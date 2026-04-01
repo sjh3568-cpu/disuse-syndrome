@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>비사용증후군 4지선다 퀴즈 | 복주회복병원</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 48px;
+      user-select: none;
+    }
+
+    .header { width: 100%; max-width: 460px; text-align: center; margin-bottom: 20px; }
+    .header h1 { color: #fff; font-size: 20px; font-weight: 800; }
+    .header p { color: rgba(255,255,255,0.8); font-size: 13px; margin-top: 4px; }
+
+    /* 이름 입력 화면 */
+    .name-screen {
+      width: 100%; max-width: 460px;
+      background: #fff; border-radius: 24px;
+      padding: 40px 28px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .name-screen .ico { font-size: 56px; margin-bottom: 16px; }
+    .name-screen h2 { font-size: 20px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .name-screen p { font-size: 14px; color: #888; margin-bottom: 28px; line-height: 1.6; }
+    .name-input {
+      width: 100%; padding: 16px 18px;
+      border: 2px solid #e0e0e0; border-radius: 12px;
+      font-size: 16px; color: #1a1a2e;
+      outline: none; margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .name-input:focus { border-color: #11998e; }
+    .btn-start {
+      width: 100%; padding: 18px;
+      border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: #fff; font-size: 16px; font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-start:active { opacity: 0.85; }
+
+    /* 진행률 */
+    .progress-wrap { width: 100%; max-width: 460px; margin-bottom: 20px; display: none; }
+    .progress-label { display: flex; justify-content: space-between; color: rgba(255,255,255,0.9); font-size: 13px; margin-bottom: 6px; }
+    .progress-bar-bg { background: rgba(255,255,255,0.3); border-radius: 99px; height: 7px; overflow: hidden; }
+    .progress-bar-fill { background: #fff; height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+
+    .score-badge { width: 100%; max-width: 460px; display: none; justify-content: flex-end; margin-bottom: 12px; }
+    .badge { background: rgba(255,255,255,0.2); color: #fff; font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 99px; backdrop-filter: blur(8px); }
+
+    /* 문제 카드 */
+    .question-card { width: 100%; max-width: 460px; background: #fff; border-radius: 20px; padding: 28px 24px 24px; box-shadow: 0 16px 48px rgba(0,0,0,0.15); margin-bottom: 16px; display: none; }
+    .q-number { font-size: 12px; font-weight: 700; color: #11998e; letter-spacing: 1px; margin-bottom: 10px; }
+    .q-text { font-size: 17px; font-weight: 700; color: #1a1a2e; line-height: 1.65; word-break: keep-all; }
+
+    /* 보기 */
+    .options { width: 100%; max-width: 460px; display: none; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .option-btn {
+      width: 100%; background: #fff; border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 14px; padding: 16px 18px; text-align: left;
+      font-size: 15px; font-weight: 500; color: #1a1a2e;
+      cursor: pointer; display: flex; align-items: center; gap: 12px;
+      transition: transform 0.1s, background 0.2s, border-color 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); line-height: 1.5; word-break: keep-all;
+    }
+    .option-btn:active { transform: scale(0.98); }
+    .option-num {
+      min-width: 30px; height: 30px; border-radius: 50%;
+      background: #f0fdf4; color: #11998e; font-weight: 800;
+      font-size: 14px; display: flex; align-items: center; justify-content: center;
+    }
+    .option-btn.correct { background: #e8f5e9; border-color: #4caf50; }
+    .option-btn.correct .option-num { background: #4caf50; color: #fff; }
+    .option-btn.wrong { background: #ffebee; border-color: #f44336; }
+    .option-btn.wrong .option-num { background: #f44336; color: #fff; }
+    .option-btn.disabled { cursor: default; }
+
+    /* 해설 */
+    .explanation { width: 100%; max-width: 460px; border-radius: 14px; padding: 16px 18px; font-size: 14px; line-height: 1.7; margin-bottom: 16px; display: none; word-break: keep-all; }
+    .explanation.correct-exp { background: #e8f5e9; border-left: 4px solid #4caf50; color: #1b5e20; display: block; }
+    .explanation.wrong-exp { background: #fff3e0; border-left: 4px solid #ff9800; color: #e65100; display: block; }
+    .exp-title { font-weight: 800; margin-bottom: 6px; font-size: 15px; }
+
+    .btn-next {
+      width: 100%; max-width: 460px; padding: 18px; border: none; border-radius: 14px;
+      background: #fff; color: #11998e; font-size: 16px; font-weight: 800;
+      cursor: pointer; display: none; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .btn-next:active { opacity: 0.8; }
+
+    /* 완료 화면 */
+    .complete-screen { display: none; width: 100%; max-width: 460px; background: #fff; border-radius: 24px; padding: 40px 28px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .complete-screen.show { display: block; }
+    .complete-emoji { font-size: 60px; margin-bottom: 12px; }
+    .complete-title { font-size: 22px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+    .complete-name { font-size: 15px; color: #11998e; font-weight: 700; margin-bottom: 8px; }
+    .complete-sub { font-size: 14px; color: #888; line-height: 1.7; margin-bottom: 24px; }
+    .score-circle {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .score-circle .big { font-size: 34px; font-weight: 900; color: #fff; }
+    .score-circle .small { font-size: 12px; color: rgba(255,255,255,0.85); }
+    .result-detail { display: flex; justify-content: center; gap: 28px; margin-bottom: 28px; }
+    .rd-item { text-align: center; }
+    .rd-item .num { font-size: 24px; font-weight: 800; }
+    .rd-item .lbl { font-size: 12px; color: #999; margin-top: 2px; }
+    .rd-item.green .num { color: #4caf50; }
+    .rd-item.red .num { color: #f44336; }
+
+    .save-status { font-size: 13px; color: #888; margin-bottom: 16px; min-height: 20px; }
+    .save-status.ok { color: #4caf50; font-weight: 600; }
+    .save-status.err { color: #f44336; }
+
+    .btn-restart {
+      width: 100%; padding: 18px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; margin-bottom: 12px;
+    }
+    .btn-restart:active { opacity: 0.85; }
+    .btn-home {
+      width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 14px;
+      background: #fff; color: #888; font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🏥 비사용증후군 퀴즈</h1>
+    <p>복주회복병원 직원 학습용</p>
+  </div>
+
+  <!-- 이름 입력 -->
+  <div class="name-screen" id="nameScreen">
+    <div class="ico">✏️</div>
+    <h2>퀴즈를 시작하기 전에</h2>
+    <p>이름을 입력해 주세요.<br>결과가 기록되어 학습 현황 파악에 사용됩니다.</p>
+    <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 홍길동)" maxlength="20" />
+    <button class="btn-start" onclick="startQuiz()">퀴즈 시작하기 →</button>
+  </div>
+
+  <!-- 진행률 -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">1 / 10</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="score-badge" id="scoreBadgeWrap">
+    <div class="badge" id="scoreBadge">점수: 0점</div>
+  </div>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-number" id="qNumber">문제 1</div>
+    <div class="q-text" id="qText"></div>
+  </div>
+
+  <div class="options" id="optionsArea"></div>
+
+  <div class="explanation" id="explanation">
+    <div class="exp-title" id="expTitle"></div>
+    <div id="expBody"></div>
+  </div>
+
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">다음 문제 →</button>
+
+  <!-- 완료 화면 -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-emoji" id="completeEmoji"></div>
+    <div class="complete-title" id="completeTitle"></div>
+    <div class="complete-name" id="completeName"></div>
+    <div class="complete-sub" id="completeSub"></div>
+    <div class="score-circle">
+      <div class="big" id="scoreCircle"></div>
+      <div class="small">/ 10점</div>
+    </div>
+    <div class="result-detail">
+      <div class="rd-item green"><div class="num" id="finalCorrect">0</div><div class="lbl">정답</div></div>
+      <div class="rd-item red"><div class="num" id="finalWrong">0</div><div class="lbl">오답</div></div>
+    </div>
+    <div class="save-status" id="saveStatus"></div>
+    <button class="btn-restart" onclick="restart()">🔄 다시 풀기</button>
+    <button class="btn-home" onclick="location.href='index.html'">🏠 홈으로</button>
+  </div>
+
+<script>
+const quizData = [
+  {
+    q: "비사용증후군(Disuse Syndrome)을 가장 잘 설명한 것은?",
+    options: ["오랫동안 과도하게 운동하여 근육이 손상된 상태","급성질환·수술 후 신체를 사용 못해 근력·균형·일상생활 능력이 저하된 상태","영양 불균형으로 인해 체중이 급격히 감소한 상태","만성 통증으로 인해 수면 장애가 발생한 상태"],
+    answer: 1,
+    exp: "비사용증후군은 급성질환이나 수술 후 신체를 사용하지 못해 근력·균형감각·일상생활 능력 등 신체 기능이 전반적으로 떨어지는 상태를 말합니다."
+  },
+  {
+    q: "비사용증후군 해당 사례로 옳지 않은 것은?",
+    options: ["폐렴 치료 후 장기입원으로 다리 근력이 감소된 환자","맹장 수술 후 입원 기간 동안 균형감각이 떨어진 환자","항암치료 후 근력 저하로 일상생활 동작이 어려운 환자","단순 감기로 하루 이틀 쉬어 피로감이 있는 환자"],
+    answer: 3,
+    exp: "단순 감기로 하루이틀 쉬는 것은 비사용증후군에 해당하지 않습니다. 비사용증후군은 내·외과적 수술, 항암치료 등 이후 신체 기능이 현저히 저하된 경우에 해당합니다."
+  },
+  {
+    q: "비사용증후군 환자가 가정으로 바로 복귀하기 어려운 이유가 아닌 것은?",
+    options: ["혼자 움직이려면 누군가의 도움이 필요하다","균형감각이 떨어져 낙상 위험이 있다","스스로 일상생활을 할 수 없다","병원비가 부담되어 퇴원을 원하지 않는다"],
+    answer: 3,
+    exp: "비사용증후군 환자가 가정으로 바로 복귀하기 어려운 이유는 근력 저하, 균형감각 저하, 일상생활 수행 어려움 때문입니다. 병원비 부담은 해당 이유가 아닙니다."
+  },
+  {
+    q: "비사용증후군 환자에게 제공되는 맞춤형 재활치료에 해당하지 않는 것은?",
+    options: ["근력 회복 운동","균형감각 훈련","일상생활동작(ADL) 훈련","성형외과적 시술"],
+    answer: 3,
+    exp: "비사용증후군 재활치료는 근력 회복, 균형감각 훈련, 일상생활동작 훈련, 도수치료 등 기능 회복에 집중합니다. 성형외과적 시술은 해당되지 않습니다."
+  },
+  {
+    q: "비사용증후군으로 건강보험 입원 시 최대 입원 가능 기간은?",
+    options: ["발병/수술 후 30일 이내 입원 시 30일","발병/수술 후 60일 이내 입원 시 60일","발병/수술 후 90일 이내 입원 시 90일","입원 기간 제한 없음"],
+    answer: 1,
+    exp: "발병 또는 수술 후 60일 이내에 입원하면 입원일로부터 최대 60일까지 건강보험이 적용되어 입원할 수 있습니다."
+  },
+  {
+    q: "비사용증후군 입원 치료 중 건강보험이 적용되는 항목은?",
+    options: ["재활치료만 적용","도수치료만 적용","재활치료와 도수치료 모두 적용","건강보험 적용 불가, 전액 본인 부담"],
+    answer: 2,
+    exp: "비사용증후군으로 입원 시 재활치료와 도수치료 모두 건강보험 적용이 가능합니다."
+  },
+  {
+    q: "간호간병통합서비스의 가장 큰 혜택은?",
+    options: ["1인실 병실을 무료로 제공받을 수 있다","건강보험 적용으로 간병비 부담이 줄어든다","입원 기간이 2배로 연장된다","모든 치료가 무료로 제공된다"],
+    answer: 1,
+    exp: "간호간병통합서비스는 병원 간호인력이 간병까지 통합 제공하는 서비스로, 건강보험이 적용되어 환자 가족의 간병비 부담이 크게 줄어드는 것이 가장 큰 혜택입니다."
+  },
+  {
+    q: "수술 후 재활이 필요한 환자에게 나타날 수 있는 증상은?",
+    options: ["근력이 떨어져 거동이 불편하다","균형감각이 떨어져 넘어질 위험이 있다","스스로 일상생활을 하기 어렵다","위의 모든 증상이 나타날 수 있다"],
+    answer: 3,
+    exp: "급성질환이나 수술 후 비사용증후군 환자에게는 근력 저하로 인한 거동 불편, 균형감각 저하로 인한 낙상 위험, 일상생활 수행 어려움이 모두 나타날 수 있습니다."
+  },
+  {
+    q: "고관절·골반·대퇴부 골절 수술 후 재활치료를 받아야 하는 기관은?",
+    options: ["일반 내과 의원","보건복지부 지정 재활의료기관(재활전문병원)","한의원","정형외과 외래 통원치료만으로 충분"],
+    answer: 1,
+    exp: "고관절·골반·대퇴부 골절, 고관절인공관절 수술 후에는 보건복지부 지정 재활의료기관(재활전문병원)에서 전문 재활치료를 받아야 건강보험 적용과 체계적인 재활이 가능합니다."
+  },
+  {
+    q: "복주회복병원 입원 문의 전화번호로 옳은 것은?",
+    options: ["054-851-1234","054-851-5070 / 5081","054-851-7000","1588-1234"],
+    answer: 1,
+    exp: "복주회복병원 대외협력팀 입원 문의 전화번호는 054-851-5070 / 5081 입니다."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let userName = '';
+let itemResults = new Array(quizData.length).fill(null);
+let shuffledQuiz = []; // 랜덤 섞인 문제 배열
+
+// 배열 랜덤 섞기
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 문제+보기 모두 랜덤 섞기
+function prepareQuiz() {
+  // 문제 순서 랜덤
+  const shuffledQ = shuffleArray(quizData.map((q, i) => ({ ...q, originalIdx: i })));
+
+  shuffledQuiz = shuffledQ.map(q => {
+    // 보기 순서 랜덤 (정답 위치도 함께 추적)
+    const correctText = q.options[q.answer];
+    const shuffledOpts = shuffleArray(q.options);
+    const newAnswerIdx = shuffledOpts.indexOf(correctText);
+    return { ...q, options: shuffledOpts, answer: newAnswerIdx };
+  });
+
+  itemResults = new Array(shuffledQuiz.length).fill(null);
+}
+
+function startQuiz() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { alert('이름을 입력해 주세요.'); return; }
+  userName = name;
+
+  prepareQuiz(); // 퀴즈 시작 시 랜덤 섞기
+
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('scoreBadgeWrap').style.display = 'flex';
+  document.getElementById('questionCard').style.display = 'block';
+  document.getElementById('optionsArea').style.display = 'flex';
+
+  render();
+}
+
+function render() {
+  const q = shuffledQuiz[current];
+  answered = false;
+
+  document.getElementById('qNumber').innerText = `문제 ${current + 1}`;
+  document.getElementById('qText').innerText = q.q;
+
+  const area = document.getElementById('optionsArea');
+  area.innerHTML = '';
+  const labels = ['①','②','③','④'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-num">${labels[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    area.appendChild(btn);
+  });
+
+  const exp = document.getElementById('explanation');
+  exp.className = 'explanation';
+  document.getElementById('btnNext').style.display = 'none';
+
+  const pct = Math.round((current / shuffledQuiz.length) * 100);
+  document.getElementById('progressText').innerText = `${current + 1} / ${shuffledQuiz.length}`;
+  document.getElementById('progressPct').innerText = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('scoreBadge').innerText = `점수: ${score}점`;
+}
+
+function selectAnswer(selected) {
+  if (answered) return;
+  answered = true;
+
+  const q = shuffledQuiz[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    btn.onclick = null;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === selected && selected !== q.answer) btn.classList.add('wrong');
+  });
+
+  const isCorrect = selected === q.answer;
+  if (isCorrect) score++;
+  itemResults[current] = isCorrect;
+
+  const exp = document.getElementById('explanation');
+  const expTitle = document.getElementById('expTitle');
+  const expBody = document.getElementById('expBody');
+
+  if (isCorrect) {
+    exp.className = 'explanation correct-exp';
+    expTitle.innerText = '✅ 정답입니다!';
+  } else {
+    exp.className = 'explanation wrong-exp';
+    expTitle.innerText = `❌ 오답! 정답은 ${['①','②','③','④'][q.answer]} 입니다.`;
+  }
+  expBody.innerText = q.exp;
+
+  document.getElementById('scoreBadge').innerText = `점수: ${score}점`;
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'block';
+  btnNext.innerText = current === shuffledQuiz.length - 1 ? '결과 보기 🎯' : '다음 문제 →';
+}
+
+function nextQuestion() {
+  if (current < shuffledQuiz.length - 1) {
+    current++;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('questionCard').style.display = 'none';
+  document.getElementById('optionsArea').style.display = 'none';
+  document.getElementById('explanation').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+  document.getElementById('scoreBadgeWrap').style.display = 'none';
+
+  document.getElementById('progressText').innerText = `${quizData.length} / ${quizData.length} 완료`;
+  document.getElementById('progressPct').innerText = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+
+  const pct = Math.round((score / quizData.length) * 100);
+  let emoji, title, sub;
+  if (pct === 100) { emoji = '🏆'; title = '완벽합니다!'; sub = '10문제 모두 정답!\n비사용증후군 전문가네요!'; }
+  else if (pct >= 80) { emoji = '🎉'; title = '훌륭해요!'; sub = `${score}개 정답!\n조금만 더 복습하면 완벽해요.`; }
+  else if (pct >= 60) { emoji = '👍'; title = '잘 하고 있어요!'; sub = `${score}개 정답!\n틀린 문제를 다시 확인해 보세요.`; }
+  else { emoji = '📚'; title = '조금 더 공부해요!'; sub = `${score}개 정답!\n학습카드로 내용을 다시 복습해 보세요.`; }
+
+  document.getElementById('completeEmoji').innerText = emoji;
+  document.getElementById('completeTitle').innerText = title;
+  document.getElementById('completeName').innerText = `${userName} 님의 결과`;
+  document.getElementById('completeSub').innerText = sub;
+  document.getElementById('scoreCircle').innerText = score;
+  document.getElementById('finalCorrect').innerText = score;
+  document.getElementById('finalWrong').innerText = quizData.length - score;
+
+  document.getElementById('completeScreen').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  saveResult();
+}
+
+const JSONBIN_ID  = '69cc6567856a682189e9b27b';
+const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
+
+function saveResult() {
+  const statusEl = document.getElementById('saveStatus');
+  statusEl.innerText = '결과 저장 중...';
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR') + ' ' + now.toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+
+  const newEntry = {
+    name: userName,
+    date: dateStr,
+    score: score,
+    total: quizData.length,
+    items: itemResults.map((r, i) => ({ q: shuffledQuiz[i].originalIdx + 1, correct: r }))
+  };
+
+  // 기존 데이터 가져온 후 새 결과 추가
+  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+    headers: { 'X-Master-Key': JSONBIN_KEY }
+  })
+  .then(res => res.json())
+  .then(data => {
+    const existing = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+    const updated = [...existing, newEntry];
+    return fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify(updated)
+    });
+  })
+  .then(res => res.json())
+  .then(() => {
+    statusEl.className = 'save-status ok';
+    statusEl.innerText = '✅ 결과가 저장되었습니다.';
+  })
+  .catch(() => {
+    statusEl.className = 'save-status err';
+    statusEl.innerText = '⚠️ 저장에 실패했습니다. (서버 확인 필요)';
+  });
+}
+
+function restart() {
+  current = 0; score = 0; answered = false;
+  itemResults = new Array(quizData.length).fill(null);
+
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('nameScreen').style.display = 'block';
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('nameInput').value = '';
+}
+</script>
+</body>
+</html>

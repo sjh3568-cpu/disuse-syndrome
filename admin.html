@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 대시보드 | 비사용증후군 퀴즈</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: #f4f6fb;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+      color: #1a1a2e;
+    }
+
+    .header {
+      max-width: 900px; margin: 0 auto 28px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .header h1 { font-size: 22px; font-weight: 800; }
+    .header p { font-size: 13px; color: #888; margin-top: 4px; }
+    .btn-refresh {
+      padding: 10px 20px; border: none; border-radius: 10px;
+      background: #11998e; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .btn-refresh:active { opacity: 0.8; }
+
+    /* 요약 카드 */
+    .summary {
+      max-width: 900px; margin: 0 auto 28px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;
+    }
+    .sum-card {
+      background: #fff; border-radius: 16px; padding: 20px 22px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .sum-card .lbl { font-size: 12px; color: #888; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
+    .sum-card .val { font-size: 30px; font-weight: 900; color: #1a1a2e; }
+    .sum-card .sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+    .sum-card.green .val { color: #11998e; }
+    .sum-card.blue .val { color: #667eea; }
+    .sum-card.orange .val { color: #ff9800; }
+
+    /* 문항별 오답률 */
+    .section {
+      max-width: 900px; margin: 0 auto 28px;
+      background: #fff; border-radius: 16px; padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+    .section h2 { font-size: 16px; font-weight: 800; margin-bottom: 18px; }
+
+    .bar-item { margin-bottom: 14px; }
+    .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+    .bar-label .q-title { color: #444; flex: 1; padding-right: 12px; word-break: keep-all; }
+    .bar-label .q-pct { font-weight: 700; white-space: nowrap; }
+    .bar-label .q-pct.good { color: #4caf50; }
+    .bar-label .q-pct.warn { color: #ff9800; }
+    .bar-label .q-pct.bad  { color: #f44336; }
+    .bar-bg { background: #f0f0f0; border-radius: 99px; height: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+    .bar-fill.good { background: #4caf50; }
+    .bar-fill.warn { background: #ff9800; }
+    .bar-fill.bad  { background: #f44336; }
+
+    /* 응답자 테이블 */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      background: #f8f9ff; padding: 12px 14px; text-align: left;
+      font-weight: 700; color: #555; border-bottom: 2px solid #eee;
+      white-space: nowrap;
+    }
+    tbody tr:hover { background: #f8f9ff; }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
+    .score-pill {
+      display: inline-block; padding: 3px 12px; border-radius: 99px;
+      font-weight: 700; font-size: 13px;
+    }
+    .score-pill.high { background: #e8f5e9; color: #2e7d32; }
+    .score-pill.mid  { background: #fff3e0; color: #e65100; }
+    .score-pill.low  { background: #ffebee; color: #c62828; }
+
+    .no-data { text-align: center; padding: 48px; color: #bbb; font-size: 15px; }
+
+    .back-btn {
+      display: inline-block; margin-bottom: 20px;
+      padding: 8px 18px; border: 2px solid #ddd; border-radius: 10px;
+      font-size: 14px; color: #666; text-decoration: none; font-weight: 600;
+    }
+    /* 로그인 화면 */
+    .login-overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(160deg, #1a1a2e, #0f3460);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .login-box {
+      background: #fff; border-radius: 24px;
+      padding: 48px 36px; width: 100%; max-width: 360px;
+      text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .login-box .ico { font-size: 52px; margin-bottom: 16px; }
+    .login-box h2 { font-size: 20px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+    .login-box p { font-size: 13px; color: #aaa; margin-bottom: 28px; }
+    .login-input {
+      width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0;
+      border-radius: 12px; font-size: 16px; outline: none;
+      margin-bottom: 14px; transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: #11998e; }
+    .login-btn {
+      width: 100%; padding: 16px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: #fff; font-size: 16px; font-weight: 800; cursor: pointer;
+    }
+    .login-btn:active { opacity: 0.85; }
+    .login-err { font-size: 13px; color: #f44336; margin-top: 12px; min-height: 18px; }
+  </style>
+</head>
+<body>
+
+  <!-- 로그인 오버레이 -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="ico">🔐</div>
+      <h2>관리자 로그인</h2>
+      <p>관리자만 접근할 수 있습니다.</p>
+      <input class="login-input" id="pwInput" type="password" placeholder="비밀번호 입력"
+        onkeydown="if(event.key==='Enter') doLogin()" />
+      <button class="login-btn" onclick="doLogin()">로그인</button>
+      <div class="login-err" id="loginErr"></div>
+    </div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto 0;">
+    <a class="back-btn" href="index.html">← 홈으로</a>
+  </div>
+
+  <div class="header">
+    <div>
+      <h1>📊 관리자 대시보드</h1>
+      <p>비사용증후군 퀴즈 응답 현황</p>
+    </div>
+    <button class="btn-refresh" onclick="loadData()">🔄 새로고침</button>
+  </div>
+
+  <!-- 요약 -->
+  <div class="summary">
+    <div class="sum-card blue">
+      <div class="lbl">총 응시 인원</div>
+      <div class="val" id="totalCount">-</div>
+      <div class="sub">명</div>
+    </div>
+    <div class="sum-card green">
+      <div class="lbl">평균 점수</div>
+      <div class="val" id="avgScore">-</div>
+      <div class="sub">/ 10점</div>
+    </div>
+    <div class="sum-card">
+      <div class="lbl">최고 점수</div>
+      <div class="val" id="maxScore">-</div>
+      <div class="sub">/ 10점</div>
+    </div>
+    <div class="sum-card orange">
+      <div class="lbl">평균 정답률</div>
+      <div class="val" id="avgPct">-</div>
+      <div class="sub">%</div>
+    </div>
+  </div>
+
+  <!-- 문항별 정답률 -->
+  <div class="section">
+    <h2>📋 문항별 정답률</h2>
+    <div id="barChart"><div class="no-data">데이터를 불러오는 중...</div></div>
+  </div>
+
+  <!-- 응답자 목록 -->
+  <div class="section">
+    <h2>👥 응답자 목록</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>이름</th>
+            <th>응시일시</th>
+            <th>점수</th>
+            <th>정답률</th>
+          </tr>
+        </thead>
+        <tbody id="resultTable">
+          <tr><td colspan="5" class="no-data">데이터를 불러오는 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+const ADMIN_PW   = 'bokju1234';
+const JSONBIN_ID  = '69cc6567856a682189e9b27b';
+const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
+
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    loadData();
+  } else {
+    document.getElementById('loginErr').innerText = '비밀번호가 틀렸습니다.';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+const qTitles = [
+  "Q1. 비사용증후군 정의",
+  "Q2. 해당 사례 구분",
+  "Q3. 가정 복귀 어려운 이유",
+  "Q4. 맞춤형 재활치료 항목",
+  "Q5. 건강보험 입원 기간",
+  "Q6. 건강보험 적용 항목",
+  "Q7. 간호간병통합서비스 혜택",
+  "Q8. 수술 후 나타나는 증상",
+  "Q9. 재활치료 기관",
+  "Q10. 병원 문의 전화번호"
+];
+
+function loadData() {
+  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+    headers: { 'X-Master-Key': JSONBIN_KEY }
+  })
+  .then(res => res.json())
+  .then(data => {
+    const records = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+    renderDashboard(records);
+  })
+  .catch(() => {
+    document.getElementById('barChart').innerHTML = '<div class="no-data">아직 응답 데이터가 없습니다.<br>직원들이 퀴즈를 풀면 여기에 결과가 표시됩니다.</div>';
+    document.getElementById('resultTable').innerHTML = '<tr><td colspan="5" class="no-data">응답 데이터 없음</td></tr>';
+    document.getElementById('totalCount').innerText = '0';
+    document.getElementById('avgScore').innerText = '-';
+    document.getElementById('maxScore').innerText = '-';
+    document.getElementById('avgPct').innerText = '-';
+  });
+}
+
+function renderDashboard(data) {
+  const total = data.length;
+  if (total === 0) { loadData(); return; }
+
+  // 요약
+  const scores = data.map(d => d.score);
+  const avg = (scores.reduce((a,b) => a+b, 0) / total).toFixed(1);
+  const max = Math.max(...scores);
+  const avgPct = Math.round((avg / 10) * 100);
+
+  document.getElementById('totalCount').innerText = total;
+  document.getElementById('avgScore').innerText = avg;
+  document.getElementById('maxScore').innerText = max;
+  document.getElementById('avgPct').innerText = avgPct;
+
+  // 문항별 정답률
+  const itemCorrect = new Array(10).fill(0);
+  data.forEach(d => {
+    if (d.items) {
+      d.items.forEach(item => {
+        if (item.correct) itemCorrect[item.q - 1]++;
+      });
+    }
+  });
+
+  const barHtml = qTitles.map((title, i) => {
+    const correctRate = total > 0 ? Math.round((itemCorrect[i] / total) * 100) : 0;
+    const cls = correctRate >= 80 ? 'good' : correctRate >= 60 ? 'warn' : 'bad';
+    return `
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="q-title">${title}</span>
+          <span class="q-pct ${cls}">${correctRate}% 정답</span>
+        </div>
+        <div class="bar-bg">
+          <div class="bar-fill ${cls}" style="width:${correctRate}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('barChart').innerHTML = barHtml;
+
+  // 응답자 목록 (최신순)
+  const rows = [...data].reverse().map((d, i) => {
+    const pct = Math.round((d.score / d.total) * 100);
+    const pillCls = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
+    return `<tr>
+      <td>${total - i}</td>
+      <td><strong>${d.name}</strong></td>
+      <td>${d.date}</td>
+      <td><span class="score-pill ${pillCls}">${d.score} / ${d.total}</span></td>
+      <td>${pct}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('resultTable').innerHTML = rows;
+}
+
+loadData();
+</script>
+</body>
+</html>
