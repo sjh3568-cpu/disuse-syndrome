@@ -82,6 +82,12 @@
     .score-pill.low  { background: #ffebee; color: #c62828; }
 
     .no-data { text-align: center; padding: 48px; color: #bbb; font-size: 15px; }
+    .btn-del {
+      padding: 5px 12px; border: none; border-radius: 8px;
+      background: #ffebee; color: #f44336; font-size: 12px;
+      font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .btn-del:active { background: #f44336; color: #fff; }
 
     .back-btn {
       display: inline-block; margin-bottom: 20px;
@@ -175,6 +181,26 @@
     <div id="barChart"><div class="no-data">데이터를 불러오는 중...</div></div>
   </div>
 
+  <!-- 부서별 통계 -->
+  <div class="section">
+    <h2>🏢 부서별 통계</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>부서</th>
+            <th>응답 인원</th>
+            <th>평균 점수</th>
+            <th>최고 점수</th>
+          </tr>
+        </thead>
+        <tbody id="deptTable">
+          <tr><td colspan="4" class="no-data">데이터를 불러오는 중...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- 응답자 목록 -->
   <div class="section">
     <h2>👥 응답자 목록</h2>
@@ -184,9 +210,11 @@
           <tr>
             <th>#</th>
             <th>이름</th>
+            <th>부서</th>
             <th>응시일시</th>
             <th>점수</th>
             <th>정답률</th>
+            <th>삭제</th>
           </tr>
         </thead>
         <tbody id="resultTable">
@@ -198,6 +226,7 @@
 
 <script>
 const ADMIN_PW   = 'bokju1234';
+let currentData  = []; // 전체 데이터 캐시
 const JSONBIN_ID  = '69cc6567856a682189e9b27b';
 const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
 
@@ -233,6 +262,7 @@ function loadData() {
   .then(res => res.json())
   .then(data => {
     const records = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+    currentData = records;
     renderDashboard(records);
   })
   .catch(() => {
@@ -286,19 +316,65 @@ function renderDashboard(data) {
   }).join('');
   document.getElementById('barChart').innerHTML = barHtml;
 
+  // 부서별 통계
+  const deptMap = {};
+  data.forEach(d => {
+    const dept = d.dept || '미입력';
+    if (!deptMap[dept]) deptMap[dept] = { count: 0, scores: [] };
+    deptMap[dept].count++;
+    deptMap[dept].scores.push(d.score);
+  });
+  const deptRows = Object.entries(deptMap)
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([dept, v]) => {
+      const avg = (v.scores.reduce((a,b) => a+b, 0) / v.count).toFixed(1);
+      const max = Math.max(...v.scores);
+      const avgCls = avg >= 8 ? 'high' : avg >= 6 ? 'mid' : 'low';
+      return `<tr>
+        <td><strong>${dept}</strong></td>
+        <td>${v.count}명</td>
+        <td><span class="score-pill ${avgCls}">${avg}점</span></td>
+        <td>${max}점</td>
+      </tr>`;
+    }).join('');
+  document.getElementById('deptTable').innerHTML = deptRows || '<tr><td colspan="4" class="no-data">부서 데이터 없음</td></tr>';
+
+
   // 응답자 목록 (최신순)
-  const rows = [...data].reverse().map((d, i) => {
+  const reversed = [...data].reverse();
+  const rows = reversed.map((d, i) => {
+    const realIdx = data.length - 1 - i; // 원본 배열 인덱스
     const pct = Math.round((d.score / d.total) * 100);
     const pillCls = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
-    return `<tr>
+    return `<tr id="row-${realIdx}">
       <td>${total - i}</td>
       <td><strong>${d.name}</strong></td>
+      <td>${d.dept || '-'}</td>
       <td>${d.date}</td>
       <td><span class="score-pill ${pillCls}">${d.score} / ${d.total}</span></td>
       <td>${pct}%</td>
+      <td><button class="btn-del" onclick="deleteEntry(${realIdx})">🗑 삭제</button></td>
     </tr>`;
   }).join('');
   document.getElementById('resultTable').innerHTML = rows;
+}
+
+function deleteEntry(idx) {
+  if (!confirm(`${currentData[idx].name} (${currentData[idx].dept || '-'}) 님의 데이터를 삭제하시겠습니까?`)) return;
+
+  currentData.splice(idx, 1);
+
+  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+    body: JSON.stringify(currentData)
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert('삭제되었습니다.');
+    renderDashboard(currentData);
+  })
+  .catch(() => alert('삭제 중 오류가 발생했습니다.'));
 }
 
 loadData();

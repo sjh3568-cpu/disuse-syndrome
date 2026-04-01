@@ -146,9 +146,11 @@
   <div class="name-screen" id="nameScreen">
     <div class="ico">✏️</div>
     <h2>퀴즈를 시작하기 전에</h2>
-    <p>이름을 입력해 주세요.<br>결과가 기록되어 학습 현황 파악에 사용됩니다.</p>
-    <input class="name-input" id="nameInput" type="text" placeholder="이름을 입력하세요 (예: 홍길동)" maxlength="20" />
+    <p>이름과 부서를 입력해 주세요.<br>결과가 기록되어 학습 현황 파악에 사용됩니다.</p>
+    <input class="name-input" id="nameInput" type="text" placeholder="이름 (예: 홍길동)" maxlength="20" />
+    <input class="name-input" id="deptInput" type="text" placeholder="부서 (예: 간호부, 원무팀)" maxlength="20" />
     <button class="btn-start" onclick="startQuiz()">퀴즈 시작하기 →</button>
+    <button class="btn-home" onclick="location.href='index.html'" style="margin-top:12px;">🏠 홈으로</button>
   </div>
 
   <!-- 진행률 -->
@@ -253,7 +255,7 @@ const quizData = [
     q: "종합병원에서 수술 후 신체 기능이 떨어진 환자(비사용증후군)의 재활은 어디서 받아야 하나요?",
     options: ["요양병원","보건복지부 지정 재활의료기관(재활전문병원)","일반 내과 의원","집에서 자가 재활"],
     answer: 1,
-    exp: "보건복지부 지정 재활의료기관(재활전문병원)에서 받아야 합니다.\n✅ 안동 복주회복병원이 해당됩니다! (요양병원 혜택 적용 X)\n📞 문의: 054-851-5070 / 5081"
+    exp: "보건복지부 지정 재활의료기관(재활전문병원)에서 받아야 합니다.\n✅ 안동 복주회복병원에서만 가능합니다! (요양병원 혜택 적용 X)\n📞 문의: 054-851-5070 / 5081"
   },
   {
     q: "복주회복병원 입원 문의 전화번호로 옳은 것은?",
@@ -267,6 +269,7 @@ let current = 0;
 let score = 0;
 let answered = false;
 let userName = '';
+let userDept = '';
 let itemResults = new Array(quizData.length).fill(null);
 let shuffledQuiz = []; // 랜덤 섞인 문제 배열
 
@@ -298,8 +301,11 @@ function prepareQuiz() {
 
 function startQuiz() {
   const name = document.getElementById('nameInput').value.trim();
+  const dept = document.getElementById('deptInput').value.trim();
   if (!name) { alert('이름을 입력해 주세요.'); return; }
+  if (!dept) { alert('부서를 입력해 주세요.'); return; }
   userName = name;
+  userDept = dept;
 
   prepareQuiz(); // 퀴즈 시작 시 랜덤 섞기
 
@@ -407,7 +413,7 @@ function showResult() {
 
   document.getElementById('completeEmoji').innerText = emoji;
   document.getElementById('completeTitle').innerText = title;
-  document.getElementById('completeName').innerText = `${userName} 님의 결과`;
+  document.getElementById('completeName').innerText = `${userDept} | ${userName} 님의 결과`;
   document.getElementById('completeSub').innerText = sub;
   document.getElementById('scoreCircle').innerText = score;
   document.getElementById('finalCorrect').innerText = score;
@@ -431,6 +437,7 @@ function saveResult() {
 
   const newEntry = {
     name: userName,
+    dept: userDept,
     date: dateStr,
     score: score,
     total: quizData.length,
@@ -470,7 +477,9 @@ function restart() {
   document.getElementById('nameScreen').style.display = 'block';
   document.getElementById('progressWrap').style.display = 'none';
   document.getElementById('nameInput').value = '';
+  document.getElementById('deptInput').value = '';
 }
+
 </script>
 </body>
 </html>

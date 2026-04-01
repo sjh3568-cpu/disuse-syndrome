@@ -278,9 +278,26 @@
       transition: opacity 0.2s;
     }
     .btn-restart:active { opacity: 0.85; }
+    .btn-home-top {
+      position: fixed; top: 16px; left: 16px;
+      background: rgba(255,255,255,0.2); border: none;
+      color: #fff; font-size: 13px; font-weight: 700;
+      padding: 8px 14px; border-radius: 99px;
+      cursor: pointer; backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .btn-home-top:active { opacity: 0.7; }
+    .btn-home-complete {
+      width: 100%; padding: 14px; border: 2px solid #e0e0e0;
+      border-radius: 14px; background: #fff; color: #888;
+      font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- 홈 버튼 (상단 고정) -->
+  <button class="btn-home-top" onclick="location.href='index.html'">🏠 홈</button>
 
   <!-- 헤더 -->
   <div class="header">
@@ -359,6 +376,7 @@
       </div>
     </div>
     <button class="btn-restart" onclick="restart()">🔄 다시 학습하기</button>
+    <button class="btn-home-complete" onclick="location.href='index.html'">🏠 홈으로</button>
   </div>
 
 <script>
