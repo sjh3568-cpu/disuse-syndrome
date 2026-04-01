@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>부서별 랭킹 | 비사용증후군</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+      color: #fff;
+    }
+
+    .header {
+      max-width: 500px; margin: 0 auto 28px; text-align: center;
+    }
+    .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .header p { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+    .btn-home {
+      display: inline-block; margin-bottom: 20px;
+      padding: 8px 18px; background: rgba(255,255,255,0.15);
+      border: none; color: #fff; font-size: 13px; font-weight: 700;
+      border-radius: 99px; cursor: pointer; backdrop-filter: blur(8px);
+      text-decoration: none;
+    }
+
+    .summary-row {
+      max-width: 500px; margin: 0 auto 24px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .sum-card {
+      background: rgba(255,255,255,0.1); border-radius: 16px;
+      padding: 16px; text-align: center; backdrop-filter: blur(10px);
+    }
+    .sum-card .val { font-size: 28px; font-weight: 900; color: #38ef7d; }
+    .sum-card .lbl { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+    .section {
+      max-width: 500px; margin: 0 auto 24px;
+      background: rgba(255,255,255,0.07); border-radius: 20px;
+      padding: 24px; backdrop-filter: blur(10px);
+    }
+    .section h2 {
+      font-size: 16px; font-weight: 800; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* 부서 랭킹 */
+    .dept-item {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px; padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .dept-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .rank-num {
+      min-width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+    }
+    .rank-1 { background: #ffd700; color: #5a3d00; }
+    .rank-2 { background: #c0c0c0; color: #333; }
+    .rank-3 { background: #cd7f32; color: #fff; }
+    .rank-other { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); }
+
+    .dept-info { flex: 1; }
+    .dept-name { font-size: 15px; font-weight: 700; }
+    .dept-count { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+    .dept-bar-wrap { flex: 1; }
+    .dept-bar-bg {
+      background: rgba(255,255,255,0.15); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 4px;
+    }
+    .dept-bar-fill { height: 100%; border-radius: 99px; background: #38ef7d; transition: width 0.6s ease; }
+    .dept-score { font-size: 14px; font-weight: 800; color: #38ef7d; white-space: nowrap; }
+
+    /* 개인 랭킹 */
+    .person-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .person-item:last-child { border-bottom: none; }
+    .person-info { flex: 1; }
+    .person-name { font-size: 14px; font-weight: 700; }
+    .person-dept { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+    .person-date { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+    .person-score {
+      font-size: 20px; font-weight: 900;
+      padding: 6px 14px; border-radius: 10px;
+    }
+    .score-high { background: rgba(56,239,125,0.2); color: #38ef7d; }
+    .score-mid  { background: rgba(255,152,0,0.2); color: #ffb74d; }
+    .score-low  { background: rgba(244,67,54,0.2); color: #ef9a9a; }
+
+    .loading { text-align: center; color: rgba(255,255,255,0.5); padding: 40px; font-size: 14px; }
+    .empty { text-align: center; color: rgba(255,255,255,0.4); padding: 24px; font-size: 14px; }
+    .level-badge {
+      font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px;
+      background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); margin-left: 6px;
+    }
+    .level-adv { background: rgba(103,126,234,0.4); color: #b0beff; }
+  </style>
+</head>
+<body>
+
+  <div style="max-width:500px; margin:0 auto;">
+    <a class="btn-home" href="index.html">← 홈으로</a>
+  </div>
+
+  <div class="header">
+    <h1>🏆 부서별 학습 랭킹</h1>
+    <p id="subText">데이터를 불러오는 중...</p>
+  </div>
+
+  <!-- 전체 요약 -->
+  <div class="summary-row">
+    <div class="sum-card">
+      <div class="val" id="totalPeople">-</div>
+      <div class="lbl">총 참여자</div>
+    </div>
+    <div class="sum-card">
+      <div class="val" id="avgScore">-</div>
+      <div class="lbl">평균 점수</div>
+    </div>
+    <div class="sum-card">
+      <div class="val" id="topScore">-</div>
+      <div class="lbl">최고 점수</div>
+    </div>
+  </div>
+
+  <!-- 부서별 랭킹 -->
+  <div class="section">
+    <h2>🏢 부서별 평균 점수</h2>
+    <div id="deptRanking"><div class="loading">로딩 중...</div></div>
+  </div>
+
+  <!-- 개인 TOP 10 -->
+  <div class="section">
+    <h2>👑 개인 TOP 10</h2>
+    <div id="personRanking"><div class="loading">로딩 중...</div></div>
+  </div>
+
+<script>
+const JSONBIN_ID  = '69cc6567856a682189e9b27b';
+const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
+
+fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+  headers: { 'X-Master-Key': JSONBIN_KEY }
+})
+.then(res => res.json())
+.then(data => {
+  const records = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+  if (records.length === 0) {
+    document.getElementById('subText').innerText = '아직 퀴즈 참여 기록이 없습니다.';
+    document.getElementById('deptRanking').innerHTML = '<div class="empty">데이터 없음</div>';
+    document.getElementById('personRanking').innerHTML = '<div class="empty">데이터 없음</div>';
+    return;
+  }
+
+  // 요약 통계
+  const totalPeople = records.length;
+  const avgScore = (records.reduce((s, r) => s + r.score, 0) / totalPeople).toFixed(1);
+  const topScore = Math.max(...records.map(r => r.score));
+  document.getElementById('totalPeople').innerText = totalPeople + '명';
+  document.getElementById('avgScore').innerText = avgScore + '점';
+  document.getElementById('topScore').innerText = topScore + '점';
+  document.getElementById('subText').innerText = `총 ${totalPeople}명 참여 · 최근 업데이트`;
+
+  // 부서별 통계
+  const deptMap = {};
+  records.forEach(r => {
+    const dept = r.dept || '미입력';
+    if (!deptMap[dept]) deptMap[dept] = { scores: [], count: 0 };
+    deptMap[dept].scores.push(r.score);
+    deptMap[dept].count++;
+  });
+
+  const deptList = Object.entries(deptMap).map(([dept, info]) => ({
+    dept,
+    avg: info.scores.reduce((a, b) => a + b, 0) / info.count,
+    count: info.count
+  })).sort((a, b) => b.avg - a.avg);
+
+  const maxAvg = deptList[0].avg;
+  const deptEl = document.getElementById('deptRanking');
+  deptEl.innerHTML = deptList.map((item, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+    const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    const barWidth = Math.round((item.avg / 10) * 100);
+    return `
+      <div class="dept-item">
+        <div class="rank-num ${rankClass}">${rankIcon}</div>
+        <div class="dept-info">
+          <div class="dept-name">${item.dept}</div>
+          <div class="dept-count">${item.count}명 참여</div>
+        </div>
+        <div class="dept-bar-wrap">
+          <div class="dept-bar-bg"><div class="dept-bar-fill" style="width:${barWidth}%"></div></div>
+          <div class="dept-score">${item.avg.toFixed(1)}점</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 개인 TOP 10 (점수 높은 순, 동점이면 최근 순)
+  const sorted = [...records].sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return 0;
+  }).slice(0, 10);
+
+  const personEl = document.getElementById('personRanking');
+  personEl.innerHTML = sorted.map((r, i) => {
+    const pct = Math.round((r.score / (r.total || 10)) * 100);
+    const scoreClass = pct >= 80 ? 'score-high' : pct >= 60 ? 'score-mid' : 'score-low';
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}위`;
+    const levelBadge = r.level === 'advanced'
+      ? `<span class="level-badge level-adv">심화</span>`
+      : `<span class="level-badge">기초</span>`;
+    return `
+      <div class="person-item">
+        <div class="rank-num ${i < 3 ? ['rank-1','rank-2','rank-3'][i] : 'rank-other'}">${rankIcon}</div>
+        <div class="person-info">
+          <div class="person-name">${r.name}${levelBadge}</div>
+          <div class="person-dept">${r.dept}</div>
+          <div class="person-date">${r.date}</div>
+        </div>
+        <div class="person-score ${scoreClass}">${r.score}점</div>
+      </div>
+    `;
+  }).join('');
+})
+.catch(() => {
+  document.getElementById('subText').innerText = '데이터를 불러오지 못했습니다.';
+  document.getElementById('deptRanking').innerHTML = '<div class="empty">연결 오류</div>';
+  document.getElementById('personRanking').innerHTML = '<div class="empty">연결 오류</div>';
+});
+</script>
+</body>
+</html>

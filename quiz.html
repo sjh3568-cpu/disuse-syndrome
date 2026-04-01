@@ -39,12 +39,28 @@
       transition: border-color 0.2s;
     }
     .name-input:focus { border-color: #11998e; }
+
+    /* 레벨 선택 */
+    .level-wrap { margin-bottom: 20px; text-align: left; }
+    .level-label { font-size: 13px; color: #888; font-weight: 600; margin-bottom: 10px; }
+    .level-btns { display: flex; gap: 10px; }
+    .level-btn {
+      flex: 1; padding: 14px 8px; border: 2px solid #e0e0e0;
+      border-radius: 12px; background: #fff; cursor: pointer;
+      transition: all 0.2s; text-align: center; font-family: inherit;
+    }
+    .level-btn.active { border-color: #11998e; background: #f0fdf4; }
+    .level-btn .lv-icon { font-size: 22px; margin-bottom: 4px; }
+    .level-btn .lv-name { font-size: 14px; font-weight: 800; color: #1a1a2e; }
+    .level-btn .lv-desc { font-size: 11px; color: #888; margin-top: 2px; }
+    .level-btn.active .lv-name { color: #11998e; }
+
     .btn-start {
       width: 100%; padding: 18px;
       border: none; border-radius: 14px;
       background: linear-gradient(135deg, #11998e, #38ef7d);
       color: #fff; font-size: 16px; font-weight: 800;
-      cursor: pointer;
+      cursor: pointer; margin-bottom: 12px;
     }
     .btn-start:active { opacity: 0.85; }
 
@@ -112,7 +128,7 @@
     }
     .score-circle .big { font-size: 34px; font-weight: 900; color: #fff; }
     .score-circle .small { font-size: 12px; color: rgba(255,255,255,0.85); }
-    .result-detail { display: flex; justify-content: center; gap: 28px; margin-bottom: 28px; }
+    .result-detail { display: flex; justify-content: center; gap: 28px; margin-bottom: 24px; }
     .rd-item { text-align: center; }
     .rd-item .num { font-size: 24px; font-weight: 800; }
     .rd-item .lbl { font-size: 12px; color: #999; margin-top: 2px; }
@@ -122,6 +138,55 @@
     .save-status { font-size: 13px; color: #888; margin-bottom: 16px; min-height: 20px; }
     .save-status.ok { color: #4caf50; font-weight: 600; }
     .save-status.err { color: #f44336; }
+
+    /* 수료증 버튼 */
+    .cert-btn-wrap { display: none; margin-bottom: 12px; }
+    .btn-cert {
+      width: 100%; padding: 16px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #f9a825, #ffd54f);
+      color: #5a3d00; font-size: 15px; font-weight: 800; cursor: pointer;
+    }
+    .btn-cert:active { opacity: 0.85; }
+
+    /* 오답 노트 */
+    .odam-wrap {
+      display: none; text-align: left;
+      background: #fff8f0; border-radius: 14px;
+      border: 1px solid #ffe0b2; margin-bottom: 16px; overflow: hidden;
+    }
+    .odam-header {
+      padding: 14px 18px; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; font-weight: 700; color: #e65100;
+    }
+    .odam-list { padding: 0 18px 14px; }
+    .odam-item {
+      border-top: 1px solid #ffe0b2; padding: 12px 0;
+    }
+    .odam-item:first-child { border-top: none; }
+    .odam-q { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 6px; line-height: 1.5; word-break: keep-all; }
+    .odam-a { font-size: 13px; color: #2e7d32; font-weight: 600; margin-bottom: 4px; }
+    .odam-exp { font-size: 12px; color: #666; line-height: 1.6; word-break: keep-all; }
+
+    /* 오답 재도전 버튼 */
+    .btn-retry-wrong {
+      width: 100%; padding: 16px; border: 2px solid #f44336; border-radius: 14px;
+      background: #fff; color: #f44336; font-size: 15px; font-weight: 800;
+      cursor: pointer; margin-bottom: 12px; display: none;
+    }
+    .btn-retry-wrong:active { background: #ffebee; }
+
+    /* 재응시 알림 */
+    .reminder-wrap {
+      display: none; background: #f3f4ff; border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 16px; text-align: left;
+    }
+    .reminder-text { font-size: 13px; color: #555; margin-bottom: 8px; line-height: 1.5; }
+    .btn-copy-reminder {
+      font-size: 12px; padding: 6px 14px; border: 1px solid #9fa8da;
+      border-radius: 99px; background: #fff; color: #3949ab;
+      cursor: pointer; font-weight: 600;
+    }
 
     .btn-restart {
       width: 100%; padding: 18px; border: none; border-radius: 14px;
@@ -133,6 +198,47 @@
       width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 14px;
       background: #fff; color: #888; font-size: 15px; font-weight: 600; cursor: pointer;
     }
+
+    /* 수료증 오버레이 */
+    .cert-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75); z-index: 1000;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .cert-overlay.show { display: flex; }
+    .cert-box {
+      background: #fff; border-radius: 20px; padding: 44px 32px;
+      max-width: 380px; width: 100%; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      border: 3px solid #11998e; position: relative;
+    }
+    .cert-hosp { font-size: 13px; font-weight: 700; color: #11998e; letter-spacing: 2px; margin-bottom: 12px; }
+    .cert-title { font-size: 36px; font-weight: 900; color: #1a1a2e; letter-spacing: 10px; margin-bottom: 20px; }
+    .cert-divider { border: none; border-top: 2px solid #11998e; margin: 0 0 20px; }
+    .cert-body { font-size: 14px; color: #444; line-height: 2; margin-bottom: 20px; }
+    .cert-name-box { font-size: 22px; font-weight: 900; color: #1a1a2e; margin-bottom: 4px; }
+    .cert-dept-box { font-size: 14px; color: #11998e; font-weight: 600; margin-bottom: 20px; }
+    .cert-score-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 8px; }
+    .cert-score-item { text-align: center; }
+    .cert-score-item .csval { font-size: 26px; font-weight: 900; color: #11998e; }
+    .cert-score-item .cslbl { font-size: 11px; color: #999; margin-top: 2px; }
+    .cert-date-txt { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .cert-sign { font-size: 15px; font-weight: 700; color: #333; border-top: 1px solid #eee; padding-top: 16px; margin-bottom: 20px; }
+    .cert-print-btn {
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 8px;
+    }
+    .cert-close-btn {
+      width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px;
+      background: #fff; color: #888; font-size: 14px; cursor: pointer;
+    }
+
+    @media print {
+      body > *:not(.cert-overlay) { display: none !important; }
+      .cert-overlay { display: flex !important; position: static !important; background: white !important; padding: 0; }
+      .cert-print-btn, .cert-close-btn { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -142,15 +248,30 @@
     <p>복주회복병원 직원 학습용</p>
   </div>
 
-  <!-- 이름 입력 -->
+  <!-- 이름/레벨 입력 -->
   <div class="name-screen" id="nameScreen">
     <div class="ico">✏️</div>
     <h2>퀴즈를 시작하기 전에</h2>
-    <p>이름과 부서를 입력해 주세요.<br>결과가 기록되어 학습 현황 파악에 사용됩니다.</p>
+    <p>이름과 부서를 입력하고 수준을 선택해 주세요.</p>
     <input class="name-input" id="nameInput" type="text" placeholder="이름 (예: 홍길동)" maxlength="20" />
     <input class="name-input" id="deptInput" type="text" placeholder="부서 (예: 간호부, 원무팀)" maxlength="20" />
+    <div class="level-wrap">
+      <div class="level-label">학습 수준 선택</div>
+      <div class="level-btns">
+        <button class="level-btn active" id="levelBasicBtn" onclick="setLevel('basic')">
+          <div class="lv-icon">📚</div>
+          <div class="lv-name">기초 퀴즈</div>
+          <div class="lv-desc">기본 개념 10문제</div>
+        </button>
+        <button class="level-btn" id="levelAdvBtn" onclick="setLevel('advanced')">
+          <div class="lv-icon">🎓</div>
+          <div class="lv-name">심화 퀴즈</div>
+          <div class="lv-desc">전문 기준 10문제</div>
+        </button>
+      </div>
+    </div>
     <button class="btn-start" onclick="startQuiz()">퀴즈 시작하기 →</button>
-    <button class="btn-home" onclick="location.href='index.html'" style="margin-top:12px;">🏠 홈으로</button>
+    <button class="btn-home" onclick="location.href='index.html'" style="margin-top:0;">🏠 홈으로</button>
   </div>
 
   <!-- 진행률 -->
@@ -190,19 +311,80 @@
     <div class="complete-sub" id="completeSub"></div>
     <div class="score-circle">
       <div class="big" id="scoreCircle"></div>
-      <div class="small">/ 10점</div>
+      <div class="small" id="scoreTotalLabel">/ 10점</div>
     </div>
     <div class="result-detail">
       <div class="rd-item green"><div class="num" id="finalCorrect">0</div><div class="lbl">정답</div></div>
       <div class="rd-item red"><div class="num" id="finalWrong">0</div><div class="lbl">오답</div></div>
     </div>
     <div class="save-status" id="saveStatus"></div>
+
+    <!-- 수료증 버튼 -->
+    <div class="cert-btn-wrap" id="certBtnWrap">
+      <button class="btn-cert" onclick="showCertificate()">🎓 수료증 발급받기</button>
+    </div>
+
+    <!-- 오답 노트 -->
+    <div class="odam-wrap" id="odamWrap">
+      <div class="odam-header" onclick="toggleOdam()">
+        <span>📋 오답 노트</span>
+        <span id="odamToggle">▼ 펼치기</span>
+      </div>
+      <div class="odam-list" id="odamList" style="display:none;"></div>
+    </div>
+
+    <!-- 오답 재도전 -->
+    <button class="btn-retry-wrong" id="btnRetryWrong" onclick="retryWrongAnswers()">
+      🔄 오답만 다시 풀기
+    </button>
+
+    <!-- 재응시 알림 -->
+    <div class="reminder-wrap" id="reminderWrap">
+      <div class="reminder-text">📅 30일 후 재도전을 권장합니다:<br><strong id="reminderDate"></strong></div>
+      <button class="btn-copy-reminder" onclick="copyReminder()">📋 날짜 복사</button>
+    </div>
+
     <button class="btn-restart" onclick="restart()">🔄 다시 풀기</button>
     <button class="btn-home" onclick="location.href='index.html'">🏠 홈으로</button>
   </div>
 
+  <!-- 수료증 오버레이 -->
+  <div class="cert-overlay" id="certOverlay">
+    <div class="cert-box" id="certBox">
+      <div class="cert-hosp">🏥 복주회복병원 · BOKJU RECOVERY HOSPITAL</div>
+      <div class="cert-title">수료증</div>
+      <hr class="cert-divider" />
+      <div class="cert-name-box" id="certName"></div>
+      <div class="cert-dept-box" id="certDept"></div>
+      <div class="cert-body">
+        위 직원은 비사용증후군(Disuse Syndrome)<br>
+        직원 학습 퀴즈를 성공적으로 이수하였기에<br>
+        이 수료증을 수여합니다.
+      </div>
+      <div class="cert-score-row">
+        <div class="cert-score-item">
+          <div class="csval" id="certScore"></div>
+          <div class="cslbl">획득 점수</div>
+        </div>
+        <div class="cert-score-item">
+          <div class="csval" id="certPct"></div>
+          <div class="cslbl">정답률</div>
+        </div>
+        <div class="cert-score-item">
+          <div class="csval" id="certLevel"></div>
+          <div class="cslbl">수준</div>
+        </div>
+      </div>
+      <div class="cert-date-txt" id="certDate"></div>
+      <div class="cert-sign">복주회복병원장 (인)</div>
+      <button class="cert-print-btn" onclick="window.print()">🖨️ 수료증 인쇄</button>
+      <button class="cert-close-btn" onclick="document.getElementById('certOverlay').classList.remove('show')">닫기</button>
+    </div>
+  </div>
+
 <script>
-const quizData = [
+/* ───── 기초 문제 ───── */
+const basicQuizData = [
   {
     q: "비사용증후군(Disuse Syndrome)을 가장 잘 설명한 것은?",
     options: ["오랫동안 과도하게 운동하여 근육이 손상된 상태","급성질환·수술 후 신체를 사용 못해 근력·균형·일상생활 능력이 저하된 상태","영양 불균형으로 인해 체중이 급격히 감소한 상태","만성 통증으로 인해 수면 장애가 발생한 상태"],
@@ -265,15 +447,88 @@ const quizData = [
   }
 ];
 
+/* ───── 심화 문제 (PDF 기반) ───── */
+const advancedQuizData = [
+  {
+    q: "비사용증후군 기능평가에서 도수근력검사(MMT) 기준으로 옳은 것은?",
+    options: ["총점 60점 중 48점 미만","총점 60점 중 50점 이하","총점 100점 중 80점 이하","총점 56점 중 40점 이하"],
+    answer: 0,
+    exp: "도수근력검사(나-661)는 총점 60점 중 48점 미만이 비사용증후군 기능평가 기준입니다. 양측 상·하지 12개 근육을 측정합니다."
+  },
+  {
+    q: "비사용증후군 판정 시 기능평가 충족 조건으로 옳은 것은?",
+    options: ["도수근력검사 기준만 충족하면 된다","일상생활동작검사 또는 버그균형검사 중 하나만 충족하면 된다","도수근력검사와 일상생활동작검사·버그균형검사 중 하나를 모두 충족해야 한다","세 가지 검사 중 두 가지만 충족하면 된다"],
+    answer: 2,
+    exp: "비사용증후군 기능평가는 ① 도수근력검사 48점 미만 AND ② 일상생활동작검사 80점 이하 또는 버그균형검사 40점 이하, 이 두 조건을 반드시 모두 충족해야 합니다."
+  },
+  {
+    q: "버그 균형검사(BBS)에서 비사용증후군 해당 기준은?",
+    options: ["총점 100점 중 70점 이하","총점 56점 중 40점 이하","총점 60점 중 48점 미만","총점 40점 중 30점 이하"],
+    answer: 1,
+    exp: "버그 균형검사(나-661-1)는 총점 56점 중 40점 이하가 비사용증후군 기준입니다. 앉기·서기·이동 등 14개 항목을 평가합니다."
+  },
+  {
+    q: "비사용증후군 판정을 위한 도수근력검사에서 측정하는 근육 수는?",
+    options: ["6개","8개","10개","12개"],
+    answer: 3,
+    exp: "양측 상지(어깨 외전근, 팔꿈치 굴곡근, 손목 신전근) 각 3개, 하지(엉덩이 굴곡근, 무릎 신전근, 발목 배굴근) 각 3개로, 좌우 합계 12개를 측정합니다."
+  },
+  {
+    q: "심장 질환 및 수술로 인한 심기능 저하 환자의 재활손상대분류(KRIC) 코드는?",
+    options: ["KRIC 20","KRIC 21","KRIC 22","KRIC 24-2"],
+    answer: 0,
+    exp: "심장 질환 및 수술로 인한 심기능 저하는 KRIC 20(심장질환)입니다. 기능상태가 현저히 저하되어 비사용증후군 기준을 충족하면 비사용증후군에 포함됩니다."
+  },
+  {
+    q: "다음 중 KRIC 21(호흡질환) 원인질환에 해당하지 않는 것은?",
+    options: ["만성 폐색성 폐질환(COPD)","기관지확장증","폐 악성 신생물(폐암)","폐동맥고혈압"],
+    answer: 2,
+    exp: "폐암은 악성 신생물로 KRIC 24-2(신생물)에 해당합니다. KRIC 21(호흡질환)에는 만성기관지염, 폐기종, 천식, 기관지확장증, COPD, 간질성 폐질환, 폐동맥고혈압, 진폐증 등이 포함됩니다."
+  },
+  {
+    q: "KRIC 24-2(신생물) 비사용증후군의 정의로 옳은 것은?",
+    options: ["심장 수술 후 심기능이 저하된 경우","호흡기 질환으로 폐기능이 저하된 경우","악성 신생물 치료(수술·화학요법·방사선요법 등) 후 지속적 관리가 필요한 경우","급성질환으로 기능이 저하되었으나 다른 KRIC에 해당하지 않는 경우"],
+    answer: 2,
+    exp: "KRIC 24-2(신생물)는 악성 신생물로 인한 치료(수술, 화학요법, 방사선요법, 면역요법, 호르몬요법 등) 후 지속적 관리가 필요한 경우입니다."
+  },
+  {
+    q: "[사례] 80세 여성, 심장부정맥으로 CABG 수술 2주 후 ICU 치료, MMT 46점, K-MBI 60점. 비사용증후군 판정은?",
+    options: ["onset이 2주에 불과해 너무 이르므로 해당 없음","KRIC 20(심장질환)으로 비사용증후군에 해당함","MMT 46점은 48점 미만으로 기준에 미달함","ICU 치료 후 일반병동으로 전동되어 해당 없음"],
+    answer: 1,
+    exp: "onset 2주(60일 이내 ✅), KRIC 20 심장질환(CABG 수술 ✅), MMT 46(48점 미만 ✅), K-MBI 60(80점 이하 ✅)로 두 조건을 모두 충족하여 비사용증후군(심장질환)에 해당합니다."
+  },
+  {
+    q: "[사례] 70세 남성, COPD 급성 악화로 인공호흡기 치료 후 일반병동 전동, MMT 40점, BBS 36점. 비사용증후군 판정은?",
+    options: ["BBS 36점은 40점 이하이므로 기준을 초과해 해당 없음","KRIC 21(호흡질환)로 비사용증후군에 해당함","입원 1개월이 지나 시기 초과로 해당 없음","ICU 인공호흡기 치료를 받지 않아 해당 없음"],
+    answer: 1,
+    exp: "onset 1개월(60일 이내 ✅), KRIC 21(COPD 급성악화 ✅), MMT 40(48점 미만 ✅), BBS 36(40점 이하 ✅)로 두 조건을 모두 충족하여 비사용증후군(호흡질환)에 해당합니다."
+  },
+  {
+    q: "비사용증후군(KRIC 22)의 정확한 정의는?",
+    options: ["심장 질환으로 심기능이 저하된 경우","호흡기 질환으로 폐기능이 저하된 경우","급성질환이나 수술로 기능이 현저히 저하되었으나 다른 KRIC에 선분류되지 않는 경우","악성 신생물 치료 후 지속적 관리가 필요한 경우"],
+    answer: 2,
+    exp: "KRIC 22(비사용증후군)는 급성질환이나 수술로 인해 기능상태가 현저하게 저하된 경우로, 심장질환·호흡질환·신생물 등 다른 KRIC에 선분류되지 않는 경우에만 사용 가능합니다."
+  }
+];
+
+/* ───── 상태 변수 ───── */
 let current = 0;
 let score = 0;
 let answered = false;
 let userName = '';
 let userDept = '';
-let itemResults = new Array(quizData.length).fill(null);
-let shuffledQuiz = []; // 랜덤 섞인 문제 배열
+let itemResults = [];
+let shuffledQuiz = [];
+let levelType = 'basic';
+let wrongItems = [];
+let isRetryMode = false;
 
-// 배열 랜덤 섞기
+function setLevel(type) {
+  levelType = type;
+  document.getElementById('levelBasicBtn').classList.toggle('active', type === 'basic');
+  document.getElementById('levelAdvBtn').classList.toggle('active', type === 'advanced');
+}
+
 function shuffleArray(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -283,19 +538,14 @@ function shuffleArray(arr) {
   return a;
 }
 
-// 문제+보기 모두 랜덤 섞기
-function prepareQuiz() {
-  // 문제 순서 랜덤
-  const shuffledQ = shuffleArray(quizData.map((q, i) => ({ ...q, originalIdx: i })));
-
+function prepareQuiz(data) {
+  const shuffledQ = shuffleArray(data.map((q, i) => ({ ...q, originalIdx: i })));
   shuffledQuiz = shuffledQ.map(q => {
-    // 보기 순서 랜덤 (정답 위치도 함께 추적)
     const correctText = q.options[q.answer];
     const shuffledOpts = shuffleArray(q.options);
     const newAnswerIdx = shuffledOpts.indexOf(correctText);
     return { ...q, options: shuffledOpts, answer: newAnswerIdx };
   });
-
   itemResults = new Array(shuffledQuiz.length).fill(null);
 }
 
@@ -306,14 +556,17 @@ function startQuiz() {
   if (!dept) { alert('부서를 입력해 주세요.'); return; }
   userName = name;
   userDept = dept;
+  isRetryMode = false;
 
-  prepareQuiz(); // 퀴즈 시작 시 랜덤 섞기
+  const data = levelType === 'advanced' ? advancedQuizData : basicQuizData;
+  prepareQuiz(data);
 
   document.getElementById('nameScreen').style.display = 'none';
   document.getElementById('progressWrap').style.display = 'block';
   document.getElementById('scoreBadgeWrap').style.display = 'flex';
   document.getElementById('questionCard').style.display = 'block';
   document.getElementById('optionsArea').style.display = 'flex';
+  document.getElementById('scoreTotalLabel').innerText = `/ ${shuffledQuiz.length}점`;
 
   render();
 }
@@ -400,31 +653,120 @@ function showResult() {
   document.getElementById('btnNext').style.display = 'none';
   document.getElementById('scoreBadgeWrap').style.display = 'none';
 
-  document.getElementById('progressText').innerText = `${quizData.length} / ${quizData.length} 완료`;
+  document.getElementById('progressText').innerText = `${shuffledQuiz.length} / ${shuffledQuiz.length} 완료`;
   document.getElementById('progressPct').innerText = '100%';
   document.getElementById('progressFill').style.width = '100%';
 
-  const pct = Math.round((score / quizData.length) * 100);
+  const pct = Math.round((score / shuffledQuiz.length) * 100);
   let emoji, title, sub;
-  if (pct === 100) { emoji = '🏆'; title = '완벽합니다!'; sub = '10문제 모두 정답!\n비사용증후군 전문가네요!'; }
+  if (pct === 100) { emoji = '🏆'; title = '완벽합니다!'; sub = `${shuffledQuiz.length}문제 모두 정답!\n비사용증후군 전문가네요!`; }
   else if (pct >= 80) { emoji = '🎉'; title = '훌륭해요!'; sub = `${score}개 정답!\n조금만 더 복습하면 완벽해요.`; }
   else if (pct >= 60) { emoji = '👍'; title = '잘 하고 있어요!'; sub = `${score}개 정답!\n틀린 문제를 다시 확인해 보세요.`; }
   else { emoji = '📚'; title = '조금 더 공부해요!'; sub = `${score}개 정답!\n학습카드로 내용을 다시 복습해 보세요.`; }
 
   document.getElementById('completeEmoji').innerText = emoji;
   document.getElementById('completeTitle').innerText = title;
-  document.getElementById('completeName').innerText = `${userDept} | ${userName} 님의 결과`;
+  const levelLabel = levelType === 'advanced' ? '심화' : '기초';
+  document.getElementById('completeName').innerText = `${userDept} | ${userName} 님 (${levelLabel} 퀴즈)`;
   document.getElementById('completeSub').innerText = sub;
   document.getElementById('scoreCircle').innerText = score;
   document.getElementById('finalCorrect').innerText = score;
-  document.getElementById('finalWrong').innerText = quizData.length - score;
+  document.getElementById('finalWrong').innerText = shuffledQuiz.length - score;
 
   document.getElementById('completeScreen').classList.add('show');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  saveResult();
+  // 수료증 버튼 (80점 이상)
+  if (pct >= 80) {
+    document.getElementById('certBtnWrap').style.display = 'block';
+  }
+
+  // 오답 노트 및 재도전 버튼
+  wrongItems = shuffledQuiz.filter((_, i) => itemResults[i] === false);
+  if (wrongItems.length > 0) {
+    buildOdamNote();
+    document.getElementById('btnRetryWrong').style.display = 'block';
+  }
+
+  // 재응시 알림 (항상 표시)
+  const reminder = new Date();
+  reminder.setDate(reminder.getDate() + 30);
+  document.getElementById('reminderDate').innerText = reminder.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('reminderWrap').style.display = 'block';
+
+  if (!isRetryMode) saveResult();
 }
 
+function buildOdamNote() {
+  const odamWrap = document.getElementById('odamWrap');
+  odamWrap.style.display = 'block';
+
+  const list = document.getElementById('odamList');
+  list.innerHTML = wrongItems.map((q, i) => `
+    <div class="odam-item">
+      <div class="odam-q">Q${i + 1}. ${q.q}</div>
+      <div class="odam-a">✅ 정답: ${q.options[q.answer]}</div>
+      <div class="odam-exp">${q.exp}</div>
+    </div>
+  `).join('');
+}
+
+function toggleOdam() {
+  const list = document.getElementById('odamList');
+  const toggle = document.getElementById('odamToggle');
+  const isHidden = list.style.display === 'none';
+  list.style.display = isHidden ? 'block' : 'none';
+  toggle.innerText = isHidden ? '▲ 접기' : '▼ 펼치기';
+}
+
+function retryWrongAnswers() {
+  shuffledQuiz = wrongItems.map(q => ({ ...q }));
+  itemResults = new Array(shuffledQuiz.length).fill(null);
+  current = 0;
+  score = 0;
+  answered = false;
+  isRetryMode = true;
+
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('certBtnWrap').style.display = 'none';
+  document.getElementById('odamWrap').style.display = 'none';
+  document.getElementById('btnRetryWrong').style.display = 'none';
+  document.getElementById('reminderWrap').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('scoreBadgeWrap').style.display = 'flex';
+  document.getElementById('questionCard').style.display = 'block';
+  document.getElementById('optionsArea').style.display = 'flex';
+  document.getElementById('scoreTotalLabel').innerText = `/ ${shuffledQuiz.length}점`;
+
+  window.scrollTo({ top: 0 });
+  render();
+}
+
+function showCertificate() {
+  const now = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  const pct = Math.round((score / shuffledQuiz.length) * 100);
+  document.getElementById('certName').innerText = userName + ' 님';
+  document.getElementById('certDept').innerText = userDept;
+  document.getElementById('certScore').innerText = `${score}/${shuffledQuiz.length}점`;
+  document.getElementById('certPct').innerText = pct + '%';
+  document.getElementById('certLevel').innerText = levelType === 'advanced' ? '심화' : '기초';
+  document.getElementById('certDate').innerText = now;
+  document.getElementById('certOverlay').classList.add('show');
+}
+
+function copyReminder() {
+  const reminder = new Date();
+  reminder.setDate(reminder.getDate() + 30);
+  const dateStr = reminder.toLocaleDateString('ko-KR');
+  const text = `[복주회복병원] 비사용증후군 퀴즈 재응시 권장일: ${dateStr}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사되었습니다!\n메모장에 붙여넣기 하세요.'));
+  } else {
+    alert(text);
+  }
+}
+
+/* ───── JSONBin 저장 ───── */
 const JSONBIN_ID  = '69cc6567856a682189e9b27b';
 const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
 
@@ -440,11 +782,11 @@ function saveResult() {
     dept: userDept,
     date: dateStr,
     score: score,
-    total: quizData.length,
+    total: shuffledQuiz.length,
+    level: levelType,
     items: itemResults.map((r, i) => ({ q: shuffledQuiz[i].originalIdx + 1, correct: r }))
   };
 
-  // 기존 데이터 가져온 후 새 결과 추가
   fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
     headers: { 'X-Master-Key': JSONBIN_KEY }
   })
@@ -458,7 +800,6 @@ function saveResult() {
       body: JSON.stringify(updated)
     });
   })
-  .then(res => res.json())
   .then(() => {
     statusEl.className = 'save-status ok';
     statusEl.innerText = '✅ 결과가 저장되었습니다.';
@@ -470,16 +811,19 @@ function saveResult() {
 }
 
 function restart() {
-  current = 0; score = 0; answered = false;
-  itemResults = new Array(quizData.length).fill(null);
+  current = 0; score = 0; answered = false; isRetryMode = false;
+  itemResults = [];
 
   document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('certBtnWrap').style.display = 'none';
+  document.getElementById('odamWrap').style.display = 'none';
+  document.getElementById('btnRetryWrong').style.display = 'none';
+  document.getElementById('reminderWrap').style.display = 'none';
   document.getElementById('nameScreen').style.display = 'block';
   document.getElementById('progressWrap').style.display = 'none';
   document.getElementById('nameInput').value = '';
   document.getElementById('deptInput').value = '';
 }
-
 </script>
 </body>
 </html>
