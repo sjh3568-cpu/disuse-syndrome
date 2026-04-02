@@ -152,7 +152,16 @@ fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
 })
 .then(res => res.json())
 .then(data => {
-  const records = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+  const allRecords = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+
+  // 같은 이름+부서는 최신 응시 1개만 남김
+  const seenMap = new Map();
+  allRecords.forEach((r, i) => {
+    const key = `${r.name}__${r.dept || ''}`;
+    seenMap.set(key, i);
+  });
+  const records = Array.from(seenMap.values()).map(i => allRecords[i]);
+
   if (records.length === 0) {
     document.getElementById('subText').innerText = '아직 퀴즈 참여 기록이 없습니다.';
     document.getElementById('deptRanking').innerHTML = '<div class="empty">데이터 없음</div>';
