@@ -2,48 +2,87 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>자주 묻는 질문 | 인덕의료재단</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
       min-height: 100vh;
-      padding: 24px 16px 56px;
+      padding: 0 0 60px;
       color: #fff;
     }
 
-    .top-bar { max-width: 500px; margin: 0 auto 20px; }
-    .btn-home {
-      display: inline-block; padding: 8px 18px;
-      background: rgba(255,255,255,0.15); border: none;
-      color: #fff; font-size: 13px; font-weight: 700;
-      border-radius: 99px; cursor: pointer;
-      backdrop-filter: blur(8px); text-decoration: none;
+    /* 헤더 */
+    .header {
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      padding: 18px 20px 16px;
+      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .back-btn {
+      font-size: 22px; color: rgba(255,255,255,0.8);
+      text-decoration: none; padding: 4px 8px; border-radius: 8px;
+    }
+    .back-btn:active { background: rgba(255,255,255,0.1); }
+    .header-title { font-size: 17px; font-weight: 800; color: #fff; flex: 1; }
+    .header-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+    /* 히어로 */
+    .hero {
+      text-align: center; padding: 32px 24px 20px;
+    }
+    .hero-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+    .hero-title { font-size: 20px; font-weight: 900; color: #fff; line-height: 1.45; margin-bottom: 8px; }
+    .hero-title span { color: #a5b4fc; }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.75; word-break: keep-all; }
+
+    /* 긴급 CTA 배너 */
+    .urgent-banner {
+      margin: 0 20px 24px;
+      background: linear-gradient(135deg, rgba(249,115,22,0.25), rgba(251,191,36,0.15));
+      border: 1px solid rgba(249,115,22,0.5);
+      border-radius: 16px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .urgent-icon { font-size: 24px; flex-shrink: 0; }
+    .urgent-text { flex: 1; }
+    .urgent-text strong { font-size: 13px; font-weight: 800; color: #fbbf24; display: block; margin-bottom: 2px; }
+    .urgent-text span { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+    .urgent-btn {
+      padding: 8px 14px; background: #f97316; color: #fff;
+      font-size: 12px; font-weight: 800; border-radius: 10px;
+      text-decoration: none; flex-shrink: 0; white-space: nowrap;
     }
 
-    .header { max-width: 500px; margin: 0 auto 24px; text-align: center; }
-    .header h1 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
-    .header p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+    /* 카테고리 레이블 */
+    .stage-label {
+      margin: 0 20px 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .stage-badge {
+      font-size: 10px; font-weight: 800; padding: 4px 10px;
+      border-radius: 99px; white-space: nowrap;
+    }
+    .stage-badge.s1 { background: rgba(168,85,247,0.3); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.4); }
+    .stage-badge.s2 { background: rgba(59,130,246,0.3); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); }
+    .stage-badge.s3 { background: rgba(16,185,129,0.3); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+    .stage-badge.s4 { background: rgba(249,115,22,0.3); color: #fcd34d; border: 1px solid rgba(249,115,22,0.4); }
+    .stage-line { flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .stage-desc { font-size: 11px; color: rgba(255,255,255,0.4); white-space: nowrap; }
 
-    .category-label {
-      max-width: 500px; margin: 0 auto 12px;
-      display: flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5);
-      letter-spacing: 0.5px;
-    }
-    .category-line {
-      flex: 1; height: 1px; background: rgba(255,255,255,0.1);
-    }
+    /* FAQ 아이템 */
+    .faq-wrap { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
 
     .faq-item {
-      max-width: 500px; margin: 0 auto 10px;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px; overflow: hidden;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
     }
     .faq-item.open {
       border-color: rgba(99,102,241,0.5);
@@ -51,254 +90,385 @@
     }
     .faq-q {
       padding: 16px 18px;
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      display: flex; align-items: flex-start; gap: 10px;
       font-size: 14px; font-weight: 700; color: #fff;
       line-height: 1.55; word-break: keep-all;
     }
-    .faq-q .q-label {
-      min-width: 24px; height: 24px; border-radius: 8px;
+    .q-label {
+      min-width: 22px; height: 22px; border-radius: 7px;
       background: rgba(99,102,241,0.4); color: #a5b4fc;
-      font-size: 12px; font-weight: 900;
+      font-size: 11px; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px;
+      flex-shrink: 0; margin-top: 2px;
     }
-    .faq-q .q-text { flex: 1; }
+    .q-text { flex: 1; }
     .faq-arrow {
-      font-size: 14px; color: rgba(255,255,255,0.4);
-      transition: transform 0.3s; flex-shrink: 0; margin-top: 2px;
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      transition: transform 0.3s; flex-shrink: 0; margin-top: 4px;
     }
     .faq-item.open .faq-arrow { transform: rotate(180deg); color: #a5b4fc; }
 
     .faq-a {
       display: none;
-      padding: 0 18px 18px;
+      padding: 14px 18px 18px;
       font-size: 13px; color: rgba(255,255,255,0.78);
       line-height: 1.85; word-break: keep-all;
       border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 14px;
     }
     .faq-item.open .faq-a { display: block; }
     .faq-a strong { color: #a5b4fc; }
-    .faq-a .highlight {
-      display: inline-block; margin-top: 10px;
-      background: rgba(99,102,241,0.2); border-left: 3px solid #6366f1;
-      border-radius: 0 8px 8px 0; padding: 8px 12px;
-      font-size: 13px; width: 100%;
+
+    .highlight {
+      display: block; margin-top: 12px;
+      background: rgba(99,102,241,0.15); border-left: 3px solid #6366f1;
+      border-radius: 0 10px 10px 0; padding: 10px 14px;
+      font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.7;
+    }
+    .highlight.orange {
+      background: rgba(249,115,22,0.15); border-color: #f97316;
+    }
+    .highlight.green {
+      background: rgba(16,185,129,0.15); border-color: #10b981;
     }
 
-    .contact-bar {
-      max-width: 500px; margin: 24px auto 0;
-      background: linear-gradient(135deg, rgba(249,115,22,0.25), rgba(251,191,36,0.15));
-      border: 1px solid rgba(249,115,22,0.4);
-      border-radius: 18px; padding: 20px; text-align: center;
+    /* 혜택 칩 */
+    .benefit-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
     }
-    .contact-bar p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 12px; line-height: 1.6; }
-    .btn-call {
-      display: inline-block; padding: 14px 32px;
-      background: linear-gradient(135deg, #f97316, #fbbf24);
-      color: #fff; font-size: 15px; font-weight: 900;
-      border-radius: 14px; text-decoration: none; border: none; cursor: pointer;
+    .chip {
+      font-size: 11px; font-weight: 700; padding: 4px 10px;
+      border-radius: 99px;
+    }
+    .chip.time { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+    .chip.money { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+    .chip.energy { background: rgba(168,85,247,0.2); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.3); }
+
+    /* 상담 유도 인라인 버튼 */
+    .cta-inline {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 14px; padding: 12px 14px;
+      background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3);
+      border-radius: 12px; text-decoration: none;
+      color: #fcd34d; font-size: 12px; font-weight: 700;
+    }
+
+    /* 섹션 구분 간격 */
+    .stage-spacer { height: 24px; }
+
+    /* 하단 CTA */
+    .cta-bar {
+      margin: 28px 20px 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(168,85,247,0.2));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 20px; padding: 22px 20px; text-align: center;
+    }
+    .cta-bar-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 6px; }
+    .cta-bar-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 16px; line-height: 1.65; word-break: keep-all; }
+    .cta-phones { display: flex; flex-direction: column; gap: 8px; }
+    .cta-phone-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px; border-radius: 12px; text-decoration: none;
+      font-weight: 800; font-size: 14px; transition: opacity 0.15s;
+    }
+    .cta-phone-btn:active { opacity: 0.8; }
+    .cta-phone-btn.p1 { background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; }
+    .cta-phone-btn.p2 { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+    /* PC 반응형 */
+    @media (min-width: 768px) {
+      .faq-wrap { max-width: 700px; margin: 0 auto; padding: 0 32px; }
+      .stage-label { max-width: 700px; margin-left: auto; margin-right: auto; padding: 0 32px; }
+      .urgent-banner { max-width: 700px; margin-left: auto; margin-right: auto; }
+      .hero { padding: 40px 32px 24px; }
+      .hero-title { font-size: 24px; }
+      .cta-bar { max-width: 700px; margin-left: auto; margin-right: auto; }
     }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <a class="btn-home" href="index.html">← 홈으로</a>
-  </div>
-
   <div class="header">
-    <h1>💬 자주 묻는 질문</h1>
-    <p>비사용증후군에 대해 가장 많이 묻는 질문들을 모았습니다</p>
-  </div>
-
-  <!-- 카테고리: 비사용증후군 기본 -->
-  <div class="category-label" style="margin-top:4px;">
-    🤔 비사용증후군이란
-    <div class="category-line"></div>
-  </div>
-
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">비사용증후군이 정확히 뭔가요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      수술이나 급성질환(폐렴, 뇌졸중 등) 이후 <strong>신체를 오랫동안 사용하지 못하면서</strong> 근력·균형감각·일상생활 능력이 전반적으로 저하된 상태를 말합니다.<br><br>
-      "쓰지 않으면 약해진다"는 원리로, 침대에 누워만 있으면 하루에도 근육이 눈에 띄게 줄어듭니다.
-      <div class="highlight">📌 단순 감기나 피로는 해당되지 않으며, 신체 기능이 현저히 저하된 경우에 해당합니다.</div>
+    <a class="back-btn" href="index.html">←</a>
+    <div>
+      <div class="header-title">💬 자주 묻는 질문</div>
+      <div class="header-sub">보호자·환자 입장에서 정리했습니다</div>
     </div>
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">어떤 분들이 비사용증후군이 되나요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      대표적인 경우는 다음과 같습니다:<br><br>
-      • 복부 수술, 정형외과 수술 후 장기 입원한 분<br>
-      • 폐렴, 뇌졸중, 심근경색 등 급성질환으로 입원한 분<br>
-      • 항암치료·방사선치료 중 활동량이 크게 줄어든 분<br>
-      • 고령으로 골절 후 거동이 어려워진 분<br><br>
-      특히 <strong>고령자일수록 빠르게 기능이 저하</strong>되므로 빠른 재활이 중요합니다.
+  <div class="hero">
+    <span class="hero-icon">🤝</span>
+    <div class="hero-title">"이런 상황이라면<br><span>저도 해당될까요?"</span></div>
+    <div class="hero-desc">
+      검색해도 잘 안 나오는 실제 궁금증을<br>
+      보호자·환자 입장에서 정리했습니다
     </div>
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">퇴원 후 집에서 쉬면 자연스럽게 회복되지 않나요?</span>
-      <span class="faq-arrow">▼</span>
+  <!-- 긴급 안내 배너 -->
+  <div class="urgent-banner">
+    <div class="urgent-icon">⏰</div>
+    <div class="urgent-text">
+      <strong>수술·퇴원 후 60일이 지나면 보험 혜택이 사라집니다</strong>
+      <span>지금 바로 상담하세요. 전화 한 통으로 확인 가능합니다.</span>
     </div>
-    <div class="faq-a">
-      아쉽게도 그렇지 않습니다. 비사용증후군은 <strong>저절로 회복되지 않으며</strong>, 방치하면 오히려 더 악화됩니다.<br><br>
-      집에서 쉬면 활동량이 줄어 근력 저하가 지속되고, 낙상 위험이 높아집니다. 낙상으로 인한 2차 골절은 더 심각한 결과를 가져올 수 있습니다.
-      <div class="highlight">📌 전문 재활치료를 통해 체계적으로 근력과 균형을 회복해야 합니다.</div>
-    </div>
+    <a class="urgent-btn" href="tel:054-851-5070">전화 상담</a>
   </div>
 
-  <!-- 카테고리: 치료 및 입원 -->
-  <div class="category-label" style="margin-top:20px;">
-    🏥 치료 및 입원
-    <div class="category-line"></div>
+  <!-- ① 상황 인식 단계 -->
+  <div class="stage-label" style="margin-top:4px;">
+    <span class="stage-badge s1">① 상황 인식</span>
+    <div class="stage-line"></div>
+    <span class="stage-desc">혹시 우리 부모님 얘기?</span>
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">요양병원이랑 재활전문병원이 뭐가 다른가요?</span>
-      <span class="faq-arrow">▼</span>
+  <div class="faq-wrap">
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">수술하고 퇴원했는데 왜 이렇게 기력이 없을까요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        수술이 잘 됐어도 입원 중 몸을 쓰지 못하는 동안 근육이 빠르게 빠집니다. 하루만 누워 있어도 근육량의 1~2%가 줄고, 1주일이면 10% 이상 감소할 수 있습니다.<br><br>
+        특히 고령이신 분은 회복 속도가 느리고, 퇴원했다고 해서 저절로 좋아지지 않습니다. <strong>이것이 바로 '비사용증후군'이라는 상태입니다.</strong>
+        <div class="highlight orange">⚠️ 수술은 끝났지만 몸은 아직 회복 중이 아니라, 지금도 약해지고 있는 중일 수 있습니다.</div>
+      </div>
     </div>
-    <div class="faq-a">
-      <strong>요양병원</strong>은 만성질환자의 장기 요양을 목적으로 하며, 재활치료보다는 유지·관리에 초점을 맞춥니다.<br><br>
-      <strong>재활전문병원(재활의료기관)</strong>은 보건복지부가 지정한 곳으로, 집중적인 재활치료를 통해 기능 회복을 목표로 합니다. 비사용증후군 건강보험 적용도 재활의료기관에서만 가능합니다.
-      <div class="highlight">📌 복주회복병원은 보건복지부 지정 재활의료기관입니다.</div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">폐렴 치료 끝나고 퇴원했는데 집에서 전혀 못 걸어요</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        폐렴 치료가 끝났다는 것은 감염이 나았다는 뜻이지, 몸 전체가 회복된 건 아닙니다. 입원 중 누워만 계셨다면 다리 근력이 크게 줄어 혼자 걷기 어려운 상태가 됩니다.<br><br>
+        이 상태로 집에 계시면 <strong>낙상 위험이 매우 높고</strong>, 넘어져서 골절이 생기면 더 큰 문제로 이어집니다. 가족이 24시간 옆에 있어야 하는 상황이 되기도 합니다.
+        <div class="highlight green">✅ 전문 재활치료를 통해 단계적으로 근력과 보행을 회복할 수 있습니다.</div>
+      </div>
     </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">오래 누워 계셨는데 퇴원 후 집에 바로 모셔도 될까요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        2주 이상 누워 계셨다면 스스로 앉거나 일어서는 것도 힘드실 수 있습니다. 이 상태에서 집으로 바로 오시면:<br><br>
+        • 화장실 이동 중 낙상 위험<br>
+        • 가족이 혼자 부축해야 하는 간병 부담<br>
+        • 활동이 줄어 근력 저하 더 빠르게 진행<br><br>
+        <strong>퇴원 직후 재활전문병원으로 연계하는 것</strong>이 가장 안전하고, 장기적으로 가족의 부담도 줄어듭니다.
+        <div class="benefit-chips">
+          <span class="chip time">⏱ 빠른 회복</span>
+          <span class="chip energy">💪 가족 부담 감소</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /faq-wrap -->
+
+  <div class="stage-spacer"></div>
+
+  <!-- ② 정보 탐색 단계 -->
+  <div class="stage-label">
+    <span class="stage-badge s2">② 정보 탐색</span>
+    <div class="stage-line"></div>
+    <span class="stage-desc">어디서, 어떻게?</span>
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">어떤 치료를 받게 되나요?</span>
-      <span class="faq-arrow">▼</span>
+  <div class="faq-wrap">
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">집에서 쉬면 자연히 좋아지지 않나요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        많은 분들이 "좀 쉬면 나아지겠지"하고 집에 계시다가 더 나빠지는 경우가 많습니다.<br><br>
+        근육은 쓰지 않으면 계속 줄어듭니다. 집에서 활동량이 적으면 낙상 → 골절 → 재입원의 악순환으로 이어질 수 있습니다. <strong>비사용증후군은 방치하면 회복이 점점 어려워집니다.</strong>
+        <div class="highlight orange">⚠️ "기다리면 낫겠지"가 가장 위험한 생각입니다. 빠른 재활이 빠른 회복의 길입니다.</div>
+      </div>
     </div>
-    <div class="faq-a">
-      환자 상태에 따라 맞춤형 재활치료가 제공됩니다:<br><br>
-      • <strong>근력 회복 운동</strong>: 약해진 근육을 단계적으로 강화<br>
-      • <strong>균형감각 훈련</strong>: 낙상 예방, 안정적 보행 회복<br>
-      • <strong>일상생활동작(ADL) 훈련</strong>: 씻기, 옷 입기, 식사 등<br>
-      • <strong>도수치료</strong>: 관절 가동범위 회복<br>
-      • <strong>보행 훈련</strong>: 독립 보행 목표<br><br>
-      모든 치료는 <strong>건강보험이 적용</strong>됩니다.
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">일반 요양병원이랑 재활병원이 뭐가 다른가요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <strong>요양병원</strong>은 만성질환 환자의 장기 관리·요양이 목적입니다. 유지와 돌봄에 초점이 있습니다.<br><br>
+        <strong>재활전문병원(재활의료기관)</strong>은 보건복지부가 지정한 곳으로, 집중적인 재활치료로 기능 회복을 목표로 합니다. 하루 3~4시간 이상의 집중 재활이 이루어집니다.<br><br>
+        핵심 차이는 <strong>건강보험 혜택</strong>입니다. 비사용증후군 건강보험 특례(60일 치료비 대폭 절감)는 재활의료기관에서만 받을 수 있습니다.
+        <div class="highlight">📌 복주회복병원은 보건복지부 지정 재활의료기관입니다. 요양병원과 다릅니다.</div>
+      </div>
     </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">요양병원에서도 재활치료가 되지 않나요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        재활치료 자체는 요양병원에서도 받을 수 있습니다. 하지만 <strong>비사용증후군에 대한 건강보험 특례 혜택은 적용되지 않습니다.</strong><br><br>
+        같은 재활치료를 받아도 재활의료기관이 아니면 비용 부담이 훨씬 커집니다. 특히 도수치료까지 보험 적용이 되는 것은 지정 재활의료기관만의 혜택입니다.
+        <div class="benefit-chips">
+          <span class="chip money">💰 보험 혜택 차이 큼</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">어떤 치료를 받게 되나요? 하루 일과가 궁금해요</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        환자 상태에 따라 맞춤으로 구성되지만, 일반적으로 하루 3~4시간 이상 집중 재활이 이루어집니다:<br><br>
+        • <strong>물리치료</strong> — 약해진 근육 강화, 보행 훈련<br>
+        • <strong>작업치료</strong> — 식사·씻기·옷 입기 등 일상생활 회복<br>
+        • <strong>언어치료</strong> — 삼키기 어려움, 말하기 회복<br>
+        • <strong>도수치료</strong> — 관절 가동범위 회복<br><br>
+        모든 치료는 <strong>건강보험이 적용</strong>됩니다.
+        <div class="highlight green">✅ 일반 요양병원의 2~3배 이상 집중적인 치료가 이루어집니다.</div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">요양병원에서도 비사용증후군 재활치료가 가능한가요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      요양병원에서도 재활치료 자체는 받을 수 있습니다. 하지만 <strong>비사용증후군에 대한 건강보험 특례 혜택은 적용되지 않습니다.</strong><br><br>
-      비사용증후군 건강보험(발병·수술 후 60일, 재활치료·도수치료 보험 적용)은 <strong>보건복지부가 지정한 재활의료기관에서만</strong> 받을 수 있습니다. 일반 요양병원은 지정기관에 해당하지 않아 동일한 혜택을 받기 어렵습니다.
-      <div class="highlight">📌 복주회복병원은 보건복지부 지정 재활의료기관으로, 비사용증후군 건강보험이 적용됩니다.</div>
-    </div>
+  <div class="stage-spacer"></div>
+
+  <!-- ③ 비용·시간·에너지 해소 단계 -->
+  <div class="stage-label">
+    <span class="stage-badge s3">③ 비용·시간·부담</span>
+    <div class="stage-line"></div>
+    <span class="stage-desc">돈·시간·간병 걱정</span>
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">입원은 언제 해야 하나요?</span>
-      <span class="faq-arrow">▼</span>
+  <div class="faq-wrap">
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">건강보험이 적용되나요? 비용이 얼마나 드나요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <strong>수술·발병 후 60일 이내 입원</strong>하시면 최대 60일간 건강보험이 적용됩니다.<br><br>
+        • 재활치료 전 항목 건강보험 적용<br>
+        • 도수치료도 건강보험 적용<br>
+        • 간호간병통합서비스로 별도 간병인 비용 없음<br><br>
+        정확한 본인 부담금은 환자 상태와 보험 종류에 따라 다릅니다. 상담 시 구체적으로 안내해 드립니다.
+        <div class="benefit-chips">
+          <span class="chip money">💰 치료비 대폭 절감</span>
+          <span class="chip money">💰 간병비 없음</span>
+          <span class="chip time">⏱ 60일 보험 적용</span>
+        </div>
+        <a class="cta-inline" href="tel:054-851-5070">📞 비용 상담 바로 전화하기 →</a>
+      </div>
     </div>
-    <div class="faq-a">
-      건강보험 적용을 받으려면 <strong>발병 또는 수술 후 60일 이내</strong>에 입원해야 합니다.<br><br>
-      빠를수록 좋습니다. 근력은 사용하지 않을수록 빠르게 저하되기 때문에, 종합병원 퇴원 직후 바로 재활전문병원으로 연계하는 것이 가장 효과적입니다.
-      <div class="highlight">⏰ 수술·발병 후 60일 이내 입원 시 최대 60일 건강보험 적용</div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">가족이 매일 간병하러 가야 하나요? 직장도 다녀야 하는데...</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <strong>간호간병통합서비스</strong> 적용 병동은 병원 간호인력이 24시간 간병을 담당합니다.<br><br>
+        가족이 교대로 간병하거나, 사비로 간병인을 고용할 필요가 없습니다. 직장을 다니면서도 안심하고 맡길 수 있습니다. 면회는 정해진 시간에 가능합니다.
+        <div class="highlight green">✅ 가족의 간병 부담 제로. 건강보험 적용으로 별도 간병비 없음.</div>
+        <div class="benefit-chips">
+          <span class="chip energy">💪 가족 간병 부담 없음</span>
+          <span class="chip money">💰 간병인 비용 절감</span>
+          <span class="chip time">⏱ 직장 유지 가능</span>
+        </div>
+      </div>
     </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">언제까지 입원해야 하고, 너무 늦으면 안 되나요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        건강보험 혜택을 받으려면 <strong>수술·발병 후 60일 이내에 입원</strong>해야 합니다. 이 기간이 지나면 보험 적용이 안 됩니다.<br><br>
+        입원 기간은 최대 60일이며, 대부분의 환자는 이 기간 내에 기본 일상생활이 가능한 수준까지 회복합니다. 빠를수록 더 많이 회복됩니다.
+        <div class="highlight orange">⚠️ 수술·퇴원 후 시간이 흐를수록 근력 저하가 심해지고 회복이 어려워집니다. 지금이 가장 빠른 시점입니다.</div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">얼마나 입원해야 하나요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      환자의 상태와 회복 속도에 따라 다르지만, 건강보험이 적용되는 기간은 <strong>최대 60일</strong>입니다.<br><br>
-      대부분의 환자는 이 기간 내에 기본적인 일상생활이 가능한 수준까지 회복됩니다.
-    </div>
+  <div class="stage-spacer"></div>
+
+  <!-- ④ 결정·행동 단계 -->
+  <div class="stage-label">
+    <span class="stage-badge s4">④ 결정·입원</span>
+    <div class="stage-line"></div>
+    <span class="stage-desc">이제 어떻게 하면 되나요?</span>
   </div>
 
-  <!-- 카테고리: 비용 및 보험 -->
-  <div class="category-label" style="margin-top:20px;">
-    💰 비용 및 건강보험
-    <div class="category-line"></div>
+  <div class="faq-wrap">
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">지금 바로 입원이 가능한가요? 절차가 어떻게 되나요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        종합병원 주치의께 <strong>진료의뢰서</strong>를 받으시면 퇴원 직후 바로 입원 연계가 됩니다.<br><br>
+        미리 진료협력팀에 전화하시면:<br>
+        • 입원 가능 날짜 확인<br>
+        • 준비물 및 절차 안내<br>
+        • 건강보험 적용 여부 확인<br>
+        • 예상 비용 안내<br><br>
+        전화 한 통으로 대부분 해결됩니다.
+        <a class="cta-inline" href="tel:054-851-5070">📞 054-851-5070 진료협력팀 바로 연결 →</a>
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggle(this)">
+      <div class="faq-q">
+        <span class="q-label">Q</span>
+        <span class="q-text">얼마나 좋아질 수 있나요? 기대해도 될까요?</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        개인마다 다르지만, <strong>조기에 재활을 시작하면 대부분 의미 있는 회복이 가능합니다.</strong><br><br>
+        • 혼자 앉기도 어려웠던 분이 걸어서 퇴원하시는 경우<br>
+        • 집에서 보호자가 감당하기 어려웠는데 일상 자립이 된 경우<br>
+        • 식사·화장실을 혼자 해결하게 된 경우<br><br>
+        포기하고 집에서 기다리는 것보다, 시작하는 것이 중요합니다. <strong>회복의 골든타임을 놓치지 마세요.</strong>
+        <div class="highlight green">✅ 지금 상담 전화 한 통이 회복의 시작입니다.</div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">입원 비용이 얼마나 드나요?</span>
-      <span class="faq-arrow">▼</span>
+  <!-- 하단 CTA -->
+  <div class="cta-bar">
+    <div class="cta-bar-title">지금 바로 상담받으세요</div>
+    <div class="cta-bar-sub">
+      전화 한 통으로 보험 적용 여부·비용·입원 일정을<br>
+      모두 확인하실 수 있습니다. 부담 없이 문의하세요.
     </div>
-    <div class="faq-a">
-      비사용증후군으로 재활전문병원에 입원하면 <strong>재활치료와 도수치료 모두 건강보험이 적용</strong>됩니다.<br><br>
-      본인 부담금은 보험 적용 후 발생하며, 구체적인 비용은 환자의 상태와 보험 유형에 따라 다를 수 있습니다. 정확한 비용은 입원 문의 시 안내받으실 수 있습니다.
-      <div class="highlight">📌 간호간병통합서비스 적용 시 별도 간병인 비용 없음</div>
+    <div class="cta-phones">
+      <a class="cta-phone-btn p1" href="tel:054-851-5070">
+        📞 복주회복병원 진료협력팀 · 054-851-5070
+      </a>
+      <a class="cta-phone-btn p2" href="tel:054-655-5119">
+        📞 경도요양병원 · 054-655-5119
+      </a>
     </div>
-  </div>
-
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">간호간병통합서비스가 뭔가요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      병원 간호인력이 간병까지 통합하여 제공하는 서비스입니다. 가족이 직접 간병하거나 별도 간병인을 고용할 필요가 없습니다.<br><br>
-      <strong>건강보험이 적용</strong>되어 가족의 간병비 부담이 크게 줄어드는 것이 가장 큰 장점입니다.
-    </div>
-  </div>
-
-  <!-- 카테고리: 기타 -->
-  <div class="category-label" style="margin-top:20px;">
-    📋 기타
-    <div class="category-line"></div>
-  </div>
-
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">다른 병원에서 종합병원 퇴원 후 바로 연계가 되나요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      네, 가능합니다. 종합병원 주치의와 상의하여 진료의뢰서를 받으면 퇴원 직후 복주회복병원으로 바로 입원 연계가 가능합니다.<br><br>
-      사전에 <strong>진료협력팀(054-851-5070)</strong>에 연락하시면 입원 절차와 준비사항을 안내받으실 수 있습니다.
-    </div>
-  </div>
-
-  <div class="faq-item" onclick="toggle(this)">
-    <div class="faq-q">
-      <span class="q-label">Q</span>
-      <span class="q-text">가족이 함께 있을 수 있나요?</span>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">
-      간호간병통합서비스 병동은 보호자 상주가 제한되지만, 면회는 가능합니다.<br><br>
-      구체적인 면회 시간과 규정은 입원 시 안내드립니다. 궁금한 사항은 진료협력팀으로 문의해 주세요.
-    </div>
-  </div>
-
-  <!-- 문의 -->
-  <div class="contact-bar">
-    <p>더 궁금한 점이 있으신가요?<br>진료협력팀이 친절하게 안내해 드립니다.</p>
-    <a class="btn-call" href="tel:054-851-5070">📞 054-851-5070 / 5081</a>
   </div>
 
 <script>
