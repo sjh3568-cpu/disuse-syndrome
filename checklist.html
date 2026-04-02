@@ -155,16 +155,16 @@
   </div>
 
   <div class="header">
-    <h1>🔍 비사용증후군 자가진단</h1>
-    <p>해당하는 항목을 모두 체크해 주세요.<br>본인 또는 가족·환자를 떠올리며 체크하세요.</p>
+    <h1>🔍 혹시 우리 가족이 해당될까요?</h1>
+    <p>수술·입원 후 몸이 예전 같지 않다면<br>아래 항목을 체크해 보세요</p>
   </div>
 
   <div class="intro-card">
-    ℹ️ 이 체크리스트는 의학적 진단을 대체하지 않습니다. 결과에 따라 전문 의료진 상담을 권장드립니다.
+    ℹ️ 본인 또는 가족을 떠올리며 해당되는 항목을 모두 체크하세요. 의학적 진단을 대체하지 않으며, 결과에 따라 전문 상담을 권장합니다.
   </div>
 
   <!-- 체크리스트 A: 발생 원인 -->
-  <div class="section-label">① 최근 병력 및 입원 경험</div>
+  <div class="section-label">① 최근 이런 일이 있었나요?</div>
 
   <div class="check-card" onclick="toggle(this)">
     <div class="check-box"></div>
@@ -197,7 +197,7 @@
   </div>
 
   <!-- 체크리스트 B: 현재 증상 -->
-  <div class="section-label" style="margin-top:20px;">② 현재 신체 상태</div>
+  <div class="section-label" style="margin-top:20px;">② 지금 몸 상태가 어떤가요?</div>
 
   <div class="check-card" onclick="toggle(this)">
     <div class="check-box"></div>
@@ -230,7 +230,7 @@
   </div>
 
   <!-- 체크리스트 C: 일상생활 -->
-  <div class="section-label" style="margin-top:20px;">③ 일상생활 수행 능력</div>
+  <div class="section-label" style="margin-top:20px;">③ 혼자 할 수 있나요?</div>
 
   <div class="check-card" onclick="toggle(this)">
     <div class="check-box"></div>
@@ -314,20 +314,20 @@ function showResult() {
 
   if (count <= 2) {
     icon = '✅';
-    title = '비사용증후군 가능성 낮음';
-    desc = '현재는 비사용증후군에 해당하는 항목이 거의 없습니다.\n꾸준한 신체 활동으로 건강을 유지하세요.\n\n만약 향후 수술이나 급성질환으로 장기 입원하게 된다면 이 체크리스트를 다시 확인해 보세요.';
+    title = '지금은 괜찮습니다';
+    desc = '현재는 해당 항목이 거의 없습니다. 꾸준한 신체 활동으로 건강을 유지하세요.\n\n향후 수술이나 입원 후 몸이 예전 같지 않다면, 그때 다시 체크해 보세요.';
     cardClass = 'result-card safe';
     btnCall.style.display = 'none';
   } else if (count <= 5) {
     icon = '⚠️';
-    title = '주의 필요 — 상담 권장';
-    desc = '일부 항목이 해당됩니다. 비사용증후군의 초기 징후일 수 있습니다.\n\n전문 의료진과 상담을 통해 현재 신체 기능 상태를 정확히 평가받아 보세요.\n조기에 재활을 시작할수록 회복이 빠릅니다.';
+    title = '전문 상담이 필요한 상태입니다';
+    desc = '일부 항목이 해당됩니다. 수술·입원 후 몸이 예전보다 약해진 상태일 수 있습니다.\n\n이런 상태를 방치하면 낙상 위험이 높아지고 회복이 더 어려워집니다. 조기에 재활을 시작할수록 빠르게 회복됩니다.\n\n수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다.';
     cardClass = 'result-card caution';
     btnCall.style.display = 'block';
   } else {
     icon = '🚨';
-    title = '비사용증후군 가능성 높음';
-    desc = '다수의 항목이 해당됩니다. 비사용증후군일 가능성이 높으므로 빠른 재활치료가 필요합니다.\n\n보건복지부 지정 재활의료기관인 복주회복병원에서 전문적인 평가와 재활치료를 받아보세요.\n발병·수술 후 60일 이내 입원 시 건강보험이 적용됩니다.';
+    title = '빠른 재활치료가 필요합니다';
+    desc = '다수의 항목이 해당됩니다. 집에서 쉬면 자연히 낫겠지 생각하실 수 있지만, 이 상태는 방치할수록 더 악화됩니다.\n\n이런 경우를 비사용증후군이라 하며, 보건복지부 지정 재활의료기관에서 집중 재활치료를 받아야 합니다.\n\n⏰ 수술·발병 후 60일 이내 입원 시 건강보험이 적용됩니다. 지금이 가장 빠른 시점입니다.';
     cardClass = 'result-card danger';
     btnCall.style.display = 'block';
   }
