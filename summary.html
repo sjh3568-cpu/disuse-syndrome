@@ -308,11 +308,11 @@
   <!-- 카카오톡 공유 -->
   <div class="share-card">
     <p>📣 수술·입원 후 회복이 필요한 분이 주변에 있다면<br>이 페이지를 카카오톡으로 공유해 보세요!</p>
-    <button class="btn-share" onclick="shareKakao()">
+    <button class="btn-share" id="shareBtn" onclick="handleShare()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
-      카카오톡으로 공유하기
+      <span id="shareBtnText">카카오톡으로 공유하기</span>
     </button>
-    <button class="btn-copy" onclick="copyLink()">🔗 링크 복사</button>
+    <button class="btn-copy" id="copyBtn" onclick="copyLink()">🔗 링크 복사</button>
   </div>
 
   <!-- 퀴즈 링크 -->
@@ -326,6 +326,17 @@
 Kakao.init('d24677d166ecd885a80091fbc35e9266');
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if (!isMobile) {
+  document.getElementById('shareBtnText').textContent = '링크 복사하기';
+  document.getElementById('copyBtn').style.display = 'none'; // PC에선 위 버튼으로 통합
+}
+
+function handleShare() {
+  if (isMobile) shareKakao();
+  else copyLink();
+}
 
 function shareKakao() {
   Kakao.Share.sendDefault({
