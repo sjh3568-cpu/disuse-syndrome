@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>회복 사례 소개 | 인덕의료재단</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(160deg, #134e5e 0%, #1a6b5a 50%, #0f3d2e 100%);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* 상단 헤더 */
+    .header {
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      padding: 18px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .back-btn {
+      font-size: 22px; color: rgba(255,255,255,0.8);
+      text-decoration: none; padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .back-btn:active { background: rgba(255,255,255,0.1); }
+    .header-title {
+      font-size: 17px; font-weight: 800; color: #fff;
+      flex: 1;
+    }
+    .header-sub {
+      font-size: 11px; color: rgba(255,255,255,0.5);
+    }
+
+    /* 히어로 섹션 */
+    .hero {
+      text-align: center;
+      padding: 36px 24px 28px;
+    }
+    .hero-icon { font-size: 64px; margin-bottom: 14px; display: block; }
+    .hero-title {
+      font-size: 22px; font-weight: 900; color: #fff;
+      line-height: 1.4; margin-bottom: 10px;
+    }
+    .hero-title span { color: #6ee7b7; }
+    .hero-desc {
+      font-size: 13px; color: rgba(255,255,255,0.65);
+      line-height: 1.75; word-break: keep-all;
+    }
+
+    /* 안내 배너 */
+    .notice-banner {
+      margin: 0 20px 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(110,231,183,0.3);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .notice-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .notice-text {
+      font-size: 12px; color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+    .notice-text strong { color: #6ee7b7; }
+
+    /* 사례 카드 */
+    .cases-wrap {
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .case-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .case-header {
+      padding: 18px 20px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .case-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .case-avatar.c1 { background: linear-gradient(135deg, #a855f7, #6366f1); }
+    .case-avatar.c2 { background: linear-gradient(135deg, #f97316, #fbbf24); }
+    .case-avatar.c3 { background: linear-gradient(135deg, #ec4899, #a855f7); }
+    .case-avatar.c4 { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+
+    .case-meta { flex: 1; }
+    .case-name {
+      font-size: 15px; font-weight: 800; color: #fff;
+      margin-bottom: 3px;
+    }
+    .case-tags {
+      display: flex; gap: 5px; flex-wrap: wrap;
+    }
+    .case-tag {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 99px;
+      background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85);
+    }
+
+    /* 결과 요약 박스 */
+    .case-result {
+      margin: 0 20px 14px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .case-result.good {
+      background: rgba(110,231,183,0.12);
+      border: 1px solid rgba(110,231,183,0.3);
+    }
+    .case-result-icon { font-size: 18px; flex-shrink: 0; }
+    .case-result-text {
+      font-size: 12px; font-weight: 700; color: #6ee7b7; line-height: 1.5;
+    }
+
+    /* Before/After */
+    .ba-wrap {
+      margin: 0 20px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .ba-box {
+      border-radius: 12px;
+      padding: 12px 12px;
+    }
+    .ba-box.before {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+    .ba-box.after {
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+    .ba-label {
+      font-size: 10px; font-weight: 900;
+      letter-spacing: 1px; margin-bottom: 6px;
+    }
+    .ba-box.before .ba-label { color: #f87171; }
+    .ba-box.after .ba-label { color: #4ade80; }
+    .ba-items { list-style: none; }
+    .ba-items li {
+      font-size: 11px; color: rgba(255,255,255,0.8);
+      line-height: 1.6; padding-left: 12px;
+      position: relative;
+    }
+    .ba-items li::before {
+      content: '·';
+      position: absolute; left: 3px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* 스토리 */
+    .case-story {
+      margin: 0 20px 18px;
+      font-size: 13px; color: rgba(255,255,255,0.72);
+      line-height: 1.85; word-break: keep-all;
+      border-left: 3px solid rgba(110,231,183,0.4);
+      padding-left: 14px;
+    }
+
+    /* 회복 기간 타임라인 */
+    .timeline {
+      margin: 0 20px 20px;
+    }
+    .timeline-title {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45);
+      letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .timeline-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .tl-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .tl-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      background: rgba(110,231,183,0.2);
+      border: 2px solid rgba(110,231,183,0.4);
+    }
+    .tl-week {
+      font-size: 9px; font-weight: 800; color: #6ee7b7;
+    }
+    .tl-desc {
+      font-size: 9px; color: rgba(255,255,255,0.55);
+      text-align: center; line-height: 1.3;
+      word-break: keep-all;
+    }
+    .tl-line {
+      height: 2px; flex: 0.4;
+      background: rgba(110,231,183,0.25);
+      margin-bottom: 20px;
+    }
+
+    /* 섹션 제목 */
+    .section-label {
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 2px;
+      padding: 0 20px;
+      margin-bottom: 14px;
+      margin-top: 8px;
+    }
+
+    /* 통계 배너 */
+    .stats-banner {
+      margin: 8px 20px 24px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(110,231,183,0.2);
+      border-radius: 18px;
+      padding: 20px 16px;
+    }
+    .stats-title {
+      font-size: 13px; font-weight: 800; color: #fff;
+      text-align: center; margin-bottom: 16px;
+    }
+    .stats-title span { color: #6ee7b7; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .stat-item {
+      text-align: center;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px 8px;
+    }
+    .stat-num {
+      font-size: 22px; font-weight: 900; color: #6ee7b7;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 10px; color: rgba(255,255,255,0.6);
+      line-height: 1.4; word-break: keep-all;
+    }
+
+    /* 전화 연결 바 */
+    .cta-bar {
+      margin: 0 20px;
+      background: linear-gradient(135deg, #134e5e, #1a6b5a);
+      border: 1px solid rgba(110,231,183,0.3);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+    }
+    .cta-bar-title {
+      font-size: 15px; font-weight: 800; color: #fff;
+      margin-bottom: 6px;
+    }
+    .cta-bar-sub {
+      font-size: 12px; color: rgba(255,255,255,0.6);
+      margin-bottom: 14px; line-height: 1.6; word-break: keep-all;
+    }
+    .cta-phones {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .cta-phone-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      padding: 13px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800; font-size: 14px;
+      transition: opacity 0.15s;
+    }
+    .cta-phone-btn:active { opacity: 0.8; }
+    .cta-phone-btn.p1 { background: #6ee7b7; color: #0f3d2e; }
+    .cta-phone-btn.p2 { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a class="back-btn" href="index.html">←</a>
+    <div>
+      <div class="header-title">🌿 회복 사례 소개</div>
+      <div class="header-sub">인덕의료재단 실제 회복 경험</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <span class="hero-icon">💚</span>
+    <div class="hero-title">포기하지 않으면<br><span>반드시 회복됩니다</span></div>
+    <div class="hero-desc">
+      비사용증후군은 조기에 발견하고 재활치료를 시작하면<br>
+      일상 복귀가 충분히 가능합니다.<br>
+      실제 회복하신 분들의 이야기를 소개합니다.
+    </div>
+  </div>
+
+  <div class="notice-banner">
+    <div class="notice-icon">🔒</div>
+    <div class="notice-text">
+      아래 사례는 <strong>실제 회복 경험을 바탕으로 재구성</strong>된 내용입니다.
+      개인정보 보호를 위해 이름·나이·세부 정보는 변경되었습니다.
+    </div>
+  </div>
+
+  <!-- 사례 1 -->
+  <div class="cases-wrap">
+
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-avatar c1">👴</div>
+        <div class="case-meta">
+          <div class="case-name">78세 남성 · 뇌졸중 후 비사용증후군</div>
+          <div class="case-tags">
+            <span class="case-tag">뇌졸중</span>
+            <span class="case-tag">3개월 와상</span>
+            <span class="case-tag">근력 회복</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-result good">
+        <div class="case-result-icon">🏆</div>
+        <div class="case-result-text">6개월 재활 후 보조기 없이 실내 보행 가능 → 귀가</div>
+      </div>
+
+      <div class="ba-wrap">
+        <div class="ba-box before">
+          <div class="ba-label">입원 전</div>
+          <ul class="ba-items">
+            <li>혼자 앉기 불가</li>
+            <li>욕창 2단계 발생</li>
+            <li>식사 전량 보조</li>
+            <li>의욕 저하·우울감</li>
+          </ul>
+        </div>
+        <div class="ba-box after">
+          <div class="ba-label">퇴원 시</div>
+          <ul class="ba-items">
+            <li>실내 독립 보행</li>
+            <li>욕창 완전 회복</li>
+            <li>식사 자립</li>
+            <li>표정·의욕 회복</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="case-story">
+        "뇌졸중으로 쓰러진 후 집에서 3개월을 누워 지냈어요. 병원에서 치료가 끝났다고 해서 포기했죠. 그런데 복주회복병원에 입원하고 나서 처음엔 침대에서 일어나는 것도 힘들었는데, 물리치료사 선생님들이 매일 옆에서 응원해 주셔서 한 걸음 한 걸음 나아갈 수 있었어요."
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">RECOVERY TIMELINE</div>
+        <div class="timeline-steps">
+          <div class="tl-step">
+            <div class="tl-dot">🛏️</div>
+            <div class="tl-week">1주</div>
+            <div class="tl-desc">욕창 치료·기초 운동</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🪑</div>
+            <div class="tl-week">4주</div>
+            <div class="tl-desc">혼자 앉기 성공</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🚶</div>
+            <div class="tl-week">10주</div>
+            <div class="tl-desc">보조기 보행</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🏠</div>
+            <div class="tl-week">24주</div>
+            <div class="tl-desc">독립 보행·귀가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 사례 2 -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-avatar c2">👵</div>
+        <div class="case-meta">
+          <div class="case-name">83세 여성 · 고관절 골절 수술 후</div>
+          <div class="case-tags">
+            <span class="case-tag">고관절 골절</span>
+            <span class="case-tag">수술 후 와상</span>
+            <span class="case-tag">폐렴 예방</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-result good">
+        <div class="case-result-icon">🏆</div>
+        <div class="case-result-text">4개월 만에 보행기 이용 보행 → 요양원 자립 생활 복귀</div>
+      </div>
+
+      <div class="ba-wrap">
+        <div class="ba-box before">
+          <div class="ba-label">입원 전</div>
+          <ul class="ba-items">
+            <li>하지 근력 거의 없음</li>
+            <li>흡인 위험으로 금식</li>
+            <li>섬망 증상</li>
+            <li>배변 전적 의존</li>
+          </ul>
+        </div>
+        <div class="ba-box after">
+          <div class="ba-label">퇴원 시</div>
+          <ul class="ba-items">
+            <li>보행기 보행 가능</li>
+            <li>경구 식사 재개</li>
+            <li>섬망 소실</li>
+            <li>부분 자립 배변</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="case-story">
+        "어머니가 수술 후 너무 빨리 약해지셔서 걱정이 많았어요. 재활병원이 따로 있다는 걸 몰랐거든요. 입원 후 언어치료·작업치료·물리치료를 함께 받으시면서 한 달 만에 눈빛이 달라지셨어요. 가족들이 매일 면회 오면서 같이 회복하는 기분이었습니다."
+        <br><br>— 보호자 자녀 증언
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">RECOVERY TIMELINE</div>
+        <div class="timeline-steps">
+          <div class="tl-step">
+            <div class="tl-dot">💊</div>
+            <div class="tl-week">1주</div>
+            <div class="tl-desc">통증 조절·연하 평가</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🍚</div>
+            <div class="tl-week">3주</div>
+            <div class="tl-desc">경구 식사 시작</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🪑</div>
+            <div class="tl-week">6주</div>
+            <div class="tl-desc">보행기 기립</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🏠</div>
+            <div class="tl-week">16주</div>
+            <div class="tl-desc">자립 복귀</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 사례 3 -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-avatar c3">👩</div>
+        <div class="case-meta">
+          <div class="case-name">67세 여성 · 폐렴 치료 후 전신 쇠약</div>
+          <div class="case-tags">
+            <span class="case-tag">폐렴 후유증</span>
+            <span class="case-tag">전신 근력 저하</span>
+            <span class="case-tag">조기 재활</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-result good">
+        <div class="case-result-icon">🏆</div>
+        <div class="case-result-text">2개월 집중 재활로 독립 보행 및 완전 귀가 성공</div>
+      </div>
+
+      <div class="ba-wrap">
+        <div class="ba-box before">
+          <div class="ba-label">입원 전</div>
+          <ul class="ba-items">
+            <li>계단 오르기 불가</li>
+            <li>숨 가쁨으로 5m 보행도 힘듦</li>
+            <li>체중 8kg 감소</li>
+            <li>일상생활 전 의존</li>
+          </ul>
+        </div>
+        <div class="ba-box after">
+          <div class="ba-label">퇴원 시</div>
+          <ul class="ba-items">
+            <li>계단 독립 보행</li>
+            <li>500m 이상 보행 가능</li>
+            <li>체중 정상 회복</li>
+            <li>가사활동 재개</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="case-story">
+        "폐렴이 나은 줄 알고 퇴원했는데 집에서 조금만 움직여도 너무 힘들었어요. 병원에서 비사용증후군이라는 말을 들었을 때 처음엔 낯설었는데, 재활치료를 받으면서 몸이 기억해 가는 것 같았어요. 숨이 차서 못 걷던 제가 이제 시장도 혼자 다녀요."
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">RECOVERY TIMELINE</div>
+        <div class="timeline-steps">
+          <div class="tl-step">
+            <div class="tl-dot">🫁</div>
+            <div class="tl-week">1주</div>
+            <div class="tl-desc">호흡 재활 시작</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🚶</div>
+            <div class="tl-week">2주</div>
+            <div class="tl-desc">실내 보행 가능</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🧗</div>
+            <div class="tl-week">5주</div>
+            <div class="tl-desc">계단 훈련</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🏠</div>
+            <div class="tl-week">8주</div>
+            <div class="tl-desc">완전 귀가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 사례 4 -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-avatar c4">👨</div>
+        <div class="case-meta">
+          <div class="case-name">72세 남성 · 심장 수술 후 장기 입원</div>
+          <div class="case-tags">
+            <span class="case-tag">심장 수술</span>
+            <span class="case-tag">ICU 장기 입원</span>
+            <span class="case-tag">심폐 재활</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-result good">
+        <div class="case-result-icon">🏆</div>
+        <div class="case-result-text">3개월 심폐 재활 후 일상생활 완전 자립, 가벼운 산책 가능</div>
+      </div>
+
+      <div class="ba-wrap">
+        <div class="ba-box before">
+          <div class="ba-label">입원 전</div>
+          <ul class="ba-items">
+            <li>ICU 1달 이상 와상</li>
+            <li>사지 근력 심각 저하</li>
+            <li>말하기·삼키기 어려움</li>
+            <li>침상 의존 100%</li>
+          </ul>
+        </div>
+        <div class="ba-box after">
+          <div class="ba-label">퇴원 시</div>
+          <ul class="ba-items">
+            <li>산책 30분 가능</li>
+            <li>근력 정상의 80% 회복</li>
+            <li>식사·대화 정상화</li>
+            <li>일상생활 자립</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="case-story">
+        "심장 수술이 잘 됐는데 몸을 못 쓰게 되니 더 힘들었어요. ICU에서 1달 넘게 있으니 다리가 완전히 힘이 없어졌어요. 처음엔 '나 이러다 평생 누워 있는 거 아닌가' 했는데 매일 치료받다 보니 조금씩 좋아지더라고요. 지금은 저녁마다 아내랑 동네 한 바퀴 걸어요."
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-title">RECOVERY TIMELINE</div>
+        <div class="timeline-steps">
+          <div class="tl-step">
+            <div class="tl-dot">❤️</div>
+            <div class="tl-week">1주</div>
+            <div class="tl-desc">심폐 모니터링</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">💪</div>
+            <div class="tl-week">3주</div>
+            <div class="tl-desc">근력 운동 시작</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🚶</div>
+            <div class="tl-week">7주</div>
+            <div class="tl-desc">복도 보행 30분</div>
+          </div>
+          <div class="tl-line"></div>
+          <div class="tl-step">
+            <div class="tl-dot">🏠</div>
+            <div class="tl-week">12주</div>
+            <div class="tl-desc">산책·귀가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cases-wrap -->
+
+  <!-- 통계 섹션 -->
+  <div class="section-label" style="margin-top:32px;">📊 회복 통계</div>
+  <div class="stats-banner">
+    <div class="stats-title">인덕의료재단의 <span>재활 성과</span></div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">87%</div>
+        <div class="stat-label">재활 후<br>보행 회복률</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3.2개월</div>
+        <div class="stat-label">평균 재활<br>소요 기간</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">91%</div>
+        <div class="stat-label">환자·보호자<br>만족도</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상담 연결 -->
+  <div class="cta-bar">
+    <div class="cta-bar-title">회복, 지금 시작할 수 있습니다</div>
+    <div class="cta-bar-sub">
+      비사용증후군이 의심되거나 재활치료가 필요하신가요?<br>
+      전문 상담팀이 최적의 재활 계획을 안내해 드립니다.
+    </div>
+    <div class="cta-phones">
+      <a class="cta-phone-btn p1" href="tel:054-851-5070">
+        📞 복주회복병원 · 054-851-5070
+      </a>
+      <a class="cta-phone-btn p2" href="tel:054-655-5119">
+        📞 경도요양병원 · 054-655-5119
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
