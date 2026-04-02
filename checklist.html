@@ -281,6 +281,9 @@
     <a class="btn-call" href="tel:054-851-5070" id="btnCall" style="display:none;">
       📞 복주회복병원 입원 문의 (054-851-5070)
     </a>
+    <a class="btn-call" href="summary.html" id="btnSummary" style="display:none;background:linear-gradient(135deg,#f97316,#fbbf24);">
+      📋 비사용증후군 핵심요약 보기 →
+    </a>
     <button class="btn-retry" onclick="retry()">🔄 다시 진단하기</button>
     <a class="btn-home-link" href="index.html">🏠 홈으로</a>
   </div>
@@ -309,6 +312,7 @@ function showResult() {
   const resultCard = document.getElementById('resultCard');
   const resultItems = document.getElementById('resultItems');
   const btnCall = document.getElementById('btnCall');
+  const btnSummary = document.getElementById('btnSummary');
 
   let icon, title, desc, cardClass;
 
@@ -318,18 +322,21 @@ function showResult() {
     desc = '현재는 해당 항목이 거의 없습니다. 꾸준한 신체 활동으로 건강을 유지하세요.\n\n향후 수술이나 입원 후 몸이 예전 같지 않다면, 그때 다시 체크해 보세요.';
     cardClass = 'result-card safe';
     btnCall.style.display = 'none';
+    btnSummary.style.display = 'none';
   } else if (count <= 5) {
     icon = '⚠️';
     title = '전문 상담이 필요한 상태입니다';
     desc = '일부 항목이 해당됩니다. 수술·입원 후 몸이 예전보다 약해진 상태일 수 있습니다.\n\n이런 상태를 방치하면 낙상 위험이 높아지고 회복이 더 어려워집니다. 조기에 재활을 시작할수록 빠르게 회복됩니다.\n\n수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다.';
     cardClass = 'result-card caution';
     btnCall.style.display = 'block';
+    btnSummary.style.display = 'block';
   } else {
     icon = '🚨';
     title = '빠른 재활치료가 필요합니다';
     desc = '다수의 항목이 해당됩니다. 집에서 쉬면 자연히 낫겠지 생각하실 수 있지만, 이 상태는 방치할수록 더 악화됩니다.\n\n이런 경우를 비사용증후군이라 하며, 보건복지부 지정 재활의료기관에서 집중 재활치료를 받아야 합니다.\n\n⏰ 수술·발병 후 60일 이내 입원 시 건강보험이 적용됩니다. 지금이 가장 빠른 시점입니다.';
     cardClass = 'result-card danger';
     btnCall.style.display = 'block';
+    btnSummary.style.display = 'block';
   }
 
   resultCard.className = cardClass;
