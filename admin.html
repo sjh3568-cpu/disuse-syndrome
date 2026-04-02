@@ -248,7 +248,8 @@
 <script>
 const ADMIN_PW   = 'bokju1234';
 let currentData  = []; // 전체 데이터 캐시
-const NAS_URL = 'https://indukmed.i234.me';
+const JSONBIN_ID  = '69cc6567856a682189e9b27b';
+const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
 
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
@@ -276,10 +277,12 @@ const qTitles = [
 ];
 
 function loadData() {
-  fetch(`${NAS_URL}/load.php`)
+  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+    headers: { 'X-Master-Key': JSONBIN_KEY }
+  })
   .then(res => res.json())
   .then(data => {
-    const records = Array.isArray(data) ? data : [];
+    const records = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
     currentData = records;
     renderDashboard(records);
   })
@@ -426,10 +429,10 @@ function deleteEntry(idx) {
 
   currentData.splice(idx, 1);
 
-  fetch(`${NAS_URL}/delete.php`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ index: idx })
+  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+    body: JSON.stringify(currentData)
   })
   .then(res => res.json())
   .then(() => {
