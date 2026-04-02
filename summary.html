@@ -105,6 +105,32 @@
       border-radius: 14px; text-decoration: none; border: none; cursor: pointer;
     }
 
+    .share-card {
+      max-width: 500px; margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(254,196,0,0.25), rgba(255,232,18,0.15));
+      border: 1px solid rgba(254,196,0,0.5);
+      border-radius: 20px; padding: 20px; text-align: center;
+    }
+    .share-card p { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 14px; line-height: 1.6; }
+    .btn-share {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      background: #fee500; color: #3a1d1d;
+      font-size: 16px; font-weight: 900;
+      border-radius: 14px; border: none; cursor: pointer; width: 100%;
+      justify-content: center;
+    }
+    .btn-share:active { opacity: 0.85; }
+    .btn-copy {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 20px; margin-top: 10px;
+      background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8);
+      font-size: 13px; font-weight: 600;
+      border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer; width: 100%; justify-content: center;
+    }
+    .btn-copy:active { opacity: 0.75; }
+
     .quiz-link {
       max-width: 500px; margin: 0 auto;
       background: linear-gradient(135deg, rgba(17,153,142,0.3), rgba(56,239,125,0.3));
@@ -249,11 +275,54 @@
     <a class="btn-call" href="tel:054-851-5070">📞 전화 연결</a>
   </div>
 
+  <!-- 카카오톡 공유 -->
+  <div class="share-card">
+    <p>📣 수술·입원 후 회복이 필요한 분이 주변에 있다면<br>이 페이지를 카카오톡으로 공유해 보세요!</p>
+    <button class="btn-share" onclick="shareKakao()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+      카카오톡으로 공유하기
+    </button>
+    <button class="btn-copy" onclick="copyLink()">🔗 링크 복사</button>
+  </div>
+
   <!-- 퀴즈 링크 -->
   <div class="quiz-link">
     <p>내용을 잘 이해했는지 확인해 보세요</p>
     <a class="btn-quiz" href="quiz.html">📝 퀴즈 풀기</a>
   </div>
 
+<script>
+const SHARE_URL  = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
+const SHARE_TEXT = '비사용증후군이 뭔지 아세요?\n수술·입원 후 재활이 필요한 분께 꼭 알려주세요.\n인덕의료재단 복주회복병원 054-851-5070';
+
+function shareKakao() {
+  if (navigator.share) {
+    navigator.share({
+      title: '비사용증후군 핵심 요약 | 인덕의료재단',
+      text: SHARE_TEXT,
+      url: SHARE_URL
+    }).catch(() => {});
+  } else {
+    copyLink();
+  }
+}
+
+function copyLink() {
+  const text = SHARE_TEXT + '\n\n' + SHARE_URL;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() =>
+      alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.')
+    );
+  } else {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.');
+  }
+}
+</script>
 </body>
 </html>
