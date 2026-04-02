@@ -796,9 +796,8 @@ function copyReminder() {
   }
 }
 
-/* ───── JSONBin 저장 ───── */
-const JSONBIN_ID  = '69cc6567856a682189e9b27b';
-const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
+/* ───── NAS 저장 ───── */
+const NAS_URL = 'http://indukmed.i234.me:8081';
 
 function saveResult() {
   const statusEl = document.getElementById('saveStatus');
@@ -818,18 +817,10 @@ function saveResult() {
     items: itemResults.map((r, i) => ({ q: shuffledQuiz[i].originalIdx + 1, correct: r }))
   };
 
-  fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-    headers: { 'X-Master-Key': JSONBIN_KEY }
-  })
-  .then(res => res.json())
-  .then(data => {
-    const existing = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
-    const updated = [...existing, newEntry];
-    return fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
-      body: JSON.stringify(updated)
-    });
+  fetch(`${NAS_URL}/append.php`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newEntry)
   })
   .then(() => {
     statusEl.className = 'save-status ok';

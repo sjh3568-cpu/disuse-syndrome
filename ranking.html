@@ -144,15 +144,12 @@
   </div>
 
 <script>
-const JSONBIN_ID  = '69cc6567856a682189e9b27b';
-const JSONBIN_KEY = '$2a$10$ZGwYAbI1H2ODzqkUFdhkB.ayoIOcAUUAt54OfOGsGfWwBE/2yjppu';
+const NAS_URL = 'http://indukmed.i234.me:8081';
 
-fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-  headers: { 'X-Master-Key': JSONBIN_KEY }
-})
+fetch(`${NAS_URL}/load.php`)
 .then(res => res.json())
 .then(data => {
-  const allRecords = Array.isArray(data.record) ? data.record.filter(r => !r.init) : [];
+  const allRecords = Array.isArray(data) ? data : [];
 
   // 같은 이름+부서는 최신 응시 1개만 남김
   const seenMap = new Map();
