@@ -209,6 +209,55 @@
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 99px;
     }
+
+    /* ── PC 반응형 ── */
+    @media (min-width: 768px) {
+      body {
+        padding: 60px 40px 60px;
+        justify-content: flex-start;
+      }
+      .top { margin-bottom: 36px; }
+      .main-title { font-size: 36px; }
+      .main-sub { font-size: 15px; }
+
+      .journey {
+        max-width: 860px;
+        padding: 20px 32px;
+      }
+      .journey-step .icon { font-size: 32px; }
+      .journey-step .label { font-size: 12px; }
+      .journey-arrow { font-size: 20px; }
+
+      .video-section {
+        max-width: 620px;
+        margin-bottom: 28px;
+      }
+
+      .menu-wrap {
+        max-width: 860px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      /* 5번째 카드(홀수 마지막) 가운데 정렬 */
+      .menu-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        max-width: 420px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .menu-card { padding: 24px 22px; }
+      .menu-icon { font-size: 42px; }
+      .menu-title { font-size: 18px; }
+      .menu-desc { font-size: 13px; }
+
+      .btn-kakao-share {
+        max-width: 500px;
+        font-size: 16px;
+        padding: 18px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -303,20 +352,6 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <!-- 자주 묻는 질문 -->
-    <a class="menu-card faq" href="faq.html">
-      <div class="menu-icon">💬</div>
-      <div class="menu-text">
-        <div class="menu-title">자주 묻는 질문</div>
-        <div class="menu-desc">비사용증후군에 대한 궁금증<br>치료·비용·입원 관련 Q&amp;A</div>
-        <div class="badge-row">
-          <span class="badge">10가지 Q&amp;A</span>
-          <span class="badge">쉬운 설명</span>
-        </div>
-      </div>
-      <div class="menu-arrow">›</div>
-    </a>
-
     <!-- 핵심 요약 -->
     <a class="menu-card summary" href="summary.html">
       <div class="menu-icon">📋</div>
@@ -326,6 +361,20 @@
         <div class="badge-row">
           <span class="badge">설명 스크립트</span>
           <span class="badge">전화번호</span>
+        </div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </a>
+
+    <!-- 자주 묻는 질문 -->
+    <a class="menu-card faq" href="faq.html">
+      <div class="menu-icon">💬</div>
+      <div class="menu-text">
+        <div class="menu-title">자주 묻는 질문</div>
+        <div class="menu-desc">비사용증후군에 대한 궁금증<br>치료·비용·입원 관련 Q&amp;A</div>
+        <div class="badge-row">
+          <span class="badge">11가지 Q&amp;A</span>
+          <span class="badge">쉬운 설명</span>
         </div>
       </div>
       <div class="menu-arrow">›</div>
