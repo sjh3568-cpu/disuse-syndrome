@@ -291,24 +291,35 @@
     <a class="btn-quiz" href="quiz.html">📝 퀴즈 풀기</a>
   </div>
 
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
-const SHARE_URL  = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
-const SHARE_TEXT = '비사용증후군이 뭔지 아세요?\n수술·입원 후 재활이 필요한 분께 꼭 알려주세요.\n인덕의료재단 복주회복병원 054-851-5070';
+Kakao.init('d24677d166ecd885a80091fbc35e9266');
+
+const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 
 function shareKakao() {
-  if (navigator.share) {
-    navigator.share({
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
       title: '비사용증후군 핵심 요약 | 인덕의료재단',
-      text: SHARE_TEXT,
-      url: SHARE_URL
-    }).catch(() => {});
-  } else {
-    copyLink();
-  }
+      description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
+      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/og-image.png',
+      link: {
+        mobileWebUrl: SHARE_URL,
+        webUrl: SHARE_URL
+      }
+    },
+    buttons: [
+      {
+        title: '핵심 요약 보기',
+        link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+      }
+    ]
+  });
 }
 
 function copyLink() {
-  const text = SHARE_TEXT + '\n\n' + SHARE_URL;
+  const text = '비사용증후군이 뭔지 아세요?\n수술·입원 후 재활이 필요한 분께 꼭 알려주세요.\n인덕의료재단 복주회복병원 054-851-5070\n\n' + SHARE_URL;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() =>
       alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.')
