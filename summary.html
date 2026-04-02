@@ -305,10 +305,10 @@
     <button class="btn-copy" onclick="copyLink()">🔗 링크 복사</button>
   </div>
 
-  <!-- 퀴즈 링크 -->
+  <!-- 자가진단 링크 -->
   <div class="quiz-link">
-    <p>내용을 잘 이해했는지 확인해 보세요</p>
-    <a class="btn-quiz" href="quiz.html">📝 퀴즈 풀기</a>
+    <p>혹시 우리 가족이 해당될까요?</p>
+    <a class="btn-quiz" href="checklist.html">🔍 자가진단 체크리스트 해보기</a>
   </div>
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
@@ -332,6 +332,13 @@ function shareKakao() {
       {
         title: '핵심 요약 보기',
         link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+      },
+      {
+        title: '자가진단 해보기',
+        link: {
+          mobileWebUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html',
+          webUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html'
+        }
       }
     ]
   });
