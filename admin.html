@@ -296,12 +296,25 @@ function loadData() {
   });
 }
 
-function renderDashboard(data) {
-  const total = data.length;
-  if (total === 0) { loadData(); return; }
+function deduplicateByLatest(data) {
+  // 같은 이름+부서 조합은 마지막(최신) 항목만 남김
+  const map = new Map();
+  data.forEach((d, i) => {
+    const key = `${d.name}__${d.dept || ''}`;
+    map.set(key, i); // 나중에 나온 인덱스로 덮어씀
+  });
+  return Array.from(map.values()).map(i => data[i]);
+}
 
-  // 요약
-  const scores = data.map(d => d.score);
+function renderDashboard(data) {
+  if (data.length === 0) { loadData(); return; }
+
+  // 응답자 목록은 전체 원본, 통계는 중복 제거 데이터 사용
+  const dedupData = deduplicateByLatest(data);
+  const total = dedupData.length;
+
+  // 요약 (중복 제거 기준)
+  const scores = dedupData.map(d => d.score);
   const avg = (scores.reduce((a,b) => a+b, 0) / total).toFixed(1);
   const max = Math.max(...scores);
   const avgPct = Math.round((avg / 10) * 100);
@@ -311,9 +324,9 @@ function renderDashboard(data) {
   document.getElementById('maxScore').innerText = max;
   document.getElementById('avgPct').innerText = avgPct;
 
-  // 문항별 정답률
+  // 문항별 정답률 (중복 제거 기준)
   const itemCorrect = new Array(10).fill(0);
-  data.forEach(d => {
+  dedupData.forEach(d => {
     if (d.items) {
       d.items.forEach(item => {
         if (item.correct) itemCorrect[item.q - 1]++;
@@ -337,9 +350,9 @@ function renderDashboard(data) {
   }).join('');
   document.getElementById('barChart').innerHTML = barHtml;
 
-  // 병원별 통계
+  // 병원별 통계 (중복 제거 기준)
   const hospMap = {};
-  data.forEach(d => {
+  dedupData.forEach(d => {
     const hosp = d.hospital || '미입력';
     if (!hospMap[hosp]) hospMap[hosp] = { count: 0, scores: [] };
     hospMap[hosp].count++;
@@ -360,9 +373,9 @@ function renderDashboard(data) {
     }).join('');
   document.getElementById('hospTable').innerHTML = hospRows || '<tr><td colspan="4" class="no-data">병원 데이터 없음</td></tr>';
 
-  // 부서별 통계
+  // 부서별 통계 (중복 제거 기준)
   const deptMap = {};
-  data.forEach(d => {
+  dedupData.forEach(d => {
     const dept = d.dept || '미입력';
     if (!deptMap[dept]) deptMap[dept] = { count: 0, scores: [] };
     deptMap[dept].count++;
@@ -384,15 +397,22 @@ function renderDashboard(data) {
   document.getElementById('deptTable').innerHTML = deptRows || '<tr><td colspan="4" class="no-data">부서 데이터 없음</td></tr>';
 
 
-  // 응답자 목록 (최신순)
+  // 응답자 목록 (최신순, 재응시 항목 표시)
+  const latestKeys = new Set(dedupData.map(d => `${d.name}__${d.dept || ''}`));
+  const seenKeys = new Set();
   const reversed = [...data].reverse();
   const rows = reversed.map((d, i) => {
-    const realIdx = data.length - 1 - i; // 원본 배열 인덱스
+    const realIdx = data.length - 1 - i;
+    const key = `${d.name}__${d.dept || ''}`;
+    const isLatest = !seenKeys.has(key) && latestKeys.has(key);
+    seenKeys.add(key);
     const pct = Math.round((d.score / d.total) * 100);
     const pillCls = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
-    return `<tr id="row-${realIdx}">
-      <td>${total - i}</td>
-      <td><strong>${d.name}</strong></td>
+    const rowStyle = isLatest ? '' : ' style="opacity:0.45;"';
+    const retryBadge = isLatest ? '' : ' <span style="font-size:11px;color:#aaa;">(재응시)</span>';
+    return `<tr id="row-${realIdx}"${rowStyle}>
+      <td>${data.length - i}</td>
+      <td><strong>${d.name}</strong>${retryBadge}</td>
       <td>${d.hospital || '-'}</td>
       <td>${d.dept || '-'}</td>
       <td>${d.date}</td>
