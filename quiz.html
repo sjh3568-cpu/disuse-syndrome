@@ -254,7 +254,7 @@
   <div class="name-screen" id="nameScreen">
     <div class="ico">✏️</div>
     <h2>퀴즈를 시작하기 전에</h2>
-    <p>이름과 부서를 입력하고 수준을 선택해 주세요.</p>
+    <p id="nameScreenDesc">이름과 부서를 입력하고 수준을 선택해 주세요.</p>
     <input class="name-input" id="nameInput" type="text" placeholder="이름 (예: 홍길동)" maxlength="20" />
     <input class="name-input" id="deptInput" type="text" placeholder="부서 (예: 간호부, 원무팀)" maxlength="20" />
     <div class="level-wrap">
@@ -271,6 +271,10 @@
         <button class="level-btn" id="hospBtn3" onclick="setHospital('복주요양원')" style="min-width:0;">
           <div class="lv-icon">🏠</div>
           <div class="lv-name" style="font-size:13px;">복주요양원</div>
+        </button>
+        <button class="level-btn" id="hospBtn4" onclick="setHospital('외부 방문자')" style="min-width:0;">
+          <div class="lv-icon">🙋</div>
+          <div class="lv-name" style="font-size:13px;">외부 방문자</div>
         </button>
       </div>
     </div>
@@ -549,6 +553,14 @@ function setHospital(name) {
   document.getElementById('hospBtn1').classList.toggle('active', name === '복주회복병원');
   document.getElementById('hospBtn2').classList.toggle('active', name === '경도요양병원');
   document.getElementById('hospBtn3').classList.toggle('active', name === '복주요양원');
+  document.getElementById('hospBtn4').classList.toggle('active', name === '외부 방문자');
+
+  const isExternal = name === '외부 방문자';
+  const deptInput = document.getElementById('deptInput');
+  deptInput.placeholder = isExternal ? '소속/직업 입력 (예: 자영업, 주부, 학생) — 선택사항' : '부서 (예: 간호부, 원무팀)';
+  document.getElementById('nameScreenDesc').innerText = isExternal
+    ? '이름과 소속/직업을 입력하고 수준을 선택해 주세요.'
+    : '이름과 부서를 입력하고 수준을 선택해 주세요.';
 }
 
 function setLevel(type) {
@@ -581,7 +593,7 @@ function startQuiz() {
   const name = document.getElementById('nameInput').value.trim();
   const dept = document.getElementById('deptInput').value.trim();
   if (!name) { alert('이름을 입력해 주세요.'); return; }
-  if (!dept) { alert('부서를 입력해 주세요.'); return; }
+  if (!dept && userHospital !== '외부 방문자') { alert('부서를 입력해 주세요.'); return; }
   userName = name;
   userDept = dept;
   // userHospital은 버튼 선택으로 이미 설정됨 (기본값: 복주회복병원)
@@ -876,6 +888,7 @@ function restart() {
   document.getElementById('nameInput').value = '';
   document.getElementById('deptInput').value = '';
   setHospital('복주회복병원');
+  document.getElementById('deptInput').placeholder = '부서 (예: 간호부, 원무팀)';
 }
 </script>
 </body>
