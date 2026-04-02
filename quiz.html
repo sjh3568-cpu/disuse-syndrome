@@ -256,6 +256,23 @@
     <input class="name-input" id="nameInput" type="text" placeholder="이름 (예: 홍길동)" maxlength="20" />
     <input class="name-input" id="deptInput" type="text" placeholder="부서 (예: 간호부, 원무팀)" maxlength="20" />
     <div class="level-wrap">
+      <div class="level-label">소속 병원 선택</div>
+      <div class="level-btns" style="flex-wrap:wrap; gap:8px;">
+        <button class="level-btn active" id="hospBtn1" onclick="setHospital('복주회복병원')" style="min-width:0;">
+          <div class="lv-icon">🏥</div>
+          <div class="lv-name" style="font-size:13px;">복주회복병원</div>
+        </button>
+        <button class="level-btn" id="hospBtn2" onclick="setHospital('경도요양병원')" style="min-width:0;">
+          <div class="lv-icon">🏥</div>
+          <div class="lv-name" style="font-size:13px;">경도요양병원</div>
+        </button>
+        <button class="level-btn" id="hospBtn3" onclick="setHospital('복주요양원')" style="min-width:0;">
+          <div class="lv-icon">🏠</div>
+          <div class="lv-name" style="font-size:13px;">복주요양원</div>
+        </button>
+      </div>
+    </div>
+    <div class="level-wrap">
       <div class="level-label">학습 수준 선택</div>
       <div class="level-btns">
         <button class="level-btn active" id="levelBasicBtn" onclick="setLevel('basic')">
@@ -351,7 +368,7 @@
   <!-- 수료증 오버레이 -->
   <div class="cert-overlay" id="certOverlay">
     <div class="cert-box" id="certBox">
-      <div class="cert-hosp">🏥 복주회복병원 · BOKJU RECOVERY HOSPITAL</div>
+      <div class="cert-hosp" id="certHosp">🏥 복주회복병원 · BOKJU RECOVERY HOSPITAL</div>
       <div class="cert-title">수료증</div>
       <hr class="cert-divider" />
       <div class="cert-name-box" id="certName"></div>
@@ -376,7 +393,7 @@
         </div>
       </div>
       <div class="cert-date-txt" id="certDate"></div>
-      <div class="cert-sign">복주회복병원장 (인)</div>
+      <div class="cert-sign" id="certSign">복주회복병원장 (인)</div>
       <button class="cert-print-btn" onclick="window.print()">🖨️ 수료증 인쇄</button>
       <button class="cert-close-btn" onclick="document.getElementById('certOverlay').classList.remove('show')">닫기</button>
     </div>
@@ -522,6 +539,14 @@ let shuffledQuiz = [];
 let levelType = 'basic';
 let wrongItems = [];
 let isRetryMode = false;
+let userHospital = '복주회복병원';
+
+function setHospital(name) {
+  userHospital = name;
+  document.getElementById('hospBtn1').classList.toggle('active', name === '복주회복병원');
+  document.getElementById('hospBtn2').classList.toggle('active', name === '경도요양병원');
+  document.getElementById('hospBtn3').classList.toggle('active', name === '복주요양원');
+}
 
 function setLevel(type) {
   levelType = type;
@@ -556,6 +581,7 @@ function startQuiz() {
   if (!dept) { alert('부서를 입력해 주세요.'); return; }
   userName = name;
   userDept = dept;
+  // userHospital은 버튼 선택으로 이미 설정됨 (기본값: 복주회복병원)
   isRetryMode = false;
 
   const data = levelType === 'advanced' ? advancedQuizData : basicQuizData;
@@ -667,7 +693,7 @@ function showResult() {
   document.getElementById('completeEmoji').innerText = emoji;
   document.getElementById('completeTitle').innerText = title;
   const levelLabel = levelType === 'advanced' ? '심화' : '기초';
-  document.getElementById('completeName').innerText = `${userDept} | ${userName} 님 (${levelLabel} 퀴즈)`;
+  document.getElementById('completeName').innerText = `${userHospital} ${userDept} | ${userName} 님 (${levelLabel} 퀴즈)`;
   document.getElementById('completeSub').innerText = sub;
   document.getElementById('scoreCircle').innerText = score;
   document.getElementById('finalCorrect').innerText = score;
@@ -745,8 +771,12 @@ function retryWrongAnswers() {
 function showCertificate() {
   const now = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
   const pct = Math.round((score / shuffledQuiz.length) * 100);
+  const hospMap = { '복주회복병원': '🏥 복주회복병원 · BOKJU RECOVERY HOSPITAL', '경도요양병원': '🏥 경도요양병원 · KYUNGDO NURSING HOSPITAL', '복주요양원': '🏠 복주요양원 · BOKJU NURSING HOME' };
+  const signMap = { '복주회복병원': '복주회복병원장 (인)', '경도요양병원': '경도요양병원장 (인)', '복주요양원': '복주요양원장 (인)' };
+  document.getElementById('certHosp').innerText = hospMap[userHospital] || `🏥 ${userHospital}`;
+  document.getElementById('certSign').innerText = signMap[userHospital] || `${userHospital}장 (인)`;
   document.getElementById('certName').innerText = userName + ' 님';
-  document.getElementById('certDept').innerText = userDept;
+  document.getElementById('certDept').innerText = `${userHospital} ${userDept}`;
   document.getElementById('certScore').innerText = `${score}/${shuffledQuiz.length}점`;
   document.getElementById('certPct').innerText = pct + '%';
   document.getElementById('certLevel').innerText = levelType === 'advanced' ? '심화' : '기초';
@@ -758,7 +788,7 @@ function copyReminder() {
   const reminder = new Date();
   reminder.setDate(reminder.getDate() + 30);
   const dateStr = reminder.toLocaleDateString('ko-KR');
-  const text = `[복주회복병원] 비사용증후군 퀴즈 재응시 권장일: ${dateStr}`;
+  const text = `[${userHospital}] 비사용증후군 퀴즈 재응시 권장일: ${dateStr}`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => alert('클립보드에 복사되었습니다!\n메모장에 붙여넣기 하세요.'));
   } else {
@@ -780,6 +810,7 @@ function saveResult() {
   const newEntry = {
     name: userName,
     dept: userDept,
+    hospital: userHospital,
     date: dateStr,
     score: score,
     total: shuffledQuiz.length,
@@ -823,6 +854,7 @@ function restart() {
   document.getElementById('progressWrap').style.display = 'none';
   document.getElementById('nameInput').value = '';
   document.getElementById('deptInput').value = '';
+  setHospital('복주회복병원');
 }
 </script>
 </body>
