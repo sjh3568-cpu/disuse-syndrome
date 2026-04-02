@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비사용증후군 자가진단 | 인덕의료재단</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      padding: 24px 16px 56px;
+      color: #fff;
+    }
+
+    .top-bar { max-width: 500px; margin: 0 auto 20px; }
+    .btn-home {
+      display: inline-block; padding: 8px 18px;
+      background: rgba(255,255,255,0.15); border: none;
+      color: #fff; font-size: 13px; font-weight: 700;
+      border-radius: 99px; cursor: pointer;
+      backdrop-filter: blur(8px); text-decoration: none;
+    }
+
+    .header { max-width: 500px; margin: 0 auto 24px; text-align: center; }
+    .header h1 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .header p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+    .intro-card {
+      max-width: 500px; margin: 0 auto 24px;
+      background: rgba(255,255,255,0.08); border-radius: 18px;
+      padding: 18px 20px; border-left: 4px solid #a855f7;
+      font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.7;
+    }
+
+    .section-label {
+      max-width: 500px; margin: 0 auto 12px;
+      font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .check-card {
+      max-width: 500px; margin: 0 auto 10px;
+      background: rgba(255,255,255,0.07);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 16px 18px;
+      display: flex; align-items: flex-start; gap: 14px;
+      cursor: pointer; transition: all 0.2s;
+      user-select: none;
+    }
+    .check-card.checked {
+      background: rgba(168,85,247,0.2);
+      border-color: #a855f7;
+    }
+    .check-box {
+      min-width: 26px; height: 26px; border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; transition: all 0.2s; margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .check-card.checked .check-box {
+      background: #a855f7; border-color: #a855f7;
+    }
+    .check-text {
+      font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85);
+      word-break: keep-all;
+    }
+    .check-card.checked .check-text { color: #fff; font-weight: 600; }
+    .check-sub {
+      font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 3px;
+      line-height: 1.5;
+    }
+
+    .counter {
+      max-width: 500px; margin: 20px auto 16px;
+      text-align: center; font-size: 15px; color: rgba(255,255,255,0.6);
+    }
+    .counter span { font-size: 28px; font-weight: 900; color: #a855f7; }
+
+    .btn-diagnose {
+      display: block; width: 100%; max-width: 500px;
+      margin: 0 auto 16px; padding: 18px;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      color: #fff; font-size: 16px; font-weight: 900;
+      border: none; border-radius: 16px; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(168,85,247,0.4);
+    }
+    .btn-diagnose:active { opacity: 0.85; }
+
+    /* 결과 화면 */
+    .result-screen {
+      display: none; max-width: 500px; margin: 0 auto;
+    }
+    .result-card {
+      border-radius: 22px; padding: 32px 24px;
+      text-align: center; margin-bottom: 16px;
+    }
+    .result-card.safe {
+      background: linear-gradient(135deg, rgba(5,150,105,0.3), rgba(52,211,153,0.2));
+      border: 1px solid rgba(52,211,153,0.4);
+    }
+    .result-card.caution {
+      background: linear-gradient(135deg, rgba(249,115,22,0.3), rgba(251,191,36,0.2));
+      border: 1px solid rgba(251,191,36,0.4);
+    }
+    .result-card.danger {
+      background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(249,115,22,0.2));
+      border: 1px solid rgba(239,68,68,0.4);
+    }
+    .result-icon { font-size: 56px; margin-bottom: 14px; }
+    .result-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .result-score { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+    .result-desc { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.85); margin-bottom: 20px; word-break: keep-all; }
+
+    .result-items {
+      text-align: left; background: rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px 18px; margin-bottom: 20px;
+    }
+    .result-items-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+    .result-item {
+      font-size: 13px; color: rgba(255,255,255,0.8);
+      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+      line-height: 1.5; word-break: keep-all;
+    }
+    .result-item:last-child { border-bottom: none; }
+
+    .btn-call {
+      display: block; width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #f97316, #fbbf24);
+      color: #fff; font-size: 16px; font-weight: 900;
+      border: none; border-radius: 14px; cursor: pointer;
+      text-decoration: none; text-align: center; margin-bottom: 10px;
+    }
+    .btn-retry {
+      display: block; width: 100%; padding: 14px;
+      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+      font-size: 14px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 14px;
+      cursor: pointer; text-align: center; margin-bottom: 10px;
+    }
+    .btn-home-link {
+      display: block; width: 100%; padding: 14px;
+      background: transparent; color: rgba(255,255,255,0.4);
+      font-size: 13px; border: none; cursor: pointer;
+      text-align: center; text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a class="btn-home" href="index.html">← 홈으로</a>
+  </div>
+
+  <div class="header">
+    <h1>🔍 비사용증후군 자가진단</h1>
+    <p>해당하는 항목을 모두 체크해 주세요.<br>본인 또는 가족·환자를 떠올리며 체크하세요.</p>
+  </div>
+
+  <div class="intro-card">
+    ℹ️ 이 체크리스트는 의학적 진단을 대체하지 않습니다. 결과에 따라 전문 의료진 상담을 권장드립니다.
+  </div>
+
+  <!-- 체크리스트 A: 발생 원인 -->
+  <div class="section-label">① 최근 병력 및 입원 경험</div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">최근 수술(복부, 정형외과, 심장 등)을 받은 적이 있다</div>
+      <div class="check-sub">개복술, 관절 수술, 심장 수술 등 포함</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">급성질환(폐렴, 뇌졸중, 심근경색 등)으로 입원한 적이 있다</div>
+      <div class="check-sub">최근 3개월 이내 해당 경험</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">항암치료, 방사선치료 등을 받은 적이 있다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">2주 이상 침상(병상)에 누워 있었던 경험이 있다</div>
+    </div>
+  </div>
+
+  <!-- 체크리스트 B: 현재 증상 -->
+  <div class="section-label" style="margin-top:20px;">② 현재 신체 상태</div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">혼자 걷거나 이동하기가 어렵다</div>
+      <div class="check-sub">부축 없이 보행이 힘든 경우</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">서 있을 때 균형을 잡기 어렵고 넘어질 것 같은 느낌이 든다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">의자나 침대에서 혼자 일어나기가 힘들다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">근력이 전보다 많이 떨어진 것 같다</div>
+      <div class="check-sub">팔다리에 힘이 없거나 무거운 느낌</div>
+    </div>
+  </div>
+
+  <!-- 체크리스트 C: 일상생활 -->
+  <div class="section-label" style="margin-top:20px;">③ 일상생활 수행 능력</div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">혼자서 씻기, 옷 입기가 어렵다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">화장실을 혼자 이용하기가 힘들다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">퇴원 후 집에서 혼자 생활하는 것이 불안하거나 어려울 것 같다</div>
+    </div>
+  </div>
+
+  <div class="check-card" onclick="toggle(this)">
+    <div class="check-box"></div>
+    <div>
+      <div class="check-text">계단 오르내리기, 외출하기 등 활동이 많이 줄었다</div>
+    </div>
+  </div>
+
+  <div class="counter">
+    <span id="countNum">0</span>개 / 12개 선택됨
+  </div>
+
+  <button class="btn-diagnose" onclick="showResult()">진단 결과 보기 →</button>
+
+  <!-- 결과 화면 -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-card" id="resultCard">
+      <div class="result-icon" id="resultIcon"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-desc" id="resultDesc"></div>
+      <div class="result-items" id="resultItems" style="display:none;">
+        <div class="result-items-title">✅ 체크된 항목</div>
+        <div id="resultItemList"></div>
+      </div>
+    </div>
+    <a class="btn-call" href="tel:054-851-5070" id="btnCall" style="display:none;">
+      📞 복주회복병원 입원 문의 (054-851-5070)
+    </a>
+    <button class="btn-retry" onclick="retry()">🔄 다시 진단하기</button>
+    <a class="btn-home-link" href="index.html">🏠 홈으로</a>
+  </div>
+
+<script>
+const cards = document.querySelectorAll('.check-card');
+const checkTexts = Array.from(cards).map(c => c.querySelector('.check-text').innerText);
+
+function toggle(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  box.innerText = el.classList.contains('checked') ? '✓' : '';
+  updateCount();
+}
+
+function updateCount() {
+  const count = document.querySelectorAll('.check-card.checked').length;
+  document.getElementById('countNum').innerText = count;
+}
+
+function showResult() {
+  const checked = document.querySelectorAll('.check-card.checked');
+  const count = checked.length;
+  const checkedTexts = Array.from(checked).map(c => c.querySelector('.check-text').innerText);
+
+  const resultCard = document.getElementById('resultCard');
+  const resultItems = document.getElementById('resultItems');
+  const btnCall = document.getElementById('btnCall');
+
+  let icon, title, desc, cardClass;
+
+  if (count <= 2) {
+    icon = '✅';
+    title = '비사용증후군 가능성 낮음';
+    desc = '현재는 비사용증후군에 해당하는 항목이 거의 없습니다.\n꾸준한 신체 활동으로 건강을 유지하세요.\n\n만약 향후 수술이나 급성질환으로 장기 입원하게 된다면 이 체크리스트를 다시 확인해 보세요.';
+    cardClass = 'result-card safe';
+    btnCall.style.display = 'none';
+  } else if (count <= 5) {
+    icon = '⚠️';
+    title = '주의 필요 — 상담 권장';
+    desc = '일부 항목이 해당됩니다. 비사용증후군의 초기 징후일 수 있습니다.\n\n전문 의료진과 상담을 통해 현재 신체 기능 상태를 정확히 평가받아 보세요.\n조기에 재활을 시작할수록 회복이 빠릅니다.';
+    cardClass = 'result-card caution';
+    btnCall.style.display = 'block';
+  } else {
+    icon = '🚨';
+    title = '비사용증후군 가능성 높음';
+    desc = '다수의 항목이 해당됩니다. 비사용증후군일 가능성이 높으므로 빠른 재활치료가 필요합니다.\n\n보건복지부 지정 재활의료기관인 복주회복병원에서 전문적인 평가와 재활치료를 받아보세요.\n발병·수술 후 60일 이내 입원 시 건강보험이 적용됩니다.';
+    cardClass = 'result-card danger';
+    btnCall.style.display = 'block';
+  }
+
+  resultCard.className = cardClass;
+  document.getElementById('resultIcon').innerText = icon;
+  document.getElementById('resultTitle').innerText = title;
+  document.getElementById('resultScore').innerText = `12개 항목 중 ${count}개 해당`;
+  document.getElementById('resultDesc').innerText = desc;
+
+  if (checkedTexts.length > 0) {
+    document.getElementById('resultItemList').innerHTML =
+      checkedTexts.map(t => `<div class="result-item">• ${t}</div>`).join('');
+    resultItems.style.display = 'block';
+  }
+
+  // 체크리스트 숨기고 결과 표시
+  document.querySelectorAll('.check-card, .section-label, .intro-card, .counter, .btn-diagnose').forEach(el => el.style.display = 'none');
+  document.getElementById('resultScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retry() {
+  cards.forEach(c => {
+    c.classList.remove('checked');
+    c.querySelector('.check-box').innerText = '';
+    c.style.display = '';
+  });
+  document.querySelectorAll('.section-label, .intro-card, .counter, .btn-diagnose').forEach(el => el.style.display = '');
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('countNum').innerText = '0';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
