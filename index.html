@@ -382,9 +382,9 @@
 
   </div>
 
-  <button class="btn-kakao-share" id="shareBtn" onclick="handleShare()">
+  <button class="btn-kakao-share" onclick="shareKakao()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
-    <span id="shareBtnText">카카오톡으로 공유하기</span>
+    카카오톡으로 공유하기
   </button>
 
   <a class="admin-link" href="admin.html">관리자 대시보드 →</a>
@@ -394,21 +394,6 @@
 Kakao.init('d24677d166ecd885a80091fbc35e9266');
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
-const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-// PC에서는 버튼 텍스트를 링크 복사로 변경
-if (!isMobile) {
-  document.getElementById('shareBtnText').textContent = '링크 복사하기';
-}
-
-function handleShare() {
-  if (isMobile) {
-    shareKakao();
-  } else {
-    copyLink();
-  }
-}
-
 function shareKakao() {
   Kakao.Share.sendDefault({
     objectType: 'feed',
@@ -419,18 +404,6 @@ function shareKakao() {
     },
     buttons: [{ title: '핵심 요약 보기', link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL } }]
   });
-}
-
-function copyLink() {
-  const text = '비사용증후군이 뭔지 아세요?\n수술·입원 후 재활이 필요한 분께 꼭 알려주세요.\n인덕의료재단 복주회복병원 054-851-5070\n\n' + SHARE_URL;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.'));
-  } else {
-    const el = document.createElement('textarea');
-    el.value = text; document.body.appendChild(el); el.select();
-    document.execCommand('copy'); document.body.removeChild(el);
-    alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.');
-  }
 }
 </script>
 </body>
