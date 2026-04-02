@@ -49,12 +49,19 @@
       width: 100%; height: 100%; border: none;
     }
 
+    @keyframes pulse-urgent {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5), 0 8px 28px rgba(239,68,68,0.3); }
+      50% { box-shadow: 0 0 0 7px rgba(239,68,68,0), 0 8px 28px rgba(239,68,68,0.5); }
+    }
     .tip-banner {
       max-width: 500px; margin: 0 auto 24px;
-      background: rgba(56,239,125,0.15); border: 1px solid rgba(56,239,125,0.4);
-      border-radius: 14px; padding: 14px 18px;
-      font-size: 13px; color: #38ef7d; line-height: 1.7;
+      background: linear-gradient(135deg, #7f1d1d, #991b1b);
+      border: 2px solid rgba(239,68,68,0.8);
+      border-radius: 16px; padding: 18px 20px;
+      font-size: 14px; color: #fef2f2; line-height: 1.75;
       text-align: center;
+      animation: pulse-urgent 2.4s ease-in-out infinite;
+      position: relative;
     }
 
     .card {
@@ -184,8 +191,9 @@
   </div>
 
   <div class="tip-banner">
-    ⏰ 수술·퇴원 후 <strong>60일</strong>이 지나면 건강보험 혜택이 사라집니다<br>
-    <span style="font-size:12px; opacity:0.8;">지금 바로 확인하고 주변에 알려주세요</span>
+    ⏰ 수술·퇴원 후 <strong style="color:#fca5a5;font-size:16px;">60일</strong>이 지나면<br>
+    <strong style="font-size:15px;">건강보험 혜택이 사라집니다</strong><br>
+    <span style="font-size:12px; color:rgba(254,242,242,0.7);">지금 바로 확인하고 주변에 알려주세요</span>
   </div>
 
   <!-- 1. 상황 인식 -->
