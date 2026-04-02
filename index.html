@@ -113,6 +113,18 @@
       color: rgba(255,255,255,0.6);
     }
 
+    /* 카카오 공유 버튼 */
+    .btn-kakao-share {
+      width: 100%; max-width: 400px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 16px; margin-bottom: 16px;
+      background: #fee500; color: #3a1d1d;
+      font-size: 15px; font-weight: 900;
+      border-radius: 16px; border: none; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(254,229,0,0.3);
+    }
+    .btn-kakao-share:active { opacity: 0.85; transform: scale(0.98); }
+
     /* 관리자 링크 */
     .admin-link {
       font-size: 13px;
@@ -210,7 +222,36 @@
 
   </div>
 
+  <button class="btn-kakao-share" onclick="shareKakao()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+    카카오톡으로 공유하기
+  </button>
+
   <a class="admin-link" href="admin.html">관리자 대시보드 →</a>
 
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+<script>
+Kakao.init('d24677d166ecd885a80091fbc35e9266');
+
+const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
+
+function shareKakao() {
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '비사용증후군 핵심 요약 | 인덕의료재단',
+      description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
+      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/og-image.png',
+      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+    },
+    buttons: [
+      {
+        title: '핵심 요약 보기',
+        link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+      }
+    ]
+  });
+}
+</script>
 </body>
 </html>
