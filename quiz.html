@@ -247,7 +247,7 @@
 
   <div class="header">
     <h1>🏥 비사용증후군 퀴즈</h1>
-    <p>인덕의료재단 직원 학습용</p>
+    <p>알고 있으면 가족을 지킬 수 있어요</p>
   </div>
 
   <!-- 이름/레벨 입력 -->
@@ -557,9 +557,10 @@ function setHospital(name) {
 
   const isExternal = name === '외부 방문자';
   const deptInput = document.getElementById('deptInput');
-  deptInput.placeholder = isExternal ? '소속/직업 입력 (예: 자영업, 주부, 학생) — 선택사항' : '부서 (예: 간호부, 원무팀)';
+  deptInput.style.display = isExternal ? 'none' : '';
+  deptInput.placeholder = '부서 (예: 간호부, 원무팀)';
   document.getElementById('nameScreenDesc').innerText = isExternal
-    ? '이름과 소속/직업을 입력하고 수준을 선택해 주세요.'
+    ? '이름을 입력하고 수준을 선택해 주세요.'
     : '이름과 부서를 입력하고 수준을 선택해 주세요.';
 }
 
@@ -888,7 +889,7 @@ function restart() {
   document.getElementById('nameInput').value = '';
   document.getElementById('deptInput').value = '';
   setHospital('복주회복병원');
-  document.getElementById('deptInput').placeholder = '부서 (예: 간호부, 원무팀)';
+  document.getElementById('deptInput').style.display = '';
 }
 </script>
 </body>
