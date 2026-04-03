@@ -203,43 +203,23 @@
     }
     .btn-kakao-share:active { opacity: 0.85; transform: scale(0.97); }
 
-    /* QR 코드 섹션 */
-    #qrSection {
+    /* QR 인쇄 소형 버튼 */
+    .btn-print-qr-small {
       width: 100%; max-width: 400px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 22px;
-      padding: 24px 20px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(12px);
-      text-align: center;
-    }
-    .qr-title {
-      font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;
-    }
-    .qr-subtitle {
-      font-size: 14px; color: rgba(255,255,255,0.82);
-      margin-bottom: 18px; line-height: 1.5;
-    }
-    .qr-box {
-      display: inline-block; background: #fff;
-      padding: 14px; border-radius: 16px; margin-bottom: 14px;
-    }
-    .qr-box canvas, .qr-box img { display: block; }
-    .qr-hint {
-      font-size: 13px; color: rgba(255,255,255,0.78);
-      margin-bottom: 14px; line-height: 1.5;
-    }
-    .btn-print-qr {
-      display: inline-block; padding: 11px 24px;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; font-size: 14px; font-weight: 700;
-      border-radius: 99px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px; margin-bottom: 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 700;
+      border-radius: 14px; cursor: pointer;
       backdrop-filter: blur(8px);
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      transition: background 0.15s;
     }
-    .btn-print-qr:active { opacity: 0.75; }
+    .btn-print-qr-small:active { background: rgba(255,255,255,0.18); }
+
+    /* QR 인쇄 전용 섹션 (화면에서는 숨김) */
+    #qrSection { display: none; }
 
     /* 관리자 링크 */
     .admin-link {
@@ -252,15 +232,22 @@
     /* 인쇄 스타일 */
     @media print {
       body > *:not(#qrSection) { display: none !important; }
-      body { background: #fff; padding: 0; }
+      body { background: #fff; padding: 0; display: block; }
       #qrSection {
-        background: #fff; border: none; padding: 40px;
-        max-width: 100%; border-radius: 0;
-        backdrop-filter: none;
+        display: block !important;
+        background: #fff; text-align: center;
+        border: 4px solid #059669; border-radius: 24px;
+        padding: 52px 44px; max-width: 480px;
+        margin: 40px auto; box-shadow: none;
       }
-      .qr-title { color: #000; font-size: 20px; }
-      .qr-subtitle, .qr-hint { color: #444; }
-      .btn-print-qr { display: none !important; }
+      .qr-eyebrow { font-size: 15px; color: #059669; margin-bottom: 14px; }
+      .qr-title { font-size: 30px; font-weight: 900; color: #1a1a2e; margin-bottom: 14px; line-height: 1.35; }
+      .qr-subtitle { font-size: 20px; color: #444; margin-bottom: 28px; line-height: 1.65; }
+      .qr-subtitle strong { color: #dc2626; }
+      .qr-box { display: inline-block; background: #fff; padding: 14px; border-radius: 16px; margin-bottom: 24px; border: 3px solid #e5e7eb; }
+      .qr-box canvas, .qr-box img { display: block; }
+      .qr-hint { font-size: 17px; color: #555; line-height: 1.6; }
+      .qr-hint strong { color: #1a1a2e; }
     }
 
     /* ── PC 반응형 ── */
@@ -436,16 +423,18 @@
 
   </div>
 
-  <!-- QR 코드 섹션 -->
+  <!-- QR 인쇄용 (화면에는 숨김, 인쇄 시에만 표시) -->
   <div id="qrSection">
-    <div class="qr-title">📱 QR 코드로 공유하기</div>
-    <div class="qr-subtitle">이 코드를 스캔하면 학습 센터로 바로 연결됩니다<br>경로당 · 복지관 · 보건소 등에 인쇄 배포용</div>
+    <div class="qr-eyebrow">📱 스마트폰 카메라로 찍어보세요</div>
+    <div class="qr-title">수술 후에도<br>걷기 힘드신가요?</div>
+    <div class="qr-subtitle">퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong><br>QR 스캔 한 번으로 원인·치료·비용을 바로 확인하세요</div>
     <div class="qr-box">
       <div id="qrcode"></div>
     </div>
-    <div class="qr-hint">📷 카메라 앱으로 스캔하거나, 아래 버튼으로 인쇄하세요</div>
-    <button class="btn-print-qr" onclick="window.print()">🖨️ QR 코드 인쇄하기</button>
+    <div class="qr-hint">📷 <strong>카메라 앱</strong>으로 위 QR 코드를 비추면<br>정보 페이지로 바로 연결됩니다</div>
   </div>
+
+  <button class="btn-print-qr-small" onclick="window.print()">🖨️ 배포용 QR 인쇄하기</button>
 
   <button class="btn-kakao-share" onclick="shareKakao()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
@@ -464,7 +453,7 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
     var qrUrl = 'https://sjh3568-cpu.github.io/disuse-syndrome/';
     new QRCode(document.getElementById('qrcode'), {
       text: qrUrl,
-      width: 180, height: 180,
+      width: 220, height: 220,
       colorDark: '#1a1a2e',
       colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.M
