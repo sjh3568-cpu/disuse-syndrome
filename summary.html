@@ -29,14 +29,14 @@
     .header {
       max-width: 500px; margin: 0 auto 28px; text-align: center;
     }
-    .header h1 { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
-    .header p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    .header h1 { font-size: 24px; font-weight: 900; margin-bottom: 6px; }
+    .header p { font-size: 16px; color: rgba(255,255,255,0.88); line-height: 1.6; }
 
     .video-section {
       max-width: 500px; margin: 0 auto 24px;
     }
     .video-label {
-      font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5);
+      font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.82);
       letter-spacing: 1px; margin-bottom: 10px; text-align: center;
     }
     .video-wrap {
@@ -75,12 +75,12 @@
       margin-bottom: 14px;
     }
     .card-icon { font-size: 28px; }
-    .card-title { font-size: 16px; font-weight: 800; }
-    .card-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .card-title { font-size: 18px; font-weight: 800; }
+    .card-sub { font-size: 14px; color: rgba(255,255,255,0.82); margin-top: 2px; }
 
     .point-list { list-style: none; }
     .point-list li {
-      font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.88);
+      font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.95);
       padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
       padding-left: 20px; position: relative; word-break: keep-all;
     }
@@ -100,13 +100,13 @@
     .script-card .card-title { color: #b0beff; }
     .script-bubble {
       background: rgba(255,255,255,0.1); border-radius: 12px;
-      padding: 14px 16px; font-size: 14px; line-height: 1.8;
-      color: rgba(255,255,255,0.9); margin-bottom: 10px;
+      padding: 14px 16px; font-size: 16px; line-height: 1.8;
+      color: rgba(255,255,255,0.95); margin-bottom: 10px;
       word-break: keep-all;
     }
     .script-bubble:last-child { margin-bottom: 0; }
     .script-bubble .label {
-      font-size: 11px; font-weight: 700; color: #b0beff;
+      font-size: 13px; font-weight: 700; color: #c8d0ff;
       margin-bottom: 6px; letter-spacing: 0.5px;
     }
 
@@ -121,7 +121,7 @@
       font-size: 28px; font-weight: 900; color: #fff;
       letter-spacing: 1px; margin: 12px 0 6px;
     }
-    .phone-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
+    .phone-sub { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 16px; }
     .btn-call {
       display: inline-block; padding: 14px 32px;
       background: linear-gradient(135deg, #f9a825, #ff6f00);
@@ -135,7 +135,7 @@
       border: 1px solid rgba(254,196,0,0.5);
       border-radius: 20px; padding: 20px; text-align: center;
     }
-    .share-card p { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 14px; line-height: 1.6; }
+    .share-card p { font-size: 16px; color: rgba(255,255,255,0.92); margin-bottom: 14px; line-height: 1.6; }
     .btn-share {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 14px 28px;
@@ -162,13 +162,32 @@
       border-radius: 20px; padding: 20px;
       text-align: center;
     }
-    .quiz-link p { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+    .quiz-link p { font-size: 16px; color: rgba(255,255,255,0.90); margin-bottom: 12px; }
     .btn-quiz {
       display: inline-block; padding: 14px 32px;
       background: linear-gradient(135deg, #11998e, #38ef7d);
       color: #fff; font-size: 15px; font-weight: 800;
       border-radius: 14px; text-decoration: none;
     }
+
+    /* TTS 버튼 */
+    #ttsBtn {
+      position: fixed; bottom: 24px; right: 20px;
+      min-width: 56px; height: 56px; padding: 0 18px;
+      border-radius: 28px; border: none;
+      background: rgba(103,126,234,0.92); color: #fff;
+      font-size: 15px; font-weight: 700;
+      display: none; align-items: center; gap: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      cursor: pointer; z-index: 200;
+      backdrop-filter: blur(8px);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s, transform 0.15s;
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    }
+    #ttsBtn:active { transform: scale(0.95); }
+    #ttsBtn.playing { background: rgba(239,68,68,0.88); }
+    #ttsBtn.paused  { background: rgba(249,115,22,0.88); }
   </style>
 </head>
 <body>
@@ -193,7 +212,7 @@
   <div class="tip-banner">
     ⏰ 수술·퇴원 후 <strong style="color:#fca5a5;font-size:16px;">60일</strong>이 지나면<br>
     <strong style="font-size:15px;">건강보험 혜택이 사라집니다</strong><br>
-    <span style="font-size:12px; color:rgba(254,242,242,0.7);">지금 바로 확인하고 주변에 알려주세요</span>
+    <span style="font-size:14px; color:rgba(254,242,242,0.88);">지금 바로 확인하고 주변에 알려주세요</span>
   </div>
 
   <!-- 1. 상황 인식 -->
@@ -211,7 +230,7 @@
       <li>오래 누워 계셔서 이제 <strong>화장실도 혼자 못 가신다</strong></li>
       <li>집에서 쉬면 낫겠지 했는데 <strong>오히려 더 약해지는 것 같다</strong></li>
     </ul>
-    <div style="margin-top:14px; padding:12px 14px; background:rgba(56,239,125,0.12); border-left:3px solid #38ef7d; border-radius:0 10px 10px 0; font-size:13px; color:rgba(255,255,255,0.85); line-height:1.7; word-break:keep-all;">
+    <div style="margin-top:14px; padding:12px 14px; background:rgba(56,239,125,0.12); border-left:3px solid #38ef7d; border-radius:0 10px 10px 0; font-size:15px; color:rgba(255,255,255,0.92); line-height:1.7; word-break:keep-all;">
       📌 이런 상태가 바로 <strong style="color:#38ef7d;">비사용증후군</strong>입니다. 수술·치료가 끝났어도 몸을 쓰지 못한 동안 근육이 빠져 기능이 저하된 상태로, 저절로 낫지 않습니다.
     </div>
   </div>
@@ -325,6 +344,12 @@
     <a class="btn-call" href="tel:054-851-5070">📞 전화 연결</a>
   </div>
 
+  <!-- TTS 버튼 -->
+  <button id="ttsBtn" aria-label="내용 읽어주기">
+    <span id="ttsIcon">🔊</span>
+    <span id="ttsLabel">읽어주기</span>
+  </button>
+
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 Kakao.init('d24677d166ecd885a80091fbc35e9266');
@@ -357,6 +382,91 @@ function shareKakao() {
     ]
   });
 }
+
+// TTS 기능
+(function() {
+  if (!window.speechSynthesis) return;
+  var btn = document.getElementById('ttsBtn');
+  btn.style.display = 'flex';
+
+  var icon = document.getElementById('ttsIcon');
+  var label = document.getElementById('ttsLabel');
+  var synth = window.speechSynthesis;
+  var koVoice = null;
+  var segments = [];
+  var segIndex = 0;
+  var isPlaying = false;
+  var isPaused = false;
+
+  function loadVoices() {
+    var voices = synth.getVoices();
+    koVoice = voices.find(function(v) { return v.lang === 'ko-KR'; }) || voices[0] || null;
+  }
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) { synth.onvoiceschanged = loadVoices; }
+
+  function buildSegments() {
+    var segs = [];
+    var hp = document.querySelector('.header p');
+    if (hp) segs.push(hp.innerText.replace(/\n/g, '. '));
+
+    var banner = document.querySelector('.tip-banner');
+    if (banner) segs.push(banner.innerText.replace(/\n/g, '. '));
+
+    document.querySelectorAll('.card').forEach(function(card) {
+      var title = card.querySelector('.card-title');
+      var items = card.querySelectorAll('.point-list li');
+      var text = title ? title.innerText + '. ' : '';
+      items.forEach(function(li) { text += li.innerText + '. '; });
+      if (text.trim()) segs.push(text.trim());
+    });
+
+    var phone = document.querySelector('.phone-num');
+    if (phone) segs.push('입원 문의 전화: ' + phone.innerText);
+    return segs;
+  }
+
+  function speakSegment(index) {
+    if (index >= segments.length) { resetState(); return; }
+    segIndex = index;
+    var utt = new SpeechSynthesisUtterance(segments[index]);
+    utt.lang = 'ko-KR';
+    utt.rate = 0.92;
+    if (koVoice) utt.voice = koVoice;
+    utt.onend = function() { if (isPlaying) speakSegment(index + 1); };
+    utt.onerror = function() { if (isPlaying) speakSegment(index + 1); };
+    synth.speak(utt);
+  }
+
+  function resetState() {
+    isPlaying = false; isPaused = false; segIndex = 0;
+    btn.classList.remove('playing', 'paused');
+    icon.textContent = '🔊'; label.textContent = '읽어주기';
+  }
+
+  btn.addEventListener('click', function() {
+    if (!isPlaying && !isPaused) {
+      segments = buildSegments();
+      segIndex = 0;
+      isPlaying = true;
+      btn.classList.add('playing');
+      icon.textContent = '⏸'; label.textContent = '일시정지';
+      speakSegment(0);
+    } else if (isPlaying) {
+      synth.cancel();
+      isPlaying = false; isPaused = true;
+      btn.classList.remove('playing'); btn.classList.add('paused');
+      icon.textContent = '▶'; label.textContent = '계속';
+    } else if (isPaused) {
+      isPlaying = true; isPaused = false;
+      btn.classList.remove('paused'); btn.classList.add('playing');
+      icon.textContent = '⏸'; label.textContent = '일시정지';
+      speakSegment(segIndex);
+    }
+  });
+
+  window.addEventListener('pagehide', function() { synth.cancel(); });
+})();
 
 function copyLink() {
   const text = '비사용증후군이 뭔지 아세요?\n수술·입원 후 재활이 필요한 분께 꼭 알려주세요.\n인덕의료재단 복주회복병원 054-851-5070\n\n' + SHARE_URL;
