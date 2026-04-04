@@ -220,15 +220,18 @@
     /* 카카오 공유 버튼 */
     .btn-kakao-share {
       width: 100%; max-width: 400px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
       padding: 16px; margin-bottom: 20px;
       background: #fee500; color: #3a1d1d;
       font-size: 15px; font-weight: 900;
       border-radius: 18px; border: none; cursor: pointer;
       box-shadow: 0 6px 20px rgba(254,229,0,0.4);
       transition: transform 0.15s, box-shadow 0.15s;
+      line-height: 1.5;
     }
     .btn-kakao-share:active { opacity: 0.85; transform: scale(0.97); }
+    .btn-kakao-share .kakao-row1 { display: flex; align-items: center; gap: 6px; }
+    .btn-kakao-share .kakao-row2 { font-size: 13px; font-weight: 700; opacity: 0.75; }
 
     /* QR 인쇄 소형 버튼 */
     .btn-print-qr-small {
@@ -465,8 +468,11 @@
   <button class="btn-print-qr-small" onclick="window.print()">🖨️ 배포용 QR 인쇄하기</button>
 
   <button class="btn-kakao-share" onclick="shareKakao()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
-    카카오톡으로 공유하기
+    <div class="kakao-row1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+      카카오톡으로 공유하기
+    </div>
+    <div class="kakao-row2">이 내용을 가족·지인에게 알려주세요</div>
   </button>
 
   <a class="admin-link" href="admin.html">관리자 대시보드 →</a>
