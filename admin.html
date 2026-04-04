@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>관리자 대시보드 | 비사용증후군 퀴즈</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QWTHCZGLC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6QWTHCZGLC');
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -81,6 +89,38 @@
     .score-pill.mid  { background: #fff3e0; color: #e65100; }
     .score-pill.low  { background: #ffebee; color: #c62828; }
 
+    /* 레벨 필터 탭 */
+    .level-tabs {
+      max-width: 900px; margin: 0 auto 24px;
+      display: flex; gap: 8px;
+    }
+    .level-tab {
+      padding: 10px 22px; border: 2px solid #e0e0e0;
+      border-radius: 99px; background: #fff;
+      font-size: 14px; font-weight: 700; color: #888;
+      cursor: pointer; transition: all 0.15s;
+      font-family: inherit;
+    }
+    .level-tab.active.all   { border-color: #667eea; background: #667eea; color: #fff; }
+    .level-tab.active.basic { border-color: #11998e; background: #11998e; color: #fff; }
+    .level-tab.active.adv   { border-color: #a855f7; background: #a855f7; color: #fff; }
+    .level-tab:not(.active):hover { border-color: #bbb; color: #555; }
+
+    /* 레벨 뱃지 */
+    .lv-badge {
+      display: inline-block; padding: 2px 10px; border-radius: 99px;
+      font-size: 12px; font-weight: 700;
+    }
+    .lv-badge.basic { background: #e8f5e9; color: #2e7d32; }
+    .lv-badge.adv   { background: #f3e8ff; color: #7e22ce; }
+
+    /* 요약 그룹 라벨 */
+    .summary-group-label {
+      max-width: 900px; margin: 0 auto 10px;
+      font-size: 12px; font-weight: 700; color: #aaa;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
     .no-data { text-align: center; padding: 48px; color: #bbb; font-size: 15px; }
     .btn-del {
       padding: 5px 12px; border: none; border-radius: 8px;
@@ -151,17 +191,13 @@
     <button class="btn-refresh" onclick="loadData()">🔄 새로고침</button>
   </div>
 
-  <!-- 요약 -->
-  <div class="summary">
+  <!-- 전체 요약 -->
+  <div class="summary-group-label">전체</div>
+  <div class="summary" style="margin-bottom:12px;">
     <div class="sum-card blue">
       <div class="lbl">총 응시 인원</div>
       <div class="val" id="totalCount">-</div>
       <div class="sub">명</div>
-    </div>
-    <div class="sum-card green">
-      <div class="lbl">평균 점수</div>
-      <div class="val" id="avgScore">-</div>
-      <div class="sub">/ 10점</div>
     </div>
     <div class="sum-card">
       <div class="lbl">최고 점수</div>
@@ -169,16 +205,52 @@
       <div class="sub">/ 10점</div>
     </div>
     <div class="sum-card orange">
-      <div class="lbl">평균 정답률</div>
+      <div class="lbl">전체 평균 정답률</div>
       <div class="val" id="avgPct">-</div>
       <div class="sub">%</div>
     </div>
   </div>
 
+  <!-- 기초 / 심화 요약 -->
+  <div class="summary-group-label">기초 · 심화 구분</div>
+  <div class="summary">
+    <div class="sum-card green">
+      <div class="lbl">📚 기초 응시</div>
+      <div class="val" id="basicCount">-</div>
+      <div class="sub">명</div>
+    </div>
+    <div class="sum-card green">
+      <div class="lbl">📚 기초 평균</div>
+      <div class="val" id="basicAvg">-</div>
+      <div class="sub">/ 10점</div>
+    </div>
+    <div class="sum-card" style="">
+      <div class="lbl" style="color:#7e22ce;">🎓 심화 응시</div>
+      <div class="val" id="advCount" style="color:#a855f7;">-</div>
+      <div class="sub">명</div>
+    </div>
+    <div class="sum-card">
+      <div class="lbl" style="color:#7e22ce;">🎓 심화 평균</div>
+      <div class="val" id="advAvg" style="color:#a855f7;">-</div>
+      <div class="sub">/ 10점</div>
+    </div>
+  </div>
+
+  <!-- 레벨 필터 탭 -->
+  <div class="level-tabs">
+    <button class="level-tab active all" id="tab-all"   onclick="setLevelFilter('all')">전체</button>
+    <button class="level-tab basic"      id="tab-basic" onclick="setLevelFilter('basic')">📚 기초</button>
+    <button class="level-tab adv"        id="tab-adv"   onclick="setLevelFilter('adv')">🎓 심화</button>
+  </div>
+
   <!-- 문항별 정답률 -->
-  <div class="section">
-    <h2>📋 문항별 정답률</h2>
-    <div id="barChart"><div class="no-data">데이터를 불러오는 중...</div></div>
+  <div class="section" id="sectionBasicBar">
+    <h2>📋 기초 — 문항별 정답률</h2>
+    <div id="barChartBasic"><div class="no-data">데이터를 불러오는 중...</div></div>
+  </div>
+  <div class="section" id="sectionAdvBar">
+    <h2>📋 심화 — 문항별 정답률</h2>
+    <div id="barChartAdv"><div class="no-data">데이터를 불러오는 중...</div></div>
   </div>
 
   <!-- 병원별 통계 -->
@@ -232,6 +304,7 @@
             <th>이름</th>
             <th>병원</th>
             <th>부서</th>
+            <th>레벨</th>
             <th>응시일시</th>
             <th>점수</th>
             <th>정답률</th>
@@ -263,7 +336,16 @@ function doLogin() {
   }
 }
 
-const qTitles = [
+let currentLevel = 'all'; // 'all' | 'basic' | 'adv'
+
+function setLevelFilter(level) {
+  currentLevel = level;
+  document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + level).classList.add('active');
+  renderDashboard(currentData);
+}
+
+const basicQTitles = [
   "Q1. 비사용증후군 정의",
   "Q2. 해당 사례 구분",
   "Q3. 가정 복귀 어려운 이유",
@@ -271,9 +353,22 @@ const qTitles = [
   "Q5. 건강보험 입원 기간",
   "Q6. 건강보험 적용 항목",
   "Q7. 간호간병통합서비스 혜택",
-  "Q8. 수술 후 나타나는 증상",
-  "Q9. 재활치료 기관",
-  "Q10. 병원 문의 전화번호"
+  "Q8. 집에서 쉬면 생기는 악순환",
+  "Q9. 60일 이내 입원해야 하는 이유",
+  "Q10. 요양병원 vs 재활전문병원 차이"
+];
+
+const advQTitles = [
+  "Q1. MMT 기준",
+  "Q2. 기능평가 충족 조건",
+  "Q3. 버그 균형검사(BBS) 기준",
+  "Q4. MMT 측정 근육 수",
+  "Q5. 심장질환 KRIC 코드",
+  "Q6. KRIC 21 해당 여부",
+  "Q7. KRIC 24-2 정의",
+  "Q8. 사례 — 심기능 저하",
+  "Q9. 사례 — 호흡질환",
+  "Q10. KRIC 22 정의"
 ];
 
 function loadData() {
@@ -287,12 +382,12 @@ function loadData() {
     renderDashboard(records);
   })
   .catch(() => {
-    document.getElementById('barChart').innerHTML = '<div class="no-data">아직 응답 데이터가 없습니다.<br>직원들이 퀴즈를 풀면 여기에 결과가 표시됩니다.</div>';
-    document.getElementById('resultTable').innerHTML = '<tr><td colspan="5" class="no-data">응답 데이터 없음</td></tr>';
-    document.getElementById('totalCount').innerText = '0';
-    document.getElementById('avgScore').innerText = '-';
-    document.getElementById('maxScore').innerText = '-';
-    document.getElementById('avgPct').innerText = '-';
+    document.getElementById('barChartBasic').innerHTML = '<div class="no-data">아직 응답 데이터가 없습니다.</div>';
+    document.getElementById('barChartAdv').innerHTML   = '<div class="no-data">아직 응답 데이터가 없습니다.</div>';
+    document.getElementById('resultTable').innerHTML   = '<tr><td colspan="9" class="no-data">응답 데이터 없음</td></tr>';
+    ['totalCount','maxScore','avgPct','basicCount','basicAvg','advCount','advAvg'].forEach(id => {
+      document.getElementById(id).innerText = '-';
+    });
   });
 }
 
@@ -306,122 +401,124 @@ function deduplicateByLatest(data) {
   return Array.from(map.values()).map(i => data[i]);
 }
 
-function renderDashboard(data) {
-  if (data.length === 0) { loadData(); return; }
-
-  // 응답자 목록은 전체 원본, 통계는 중복 제거 데이터 사용
-  const dedupData = deduplicateByLatest(data);
-  const total = dedupData.length;
-
-  // 요약 (중복 제거 기준)
-  const scores = dedupData.map(d => d.score);
-  const avg = (scores.reduce((a,b) => a+b, 0) / total).toFixed(1);
-  const max = Math.max(...scores);
-  const avgPct = Math.round((avg / 10) * 100);
-
-  document.getElementById('totalCount').innerText = total;
-  document.getElementById('avgScore').innerText = avg;
-  document.getElementById('maxScore').innerText = max;
-  document.getElementById('avgPct').innerText = avgPct;
-
-  // 문항별 정답률 (중복 제거 기준)
-  const itemCorrect = new Array(10).fill(0);
+function renderBarChart(dedupData, titles, elId) {
+  const n = titles.length;
+  const itemCorrect = new Array(n).fill(0);
   dedupData.forEach(d => {
-    if (d.items) {
-      d.items.forEach(item => {
-        if (item.correct) itemCorrect[item.q - 1]++;
-      });
-    }
+    if (d.items) d.items.forEach(item => {
+      if (item.correct && item.q >= 1 && item.q <= n) itemCorrect[item.q - 1]++;
+    });
   });
-
-  const barHtml = qTitles.map((title, i) => {
-    const correctRate = total > 0 ? Math.round((itemCorrect[i] / total) * 100) : 0;
-    const cls = correctRate >= 80 ? 'good' : correctRate >= 60 ? 'warn' : 'bad';
-    return `
-      <div class="bar-item">
-        <div class="bar-label">
-          <span class="q-title">${title}</span>
-          <span class="q-pct ${cls}">${correctRate}% 정답</span>
-        </div>
-        <div class="bar-bg">
-          <div class="bar-fill ${cls}" style="width:${correctRate}%"></div>
-        </div>
-      </div>`;
+  const total = dedupData.length;
+  if (total === 0) {
+    document.getElementById(elId).innerHTML = '<div class="no-data">해당 레벨 응시 데이터 없음</div>';
+    return;
+  }
+  const html = titles.map((title, i) => {
+    const rate = Math.round((itemCorrect[i] / total) * 100);
+    const cls = rate >= 80 ? 'good' : rate >= 60 ? 'warn' : 'bad';
+    return `<div class="bar-item">
+      <div class="bar-label">
+        <span class="q-title">${title}</span>
+        <span class="q-pct ${cls}">${rate}% 정답</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill ${cls}" style="width:${rate}%"></div></div>
+    </div>`;
   }).join('');
-  document.getElementById('barChart').innerHTML = barHtml;
+  document.getElementById(elId).innerHTML = html;
+}
 
-  // 병원별 통계 (중복 제거 기준)
-  const hospMap = {};
+function renderGroupTable(dedupData, tbodyId, colspan) {
+  const hospMap = {}, deptMap = {};
   dedupData.forEach(d => {
     const hosp = d.hospital || '미입력';
     if (!hospMap[hosp]) hospMap[hosp] = { count: 0, scores: [] };
     hospMap[hosp].count++;
     hospMap[hosp].scores.push(d.score);
-  });
-  const hospRows = Object.entries(hospMap)
-    .sort((a, b) => b[1].count - a[1].count)
-    .map(([hosp, v]) => {
-      const avg = (v.scores.reduce((a,b) => a+b, 0) / v.count).toFixed(1);
-      const max = Math.max(...v.scores);
-      const avgCls = avg >= 8 ? 'high' : avg >= 6 ? 'mid' : 'low';
-      return `<tr>
-        <td><strong>${hosp}</strong></td>
-        <td>${v.count}명</td>
-        <td><span class="score-pill ${avgCls}">${avg}점</span></td>
-        <td>${max}점</td>
-      </tr>`;
-    }).join('');
-  document.getElementById('hospTable').innerHTML = hospRows || '<tr><td colspan="4" class="no-data">병원 데이터 없음</td></tr>';
-
-  // 부서별 통계 (중복 제거 기준)
-  const deptMap = {};
-  dedupData.forEach(d => {
     const dept = d.dept || '미입력';
     if (!deptMap[dept]) deptMap[dept] = { count: 0, scores: [] };
     deptMap[dept].count++;
     deptMap[dept].scores.push(d.score);
   });
-  const deptRows = Object.entries(deptMap)
+  const makeRows = (map) => Object.entries(map)
     .sort((a, b) => b[1].count - a[1].count)
-    .map(([dept, v]) => {
-      const avg = (v.scores.reduce((a,b) => a+b, 0) / v.count).toFixed(1);
-      const max = Math.max(...v.scores);
-      const avgCls = avg >= 8 ? 'high' : avg >= 6 ? 'mid' : 'low';
-      return `<tr>
-        <td><strong>${dept}</strong></td>
-        <td>${v.count}명</td>
-        <td><span class="score-pill ${avgCls}">${avg}점</span></td>
-        <td>${max}점</td>
-      </tr>`;
+    .map(([name, v]) => {
+      const a = (v.scores.reduce((x,y)=>x+y,0)/v.count).toFixed(1);
+      const m = Math.max(...v.scores);
+      const c = a >= 8 ? 'high' : a >= 6 ? 'mid' : 'low';
+      return `<tr><td><strong>${name}</strong></td><td>${v.count}명</td><td><span class="score-pill ${c}">${a}점</span></td><td>${m}점</td></tr>`;
     }).join('');
-  document.getElementById('deptTable').innerHTML = deptRows || '<tr><td colspan="4" class="no-data">부서 데이터 없음</td></tr>';
+  document.getElementById('hospTable').innerHTML = makeRows(hospMap) || `<tr><td colspan="4" class="no-data">데이터 없음</td></tr>`;
+  document.getElementById('deptTable').innerHTML = makeRows(deptMap) || `<tr><td colspan="4" class="no-data">데이터 없음</td></tr>`;
+}
 
+function renderDashboard(data) {
+  if (data.length === 0) { loadData(); return; }
 
-  // 응답자 목록 (최신순, 재응시 항목 표시)
-  const latestKeys = new Set(dedupData.map(d => `${d.name}__${d.dept || ''}`));
-  const seenKeys = new Set();
-  const reversed = [...data].reverse();
+  const dedupAll   = deduplicateByLatest(data);
+  const dedupBasic = deduplicateByLatest(data.filter(d => d.level !== 'advanced'));
+  const dedupAdv   = deduplicateByLatest(data.filter(d => d.level === 'advanced'));
+
+  // 전체 요약
+  const allScores = dedupAll.map(d => d.score);
+  const allAvgPct = allScores.length ? Math.round((allScores.reduce((a,b)=>a+b,0)/allScores.length/10)*100) : 0;
+  document.getElementById('totalCount').innerText = dedupAll.length;
+  document.getElementById('maxScore').innerText   = allScores.length ? Math.max(...allScores) : '-';
+  document.getElementById('avgPct').innerText     = allScores.length ? allAvgPct : '-';
+
+  // 기초/심화 요약
+  const bScores = dedupBasic.map(d => d.score);
+  const aScores = dedupAdv.map(d => d.score);
+  document.getElementById('basicCount').innerText = dedupBasic.length || '-';
+  document.getElementById('basicAvg').innerText   = bScores.length ? (bScores.reduce((a,b)=>a+b,0)/bScores.length).toFixed(1) : '-';
+  document.getElementById('advCount').innerText   = dedupAdv.length || '-';
+  document.getElementById('advAvg').innerText     = aScores.length ? (aScores.reduce((a,b)=>a+b,0)/aScores.length).toFixed(1) : '-';
+
+  // 문항별 정답률 차트 (레벨 필터 반영)
+  const showBasic = (currentLevel === 'all' || currentLevel === 'basic');
+  const showAdv   = (currentLevel === 'all' || currentLevel === 'adv');
+  document.getElementById('sectionBasicBar').style.display = showBasic ? '' : 'none';
+  document.getElementById('sectionAdvBar').style.display   = showAdv   ? '' : 'none';
+  if (showBasic) renderBarChart(dedupBasic, basicQTitles, 'barChartBasic');
+  if (showAdv)   renderBarChart(dedupAdv,   advQTitles,   'barChartAdv');
+
+  // 병원/부서 통계 (레벨 필터 반영)
+  const filteredDedup = currentLevel === 'basic' ? dedupBasic : currentLevel === 'adv' ? dedupAdv : dedupAll;
+  renderGroupTable(filteredDedup);
+
+  // 응답자 목록 (레벨 필터 반영)
+  const filteredRaw = currentLevel === 'basic' ? data.filter(d => d.level !== 'advanced')
+                    : currentLevel === 'adv'   ? data.filter(d => d.level === 'advanced')
+                    : data;
+  const dedupFiltered = deduplicateByLatest(filteredRaw);
+  const latestKeys = new Set(dedupFiltered.map(d => `${d.name}__${d.dept||''}`));
+  const seenKeys   = new Set();
+  const reversed   = [...filteredRaw].reverse();
   const rows = reversed.map((d, i) => {
-    const realIdx = data.length - 1 - i;
-    const key = `${d.name}__${d.dept || ''}`;
+    const realIdx = data.indexOf(d);
+    const key     = `${d.name}__${d.dept||''}`;
     const isLatest = !seenKeys.has(key) && latestKeys.has(key);
     seenKeys.add(key);
-    const pct = Math.round((d.score / d.total) * 100);
+    const pct    = Math.round((d.score / d.total) * 100);
     const pillCls = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
-    const rowStyle = isLatest ? '' : ' style="opacity:0.45;"';
+    const rowStyle   = isLatest ? '' : ' style="opacity:0.45;"';
     const retryBadge = isLatest ? '' : ' <span style="font-size:11px;color:#aaa;">(재응시)</span>';
+    const lvBadge    = d.level === 'advanced'
+      ? '<span class="lv-badge adv">심화</span>'
+      : '<span class="lv-badge basic">기초</span>';
     return `<tr id="row-${realIdx}"${rowStyle}>
-      <td>${data.length - i}</td>
+      <td>${filteredRaw.length - i}</td>
       <td><strong>${d.name}</strong>${retryBadge}</td>
       <td>${d.hospital || '-'}</td>
       <td>${d.dept || '-'}</td>
+      <td>${lvBadge}</td>
       <td>${d.date}</td>
       <td><span class="score-pill ${pillCls}">${d.score} / ${d.total}</span></td>
       <td>${pct}%</td>
       <td><button class="btn-del" onclick="deleteEntry(${realIdx})">🗑 삭제</button></td>
     </tr>`;
   }).join('');
-  document.getElementById('resultTable').innerHTML = rows;
+  document.getElementById('resultTable').innerHTML = rows || `<tr><td colspan="9" class="no-data">해당 레벨 응시 데이터 없음</td></tr>`;
 }
 
 function deleteEntry(idx) {

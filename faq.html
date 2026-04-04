@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>자주 묻는 질문 | 인덕의료재단</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QWTHCZGLC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6QWTHCZGLC');
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
@@ -475,12 +483,17 @@
     <div class="cta-bar-eyebrow">📞 무료 상담</div>
     <div class="cta-bar-title">지금 바로 상담받으세요</div>
     <div class="cta-bar-sub">
-      전화 한 통으로 보험 적용 여부·비용·입원 일정을<br>
-      모두 확인하실 수 있습니다. 부담 없이 문의하세요.
+      전화가 부담스러우시면 카카오톡으로 편하게 문의하세요.<br>
+      보험 적용 여부·비용·입원 일정 모두 확인 가능합니다.
     </div>
     <div class="cta-phones">
       <a class="cta-phone-btn p1" href="tel:054-851-5070">
         📞 복주회복병원 진료협력팀 · 054-851-5070
+      </a>
+      <a class="cta-phone-btn" href="https://pf.kakao.com/_HmhxhK" target="_blank" rel="noopener"
+         style="background:#fee500;color:#3a1d1d;box-shadow:0 6px 20px rgba(254,229,0,0.4);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+        카카오톡으로 편하게 문의하기
       </a>
     </div>
   </div>
@@ -489,6 +502,15 @@
 function toggle(el) {
   el.classList.toggle('open');
 }
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('a');
+  if (!a) return;
+  if (a.href && a.href.startsWith('tel:')) {
+    gtag('event', 'contact_click', { method: 'phone', page: 'faq' });
+  } else if (a.href && a.href.indexOf('pf.kakao.com') !== -1) {
+    gtag('event', 'contact_click', { method: 'kakao', page: 'faq' });
+  }
+});
 </script>
 </body>
 </html>

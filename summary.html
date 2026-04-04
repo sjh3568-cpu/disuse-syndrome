@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>비사용증후군 핵심 요약 | 인덕의료재단</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QWTHCZGLC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6QWTHCZGLC');
+  </script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -128,6 +136,15 @@
       color: #fff; font-size: 16px; font-weight: 800;
       border-radius: 14px; text-decoration: none; border: none; cursor: pointer;
     }
+    .btn-kakao-channel {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 28px; margin-top: 10px;
+      background: #fee500; color: #3a1d1d;
+      font-size: 15px; font-weight: 800;
+      border-radius: 14px; text-decoration: none; border: none; cursor: pointer;
+      width: 100%;
+    }
+    .btn-kakao-channel:active { opacity: 0.85; }
 
     .share-card {
       max-width: 500px; margin: 0 auto 16px;
@@ -341,7 +358,11 @@
     </div>
     <div class="phone-num">054-851-5070 / 5081</div>
     <div class="phone-sub">인덕의료재단 복주회복병원 진료협력팀</div>
-    <a class="btn-call" href="tel:054-851-5070">📞 전화 연결</a>
+    <a class="btn-call" href="tel:054-851-5070" onclick="trackContact('phone','summary')">📞 전화 연결</a>
+    <a class="btn-kakao-channel" href="https://pf.kakao.com/_HmhxhK" target="_blank" rel="noopener" onclick="trackContact('kakao','summary')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+      카카오톡으로 편하게 문의하기
+    </a>
   </div>
 
   <!-- TTS 버튼 -->
@@ -483,6 +504,9 @@ function copyLink() {
     document.body.removeChild(el);
     alert('링크가 복사되었습니다!\n카카오톡에서 붙여넣기 하세요.');
   }
+}
+function trackContact(method, page) {
+  gtag('event', 'contact_click', { method: method, page: page });
 }
 </script>
 </body>
