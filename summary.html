@@ -194,7 +194,7 @@
       border-radius: 28px; border: none;
       background: rgba(103,126,234,0.92); color: #fff;
       font-size: 15px; font-weight: 700;
-      display: none; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 8px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.35);
       cursor: pointer; z-index: 200;
       backdrop-filter: blur(8px);
@@ -407,9 +407,13 @@ function shareKakao() {
 
 // TTS 기능
 (function() {
-  if (!window.speechSynthesis) return;
   var btn = document.getElementById('ttsBtn');
-  btn.style.display = 'flex';
+  if (!window.speechSynthesis) {
+    btn.addEventListener('click', function() {
+      alert('이 브라우저는 음성 읽기를 지원하지 않습니다.\n크롬 또는 사파리를 이용해 주세요.');
+    });
+    return;
+  }
 
   var icon = document.getElementById('ttsIcon');
   var label = document.getElementById('ttsLabel');
