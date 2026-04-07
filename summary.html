@@ -419,13 +419,32 @@ function shareKakao() {
   var segIndex = 0;
   var isPlaying = false;
   var isPaused = false;
+  var resumeTimer = null;
 
+  // iOS는 getVoices()가 비동기로 로드됨 — 반복 시도
   function loadVoices() {
     var voices = synth.getVoices();
+    if (voices.length === 0) return false;
     koVoice = voices.find(function(v) { return v.lang === 'ko-KR'; }) || voices[0] || null;
+    return true;
   }
-  loadVoices();
+  if (!loadVoices()) {
+    var voiceRetry = 0;
+    var voiceTimer = setInterval(function() {
+      if (loadVoices() || ++voiceRetry > 20) clearInterval(voiceTimer);
+    }, 100);
+  }
   if (synth.onvoiceschanged !== undefined) { synth.onvoiceschanged = loadVoices; }
+
+  // iOS Safari: 10초마다 pause/resume으로 자동 중단 방지
+  function startResumeTimer() {
+    resumeTimer = setInterval(function() {
+      if (synth.speaking && !synth.paused) { synth.pause(); synth.resume(); }
+    }, 10000);
+  }
+  function stopResumeTimer() {
+    if (resumeTimer) { clearInterval(resumeTimer); resumeTimer = null; }
+  }
 
   function buildSegments() {
     var segs = [];
@@ -462,6 +481,7 @@ function shareKakao() {
 
   function resetState() {
     isPlaying = false; isPaused = false; segIndex = 0;
+    stopResumeTimer();
     btn.classList.remove('playing', 'paused');
     icon.textContent = '🔊'; label.textContent = '읽어주기';
   }
@@ -473,21 +493,24 @@ function shareKakao() {
       isPlaying = true;
       btn.classList.add('playing');
       icon.textContent = '⏸'; label.textContent = '일시정지';
+      startResumeTimer();
       speakSegment(0);
     } else if (isPlaying) {
       synth.cancel();
       isPlaying = false; isPaused = true;
+      stopResumeTimer();
       btn.classList.remove('playing'); btn.classList.add('paused');
       icon.textContent = '▶'; label.textContent = '계속';
     } else if (isPaused) {
       isPlaying = true; isPaused = false;
       btn.classList.remove('paused'); btn.classList.add('playing');
       icon.textContent = '⏸'; label.textContent = '일시정지';
+      startResumeTimer();
       speakSegment(segIndex);
     }
   });
 
-  window.addEventListener('pagehide', function() { synth.cancel(); });
+  window.addEventListener('pagehide', function() { synth.cancel(); stopResumeTimer(); });
 })();
 
 function copyLink() {
