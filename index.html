@@ -541,7 +541,7 @@
       </div>
       <div class="qr-eyebrow" id="qrEyebrow1">📱 스마트폰 카메라로 찍어보세요</div>
       <div class="qr-title">수술 후에도<br>걷기 힘드신가요?</div>
-      <div class="qr-subtitle" id="qrSubtitle1">퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong></div>
+      <div class="qr-subtitle" id="qrSubtitle1">안동병원, 성소병원, 안동의료원에서<br>수술(처치) 후 퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong></div>
       <div class="qr-golden">⏰ 수술·퇴원 후 <strong>60일</strong>이 지나면 건강보험 혜택이 사라집니다</div>
       <div class="qr-box">
         <div id="qrcode"></div>
@@ -558,7 +558,7 @@
       </div>
       <div class="qr-eyebrow" id="qrEyebrow2">📱 스마트폰 카메라로 찍어보세요</div>
       <div class="qr-title">수술 후에도<br>걷기 힘드신가요?</div>
-      <div class="qr-subtitle" id="qrSubtitle2">퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong></div>
+      <div class="qr-subtitle" id="qrSubtitle2">안동병원, 성소병원, 안동의료원에서<br>수술(처치) 후 퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong></div>
       <div class="qr-golden">⏰ 수술·퇴원 후 <strong>60일</strong>이 지나면 건강보험 혜택이 사라집니다</div>
       <div class="qr-box">
         <div id="qrcode2"></div>
@@ -624,10 +624,10 @@ function printWithHospital(name) {
     var subtitle = document.getElementById(pair[1]);
     if (name) {
       eyebrow.innerHTML = '📱 ' + name + ' 환자·보호자분께';
-      subtitle.innerHTML = '<strong>' + name + '</strong>에서 수술 받으셨나요?<br>퇴원했는데 기력이 없다면 <strong>이유가 따로 있습니다</strong>';
+      subtitle.innerHTML = name + '에서 수술(처치) 후 퇴원했는데<br>기력이 없다면 <strong>이유가 따로 있습니다</strong>';
     } else {
       eyebrow.innerHTML = '📱 스마트폰 카메라로 찍어보세요';
-      subtitle.innerHTML = '퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong>';
+      subtitle.innerHTML = '안동병원, 성소병원, 안동의료원에서<br>수술(처치) 후 퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong>';
     }
   });
   window.print();
