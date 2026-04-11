@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>비사용증후군 핵심 요약 | 인덕의료재단</title>
   <meta property="og:type" content="website" />
   <meta property="og:title" content="비사용증후군 핵심 요약 | 인덕의료재단" />
@@ -22,13 +22,17 @@
     gtag('config', 'G-6QWTHCZGLC');
   </script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       padding: 24px 16px 56px;
       color: #fff;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     .top-bar {
