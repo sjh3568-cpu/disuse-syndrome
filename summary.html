@@ -526,33 +526,50 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 function shareKakao() {
-  Kakao.Share.sendDefault({
-    objectType: 'feed',
-    content: {
-      title: '비사용증후군 핵심 요약 | 인덕의료재단',
-      description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
-      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
-      imageWidth: 800,
-      imageHeight: 400,
-      link: {
-        mobileWebUrl: SHARE_URL,
-        webUrl: SHARE_URL
-      }
-    },
-    buttons: [
-      {
-        title: '핵심 요약 보기',
-        link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
-      },
-      {
-        title: '자가진단 해보기',
+  if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
+    fallbackShare();
+    return;
+  }
+  try {
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '비사용증후군 핵심 요약 | 인덕의료재단',
+        description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
+        imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
+        imageWidth: 800,
+        imageHeight: 400,
         link: {
-          mobileWebUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html',
-          webUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html'
+          mobileWebUrl: SHARE_URL,
+          webUrl: SHARE_URL
         }
-      }
-    ]
-  });
+      },
+      buttons: [
+        {
+          title: '핵심 요약 보기',
+          link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+        },
+        {
+          title: '자가진단 해보기',
+          link: {
+            mobileWebUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html',
+            webUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html'
+          }
+        }
+      ]
+    });
+  } catch(e) {
+    fallbackShare();
+  }
+}
+function fallbackShare() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(SHARE_URL).then(function() {
+      alert('카카오톡 공유가 지원되지 않는 환경입니다.\n링크가 복사되었습니다. 카카오톡에 붙여넣기 해주세요!');
+    });
+  } else {
+    prompt('카카오톡 공유가 지원되지 않는 환경입니다.\n아래 링크를 복사해서 카카오톡에 붙여넣기 해주세요:', SHARE_URL);
+  }
 }
 
 // TTS 기능
@@ -700,7 +717,7 @@ function trackContact(method, page) {
   // shareKakao, copyLink에 카운터 연결
   var origShare = window.shareKakao;
   window.shareKakao = function() {
-    origShare();
+    try { origShare(); } catch(e) { fallbackShare(); }
     count++;
     localStorage.setItem(KEY, count);
     updateDisplay();
