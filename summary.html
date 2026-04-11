@@ -117,6 +117,55 @@
     }
     .point-list li strong { color: #38ef7d; }
 
+    /* 근육 감소 시각화 */
+    .decline-visual {
+      margin-top: 18px; padding: 18px 16px;
+      background: rgba(239,68,68,0.08); border-radius: 14px;
+      border: 1px solid rgba(239,68,68,0.15);
+    }
+    .decline-title {
+      font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.6);
+      text-align: center; margin-bottom: 14px; letter-spacing: 0.5px;
+    }
+    .decline-steps {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .decline-step {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .decline-step:last-child { border-bottom: none; }
+    .decline-icon { font-size: 28px; min-width: 36px; text-align: center; }
+    .decline-info { flex: 1; }
+    .decline-day {
+      font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.5);
+      margin-bottom: 3px;
+    }
+    .decline-desc {
+      font-size: 14px; color: rgba(255,255,255,0.9);
+      line-height: 1.5; word-break: keep-all;
+    }
+    .decline-bar-bg {
+      width: 100%; height: 8px; background: rgba(255,255,255,0.1);
+      border-radius: 99px; overflow: hidden; margin-top: 6px;
+    }
+    .decline-bar {
+      height: 100%; border-radius: 99px;
+      transition: width 1.5s ease;
+    }
+    .decline-bar.lv1 { width: 85%; background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    .decline-bar.lv2 { width: 60%; background: linear-gradient(90deg, #f97316, #ef4444); }
+    .decline-bar.lv3 { width: 35%; background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .decline-bar.lv4 { width: 10%; background: #dc2626; }
+    .decline-bottom {
+      margin-top: 14px; padding: 10px 14px;
+      background: rgba(239,68,68,0.15); border-left: 3px solid #ef4444;
+      border-radius: 0 10px 10px 0;
+      font-size: 14px; font-weight: 700; color: #fca5a5;
+      line-height: 1.6; text-align: center; word-break: keep-all;
+    }
+
     .script-card {
       max-width: 500px; margin: 0 auto 16px;
       background: rgba(103,126,234,0.2);
@@ -285,6 +334,48 @@
       <li>가족이 24시간 곁에 있어야 해서 <strong>간병 부담이 감당하기 어려운 수준</strong>이 됩니다</li>
       <li>회복 시기를 놓칠수록 <strong>재활 효과도 줄어듭니다</strong></li>
     </ul>
+
+    <!-- 근육 감소 시각화 -->
+    <div class="decline-visual">
+      <div class="decline-title">⏱ 누워만 있으면 몸에 이런 일이 생깁니다</div>
+      <div class="decline-steps">
+        <div class="decline-step">
+          <div class="decline-icon">🚶</div>
+          <div class="decline-info">
+            <div class="decline-day">수술 직후</div>
+            <div class="decline-desc">근력이 조금씩 빠지기 시작합니다</div>
+            <div class="decline-bar-bg"><div class="decline-bar lv1"></div></div>
+          </div>
+        </div>
+        <div class="decline-step">
+          <div class="decline-icon">🛌</div>
+          <div class="decline-info">
+            <div class="decline-day">1주일 후</div>
+            <div class="decline-desc">근육 10% 이상 감소, 혼자 일어서기 힘들어집니다</div>
+            <div class="decline-bar-bg"><div class="decline-bar lv2"></div></div>
+          </div>
+        </div>
+        <div class="decline-step">
+          <div class="decline-icon">😰</div>
+          <div class="decline-info">
+            <div class="decline-day">2주일 후</div>
+            <div class="decline-desc">화장실도 혼자 못 갑니다, 넘어질 위험 급증</div>
+            <div class="decline-bar-bg"><div class="decline-bar lv3"></div></div>
+          </div>
+        </div>
+        <div class="decline-step">
+          <div class="decline-icon">🆘</div>
+          <div class="decline-info">
+            <div class="decline-day">4주 이상</div>
+            <div class="decline-desc">일상생활 불가능, 24시간 간병이 필요한 상태</div>
+            <div class="decline-bar-bg"><div class="decline-bar lv4"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="decline-bottom">
+        쉬면 나아지는 게 아닙니다<br>쉴수록 더 나빠집니다
+      </div>
+    </div>
   </div>
 
   <!-- 3. 어디서 치료 -->
