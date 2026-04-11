@@ -35,11 +35,21 @@
       display: flex; align-items: center; gap: 12px;
     }
     .btn-home {
-      display: inline-block; padding: 8px 18px;
-      background: rgba(255,255,255,0.15); border: none;
-      color: #fff; font-size: 13px; font-weight: 700;
+      display: inline-block; padding: 10px 22px;
+      background: #fff; border: none;
+      color: #1a5276; font-size: 14px; font-weight: 800;
       border-radius: 99px; cursor: pointer;
-      backdrop-filter: blur(8px); text-decoration: none;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .btn-home-bottom {
+      display: block; max-width: 500px; margin: 20px auto 0;
+      padding: 16px; text-align: center;
+      background: #fff; border: none;
+      color: #1a5276; font-size: 16px; font-weight: 800;
+      border-radius: 14px; cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
     }
 
     .header {
@@ -373,6 +383,8 @@
       카카오톡으로 편하게 문의하기
     </a>
   </div>
+
+  <a class="btn-home-bottom" href="index.html">🏠 홈으로 돌아가기</a>
 
   <!-- TTS 버튼 -->
   <button id="ttsBtn" aria-label="내용 읽어주기">
