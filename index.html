@@ -314,53 +314,47 @@
       }
       .qr-poster {
         text-align: center;
-        border: 3px solid #059669; border-radius: 18px;
-        padding: 24px 28px 20px;
-        max-width: 460px; margin: 10px auto;
+        border: 3px solid #059669; border-radius: 14px;
+        padding: 16px 24px 14px;
+        max-width: 460px; margin: 6px auto;
         page-break-inside: avoid;
       }
       .qr-logo {
-        display: flex; align-items: center; justify-content: center;
-        gap: 10px; margin-bottom: 12px;
+        margin-bottom: 6px;
       }
-      .qr-logo-de {
-        font-size: 32px; font-weight: 900; color: #dc2626;
-        letter-spacing: -2px; line-height: 1;
+      .qr-logo-img {
+        height: 40px; width: auto;
       }
-      .qr-logo-text {
-        text-align: left; line-height: 1.3;
-      }
-      .qr-logo-text small { font-size: 11px; color: #666; font-weight: 600; }
-      .qr-logo-text strong { font-size: 20px; color: #1a1a2e; font-weight: 900; }
-      .qr-eyebrow { font-size: 13px; color: #059669; margin-bottom: 8px; font-weight: 600; }
-      .qr-title { font-size: 26px; font-weight: 900; color: #1a1a2e; margin-bottom: 8px; line-height: 1.35; }
-      .qr-subtitle { font-size: 16px; color: #444; margin-bottom: 10px; line-height: 1.6; }
+      .qr-eyebrow { font-size: 11px; color: #059669; margin-bottom: 4px; font-weight: 600; }
+      .qr-title { font-size: 22px; font-weight: 900; color: #1a1a2e; margin-bottom: 4px; line-height: 1.3; }
+      .qr-subtitle { font-size: 14px; color: #444; margin-bottom: 6px; line-height: 1.5; }
       .qr-subtitle strong { color: #dc2626; }
       .qr-golden {
-        font-size: 13px; font-weight: 700; color: #92400e;
+        font-size: 11px; font-weight: 700; color: #92400e;
         background: #fef3c7; border: 1px solid #fbbf24;
-        border-radius: 8px; padding: 8px 14px; margin-bottom: 12px;
+        border-radius: 6px; padding: 5px 12px; margin-bottom: 8px;
         display: inline-block;
       }
-      .qr-golden strong { color: #dc2626; font-size: 16px; }
+      .qr-golden strong { color: #dc2626; font-size: 13px; }
       .qr-box {
         display: inline-block; background: #fff;
-        padding: 10px; border-radius: 12px;
-        margin-bottom: 10px; border: 2px solid #e5e7eb;
+        padding: 8px; border-radius: 10px;
+        margin-bottom: 6px; border: 2px solid #e5e7eb;
       }
-      .qr-box canvas, .qr-box img { display: block; }
-      .qr-hint { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 10px; }
+      .qr-box canvas, .qr-box img { display: block; width: 150px; height: 150px; }
+      .qr-hint { font-size: 11px; color: #555; line-height: 1.4; margin-bottom: 6px; }
       .qr-hint strong { color: #1a1a2e; }
       .qr-phone {
-        font-size: 16px; font-weight: 900; color: #1a1a2e;
+        font-size: 14px; font-weight: 900; color: #1a1a2e;
         background: #f0fdf4; border: 2px solid #059669;
-        border-radius: 10px; padding: 10px 16px;
-        line-height: 1.6;
+        border-radius: 8px; padding: 6px 14px;
+        line-height: 1.5;
       }
-      .qr-phone span { font-size: 11px; font-weight: 600; color: #666; }
+      .qr-phone span { font-size: 10px; font-weight: 600; color: #666; }
       .qr-cut-line {
-        text-align: center; font-size: 12px; color: #ccc;
-        margin: 8px 0; letter-spacing: 2px;
+        text-align: center; font-size: 11px; color: #bbb;
+        margin: 4px 0; letter-spacing: 1px;
+        border-top: 1px dashed #ccc; padding-top: 4px;
       }
     }
 
@@ -543,8 +537,7 @@
     <!-- 포스터 1 -->
     <div class="qr-poster">
       <div class="qr-logo">
-        <span class="qr-logo-de">DE</span>
-        <span class="qr-logo-text"><small>인덕의료재단</small><br><strong>복주회복병원</strong></span>
+        <img src="images/복주회복병원.png" alt="인덕의료재단 복주회복병원" class="qr-logo-img">
       </div>
       <div class="qr-eyebrow" id="qrEyebrow1">📱 스마트폰 카메라로 찍어보세요</div>
       <div class="qr-title">수술 후에도<br>걷기 힘드신가요?</div>
@@ -561,8 +554,7 @@
     <!-- 포스터 2 (복제) -->
     <div class="qr-poster">
       <div class="qr-logo">
-        <span class="qr-logo-de">DE</span>
-        <span class="qr-logo-text"><small>인덕의료재단</small><br><strong>복주회복병원</strong></span>
+        <img src="images/복주회복병원.png" alt="인덕의료재단 복주회복병원" class="qr-logo-img">
       </div>
       <div class="qr-eyebrow" id="qrEyebrow2">📱 스마트폰 카메라로 찍어보세요</div>
       <div class="qr-title">수술 후에도<br>걷기 힘드신가요?</div>
@@ -609,7 +601,7 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
 (function() {
   try {
     var qrUrl = 'https://sjh3568-cpu.github.io/disuse-syndrome/';
-    var qrOpts = { text: qrUrl, width: 180, height: 180, colorDark: '#1a1a2e', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M };
+    var qrOpts = { text: qrUrl, width: 150, height: 150, colorDark: '#1a1a2e', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M };
     new QRCode(document.getElementById('qrcode'), qrOpts);
     new QRCode(document.getElementById('qrcode2'), qrOpts);
   } catch(e) {
