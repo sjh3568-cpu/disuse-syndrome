@@ -242,7 +242,7 @@
   <!-- 골든타임 계산기 -->
   <div class="golden-calc" id="goldenCalc">
     <div class="golden-calc-title">⏰ 골든타임 계산기</div>
-    <div class="golden-calc-desc">수술·발병 날짜를 입력하시면 건강보험 입원 가능 기간(60일)이 얼마나 남았는지 확인하실 수 있습니다.</div>
+    <div class="golden-calc-desc">수술을 받거나 병이 생긴 날짜를 입력하시면 건강보험 입원 가능 기간(60일)이 얼마나 남았는지 확인하실 수 있습니다.</div>
     <input type="date" class="golden-date-input" id="onsetDate" onchange="calcGolden()">
     <div class="golden-result" id="goldenResult">
       <div class="golden-days" id="goldenDays"></div>
@@ -260,14 +260,14 @@
     <div class="check-box"></div>
     <div>
       <div class="check-text">최근 수술·처치(폐렴, 심장질환 등)를 받은 적이 있다</div>
-      <div class="check-sub">개복술, 심장 수술, 폐렴 처치 등 포함</div>
+      <div class="check-sub">배를 여는 수술, 심장 수술, 폐렴 치료 등 포함</div>
     </div>
   </div>
 
   <div class="check-card" onclick="toggle(this)">
     <div class="check-box"></div>
     <div>
-      <div class="check-text">급성질환(폐렴, 심근경색 등)으로 입원한 적이 있다</div>
+      <div class="check-text">갑자기 생긴 위험한 병(폐렴, 심장병 등)으로 입원한 적이 있다</div>
       <div class="check-sub">최근 2개월 이내 해당 경험</div>
     </div>
   </div>
@@ -282,7 +282,7 @@
   <div class="check-card" onclick="toggle(this)">
     <div class="check-box"></div>
     <div>
-      <div class="check-text">2주 이상 침상(병상)에 누워 있었던 경험이 있다</div>
+      <div class="check-text">2주 이상 병원 침대에 누워만 있었던 경험이 있다</div>
     </div>
   </div>
 
@@ -478,7 +478,7 @@ function showResult() {
   } else if (count <= 5) {
     icon = '⚠️';
     title = '전문 상담이 필요한 상태입니다';
-    desc = '일부 항목이 해당됩니다. 수술·입원 후 몸이 예전보다 약해진 상태일 수 있습니다.\n\n이런 상태를 방치하면 낙상 위험이 높아지고 회복이 더 어려워집니다. 조기에 재활을 시작할수록 빠르게 회복됩니다.\n\n수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다.';
+    desc = '일부 항목이 해당됩니다. 수술·입원 후 몸이 예전보다 약해진 상태일 수 있습니다.\n\n이런 상태를 방치하면 넘어질 위험(낙상)이 높아지고 회복이 더 어려워집니다. 조기에 재활을 시작할수록 빠르게 회복됩니다.\n\n수술을 받거나 병이 생긴 후 60일 이내라면 지금이 가장 좋은 타이밍입니다.';
     cardClass = 'result-card caution';
     btnCall.style.display = 'block';
     btnKakao.style.display = 'flex';
@@ -486,7 +486,7 @@ function showResult() {
   } else {
     icon = '🚨';
     title = '빠른 재활치료가 필요합니다';
-    desc = '다수의 항목이 해당됩니다. 집에서 쉬면 자연히 낫겠지 생각하실 수 있지만, 이 상태는 방치할수록 더 악화됩니다.\n\n이런 경우를 비사용증후군이라 하며, 보건복지부 지정 재활의료기관에서 집중 재활치료를 받아야 합니다.\n\n⏰ 수술·발병 후 60일 이내 입원 시 건강보험이 적용됩니다. 지금이 가장 빠른 시점입니다.';
+    desc = '다수의 항목이 해당됩니다. 집에서 쉬면 자연히 낫겠지 생각하실 수 있지만, 이 상태는 방치할수록 더 악화됩니다.\n\n이런 경우를 비사용증후군이라 하며, 보건복지부 지정 재활전문병원에서 집중 재활치료를 받아야 합니다.\n\n⏰ 수술을 받거나 병이 생긴 후 60일 이내 입원 시 건강보험이 적용됩니다. 지금이 가장 빠른 시점입니다.';
     cardClass = 'result-card danger';
     btnCall.style.display = 'block';
     btnKakao.style.display = 'flex';
