@@ -526,34 +526,11 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 const CHECKLIST_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html';
-var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
 function shareKakao() {
-  if (isMobile && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-    Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '비사용증후군 핵심 요약 | 인덕의료재단',
-        description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
-        imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
-        imageWidth: 800,
-        imageHeight: 400,
-        link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
-      },
-      buttons: [
-        { title: '핵심 요약 보기', link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL } },
-        { title: '자가진단 해보기', link: { mobileWebUrl: CHECKLIST_URL, webUrl: CHECKLIST_URL } }
-      ]
-    });
-  } else {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(SHARE_URL).then(function() {
-        alert('링크가 복사되었습니다!\n카카오톡을 열어서 붙여넣기 해주세요.');
-      });
-    } else {
-      prompt('아래 링크를 복사해서 카카오톡에 붙여넣기 해주세요:', SHARE_URL);
-    }
-  }
+  if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) return;
+  Kakao.Share.sendScrap({
+    requestUrl: SHARE_URL
+  });
 }
 
 // TTS 기능
@@ -705,7 +682,7 @@ function trackContact(method, page) {
     count++;
     localStorage.setItem(KEY, count);
     updateDisplay();
-    gtag('event', 'share', { method: isMobile ? 'kakao' : 'link_copy_kakao', page: 'summary', count: count });
+    gtag('event', 'share', { method: 'kakao', page: 'summary', count: count });
   };
 
   var origCopy = window.copyLink;
