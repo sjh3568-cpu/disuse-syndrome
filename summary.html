@@ -238,6 +238,21 @@
       cursor: pointer; width: 100%; justify-content: center;
     }
     .btn-copy:active { opacity: 0.75; }
+    .share-counter {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 14px; padding: 10px 16px;
+      background: rgba(56,239,125,0.1);
+      border: 1px solid rgba(56,239,125,0.25);
+      border-radius: 10px; font-size: 14px;
+      color: rgba(255,255,255,0.85);
+      animation: fadeInUp 0.5s ease;
+    }
+    .share-counter strong { color: #38ef7d; font-size: 18px; }
+    .share-counter-icon { font-size: 16px; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .quiz-link {
       max-width: 500px; margin: 0 auto;
@@ -443,6 +458,10 @@
       카카오톡으로 공유하기
     </button>
     <button class="btn-copy" onclick="copyLink()">🔗 링크 복사</button>
+    <div class="share-counter" id="shareCounter">
+      <span class="share-counter-icon">📊</span>
+      <span id="shareCountText">이 정보가 <strong>0</strong>번 공유되었습니다</span>
+    </div>
   </div>
 
   <!-- 자가진단 링크 -->
@@ -649,6 +668,36 @@ function copyLink() {
 function trackContact(method, page) {
   gtag('event', 'contact_click', { method: method, page: page });
 }
+
+// 공유 카운터
+(function() {
+  var KEY = 'disuse_share_count';
+  var count = parseInt(localStorage.getItem(KEY) || '0', 10);
+  function updateDisplay() {
+    var el = document.getElementById('shareCountText');
+    if (el) el.innerHTML = '이 정보가 <strong>' + count + '</strong>번 공유되었습니다';
+  }
+  updateDisplay();
+
+  // shareKakao, copyLink에 카운터 연결
+  var origShare = window.shareKakao;
+  window.shareKakao = function() {
+    origShare();
+    count++;
+    localStorage.setItem(KEY, count);
+    updateDisplay();
+    gtag('event', 'share', { method: 'kakao', page: 'summary', count: count });
+  };
+
+  var origCopy = window.copyLink;
+  window.copyLink = function() {
+    origCopy();
+    count++;
+    localStorage.setItem(KEY, count);
+    updateDisplay();
+    gtag('event', 'share', { method: 'link_copy', page: 'summary', count: count });
+  };
+})();
 </script>
 </body>
 </html>

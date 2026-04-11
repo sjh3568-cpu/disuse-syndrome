@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>상황별 판단 학습 | 인덕의료재단</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QWTHCZGLC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6QWTHCZGLC');
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 20px 16px 40px;
+      user-select: none; color: #fff;
+    }
+    .btn-home-top {
+      position: fixed; top: 16px; left: 16px;
+      background: rgba(255,255,255,0.2); border: none;
+      color: #fff; font-size: 13px; font-weight: 700;
+      padding: 8px 14px; border-radius: 99px;
+      cursor: pointer; backdrop-filter: blur(8px); z-index: 100;
+    }
+    .header { max-width: 420px; width: 100%; text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 22px; font-weight: 700; }
+    .header p { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 6px; }
+
+    .progress-wrap { max-width: 420px; width: 100%; margin-bottom: 20px; }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      color: rgba(255,255,255,0.9); font-size: 15px; font-weight: 700; margin-bottom: 8px;
+    }
+    .progress-bar-bg { background: rgba(255,255,255,0.15); border-radius: 99px; height: 10px; overflow: hidden; }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #fbbf24, #38ef7d);
+      height: 100%; border-radius: 99px; transition: width 0.5s ease;
+    }
+
+    .scenario-card {
+      max-width: 420px; width: 100%;
+      background: rgba(255,255,255,0.08); border-radius: 20px;
+      padding: 28px 22px; margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .scenario-badge {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 99px;
+      background: rgba(251,191,36,0.2); color: #fbbf24;
+      margin-bottom: 14px;
+    }
+    .scenario-story {
+      font-size: 16px; line-height: 1.8; color: rgba(255,255,255,0.92);
+      word-break: keep-all; margin-bottom: 20px;
+      padding: 16px; background: rgba(255,255,255,0.05);
+      border-left: 3px solid #fbbf24; border-radius: 0 12px 12px 0;
+    }
+    .scenario-question {
+      font-size: 17px; font-weight: 800; margin-bottom: 16px;
+      color: #fff; line-height: 1.5;
+    }
+    .choice-btn {
+      display: block; width: 100%; padding: 16px 18px;
+      background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 14px; color: rgba(255,255,255,0.9);
+      font-size: 15px; font-weight: 600; text-align: left;
+      cursor: pointer; margin-bottom: 10px;
+      transition: all 0.2s; line-height: 1.5; word-break: keep-all;
+      font-family: inherit;
+    }
+    .choice-btn:active { transform: scale(0.98); }
+    .choice-btn.correct {
+      background: rgba(52,211,153,0.2); border-color: #34d399; color: #fff;
+    }
+    .choice-btn.wrong {
+      background: rgba(239,68,68,0.15); border-color: #f87171; color: rgba(255,255,255,0.5);
+    }
+    .choice-btn:disabled { cursor: default; }
+
+    .feedback-box {
+      display: none; margin-top: 16px; padding: 18px;
+      border-radius: 14px; font-size: 14px; line-height: 1.8;
+      color: rgba(255,255,255,0.9); word-break: keep-all;
+    }
+    .feedback-box.correct-fb {
+      background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3);
+    }
+    .feedback-box.wrong-fb {
+      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25);
+    }
+    .feedback-box strong { color: #fbbf24; }
+
+    .btn-next-scenario {
+      display: none; max-width: 420px; width: 100%;
+      padding: 16px; border: none; border-radius: 14px;
+      background: #fff; color: #1e3a5f;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      margin-bottom: 16px; font-family: inherit;
+    }
+    .btn-next-scenario:active { opacity: 0.85; }
+
+    .complete-screen {
+      display: none; max-width: 420px; width: 100%;
+      background: #fff; border-radius: 24px;
+      padding: 48px 28px; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .complete-screen.show { display: block; }
+    .complete-emoji { font-size: 56px; margin-bottom: 16px; }
+    .complete-title { font-size: 22px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .complete-sub { font-size: 15px; color: #666; line-height: 1.7; margin-bottom: 24px; }
+    .complete-score { font-size: 48px; font-weight: 900; color: #059669; margin-bottom: 20px; }
+    .btn-complete {
+      display: block; width: 100%; padding: 16px;
+      border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      margin-bottom: 10px; font-family: inherit;
+    }
+    .btn-primary { background: linear-gradient(135deg, #0f172a, #1e3a5f); color: #fff; }
+    .btn-secondary { background: #f0f0f0; color: #666; }
+  </style>
+</head>
+<body>
+
+<button class="btn-home-top" onclick="location.href='index.html'">🏠 홈</button>
+
+<div class="header">
+  <h1>🎯 이런 상황이라면?</h1>
+  <p>실제 사례로 배우는 비사용증후군 판단</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">1 / 5</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="scenario-card" id="scenarioCard">
+  <div class="scenario-badge" id="scenarioBadge"></div>
+  <div class="scenario-story" id="scenarioStory"></div>
+  <div class="scenario-question" id="scenarioQuestion"></div>
+  <div id="choiceArea"></div>
+  <div class="feedback-box" id="feedbackBox"></div>
+</div>
+
+<button class="btn-next-scenario" id="btnNext" onclick="nextScenario()">다음 상황 →</button>
+
+<div class="complete-screen" id="completeScreen">
+  <div class="complete-emoji" id="completeEmoji">🎉</div>
+  <div class="complete-title" id="completeTitle">학습 완료!</div>
+  <div class="complete-score" id="completeScore"></div>
+  <div class="complete-sub" id="completeSub"></div>
+  <button class="btn-complete btn-primary" onclick="restart()">🔄 다시 학습하기</button>
+  <button class="btn-complete btn-secondary" onclick="location.href='quiz.html'">📝 퀴즈로 실력 확인하기</button>
+  <button class="btn-complete btn-secondary" onclick="location.href='index.html'">🏠 홈으로</button>
+</div>
+
+<script>
+const scenarios = [
+  {
+    badge: "사례 1 — 폐렴 후 보호자",
+    story: "75세 아버지가 폐렴으로 2주간 입원하셨습니다. 폐렴은 다 나았다고 퇴원하셨는데, 집에서 혼자 일어서지도 못하시고 화장실도 못 가십니다. 가족들은 \"좀 쉬면 나아지겠지\"라고 생각하고 있습니다.",
+    question: "이 상황에서 가장 먼저 해야 할 일은?",
+    choices: [
+      "집에서 충분히 쉬게 해드린다",
+      "재활전문병원에 입원 상담 전화를 한다",
+      "보약을 지어드린다",
+    ],
+    answer: 1,
+    feedback: "집에서 쉬면 근육이 더 빠져서 상태가 악화됩니다. 폐렴 치료 후에도 몸을 쓰지 못해 근력이 떨어진 상태이므로 <strong>재활전문병원에서 전문 재활치료</strong>를 받아야 합니다. 수술·발병 후 60일 이내에 입원해야 건강보험이 적용됩니다."
+  },
+  {
+    badge: "사례 2 — 고관절 수술",
+    story: "80세 어머니가 넘어져서 고관절 수술을 받으셨습니다. 수술은 성공적이었지만, 3주가 지나도 걷지 못하시고 침대에서 혼자 일어나지도 못하십니다. 병원에서 퇴원하라고 합니다.",
+    question: "퇴원 후 어디로 가는 것이 가장 좋을까요?",
+    choices: [
+      "요양병원에서 편히 쉬게 해드린다",
+      "집으로 모셔와서 간병인을 구한다",
+      "보건복지부 지정 재활의료기관에 입원한다",
+    ],
+    answer: 2,
+    feedback: "요양병원은 돌봄·관리 목적이라 적극적인 재활치료가 어렵습니다. 집에서 간병인만으로는 전문 재활이 불가능합니다. <strong>보건복지부 지정 재활의료기관</strong>에서 집중 재활치료를 받아야 다시 걸을 수 있습니다. 건강보험도 이곳에서만 적용됩니다."
+  },
+  {
+    badge: "사례 3 — 비용 걱정",
+    story: "아버지가 심장 수술 후 재활이 필요한데, 가족들이 \"재활병원 비용이 너무 비쌀 것 같다\"며 걱정하고 있습니다. 수술한 지 한 달이 지났습니다.",
+    question: "비용에 대해 맞는 사실은?",
+    choices: [
+      "재활병원은 건강보험이 안 되니까 전액 본인 부담이다",
+      "60일 이내 입원하면 건강보험이 적용되고 간병비도 없다",
+      "비용은 요양병원이나 재활병원이나 같다",
+    ],
+    answer: 1,
+    feedback: "수술 후 <strong>60일 이내에 재활의료기관에 입원</strong>하면 건강보험이 적용됩니다. 재활치료·도수치료 모두 보험 적용이 되고, 간호간병통합서비스로 <strong>별도 간병비가 없습니다</strong>. 요양병원에서는 이 혜택을 받을 수 없습니다."
+  },
+  {
+    badge: "사례 4 — 시간이 촉박",
+    story: "지인의 어머니가 대장 수술 후 퇴원하셨습니다. 벌써 45일이 지났는데, 아직 혼자 못 걸으시고 가족이 24시간 간병 중입니다. 지인이 \"이제 좀 늦은 것 같다\"고 말합니다.",
+    question: "이 상황에서 올바른 판단은?",
+    choices: [
+      "이미 45일 지났으니 어차피 늦었다",
+      "아직 15일 남았으니 지금 바로 전화해야 한다",
+      "60일이 지나도 아무 차이 없다",
+    ],
+    answer: 1,
+    feedback: "아직 <strong>15일이 남았습니다!</strong> 60일이 지나면 건강보험 혜택이 완전히 사라집니다. 지금 바로 전화하면 입원 준비를 할 수 있습니다. 재활은 빠를수록 효과가 좋으니, 남은 시간을 허비하지 마세요."
+  },
+  {
+    badge: "사례 5 — 주변에 알려주기",
+    story: "직장 동료가 \"시어머니가 폐렴으로 입원했다가 퇴원하셨는데, 기력이 너무 없어서 걱정\"이라고 합니다. 퇴원한 지 일주일 됐다고 합니다.",
+    question: "동료에게 해줄 수 있는 가장 도움이 되는 말은?",
+    choices: [
+      "\"그럴 수 있어, 좀 쉬면 나아질 거야\"",
+      "\"좋은 보약 추천해줄까?\"",
+      "\"비사용증후군일 수 있어. 복주회복병원에 전화해봐, 60일 안에 가야 보험 돼\"",
+    ],
+    answer: 2,
+    feedback: "퇴원 후 기력이 없고 못 걷는 상태는 <strong>비사용증후군</strong>일 가능성이 높습니다. 쉬면 낫는 게 아니라 재활치료가 필요합니다. 퇴원한 지 일주일이면 아직 충분한 시간이 있으니, <strong>빨리 재활전문병원에 연락</strong>하도록 알려주는 것이 가장 큰 도움입니다."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function render() {
+  const s = scenarios[current];
+  document.getElementById('scenarioBadge').innerText = s.badge;
+  document.getElementById('scenarioStory').innerText = s.story;
+  document.getElementById('scenarioQuestion').innerText = s.question;
+
+  const area = document.getElementById('choiceArea');
+  area.innerHTML = s.choices.map((c, i) =>
+    `<button class="choice-btn" onclick="selectChoice(${i})">${c}</button>`
+  ).join('');
+
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('btnNext').style.display = 'none';
+  answered = false;
+
+  const pct = Math.round((current / scenarios.length) * 100);
+  document.getElementById('progressText').innerText = `${current + 1} / ${scenarios.length}`;
+  document.getElementById('progressPct').innerText = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  answered = true;
+
+  const s = scenarios[current];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === s.answer) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.innerHTML = (idx === s.answer ? '✅ 정답입니다! ' : '❌ 아쉽습니다. ') + s.feedback;
+  fb.className = 'feedback-box ' + (idx === s.answer ? 'correct-fb' : 'wrong-fb');
+  fb.style.display = 'block';
+
+  if (idx === s.answer) score++;
+
+  const btn = document.getElementById('btnNext');
+  btn.innerText = current === scenarios.length - 1 ? '결과 보기' : '다음 상황 →';
+  btn.style.display = 'block';
+}
+
+function nextScenario() {
+  if (current < scenarios.length - 1) {
+    current++;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showComplete();
+  }
+}
+
+function showComplete() {
+  document.getElementById('scenarioCard').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+
+  const pct = Math.round((score / scenarios.length) * 100);
+  document.getElementById('completeScore').innerText = `${score} / ${scenarios.length}`;
+
+  let emoji, title, sub;
+  if (pct >= 80) {
+    emoji = '🎉'; title = '훌륭합니다!';
+    sub = '비사용증후군을 정확히 이해하고 계십니다.\n주변에 도움이 필요한 분이 있다면 자신있게 안내해 주세요.';
+  } else if (pct >= 60) {
+    emoji = '👍'; title = '잘 하셨습니다!';
+    sub = '대부분 맞추셨습니다.\n틀린 부분만 다시 복습하시면 완벽합니다.';
+  } else {
+    emoji = '📚'; title = '다시 한번 살펴보세요';
+    sub = '핵심요약을 먼저 읽고 다시 도전해 보세요.\n반복할수록 확실해집니다.';
+  }
+
+  document.getElementById('completeEmoji').innerText = emoji;
+  document.getElementById('completeTitle').innerText = title;
+  document.getElementById('completeSub').innerText = sub;
+  document.getElementById('completeScreen').classList.add('show');
+}
+
+function restart() {
+  current = 0; score = 0;
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('scenarioCard').style.display = '';
+  document.querySelector('.progress-wrap').style.display = '';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+render();
+</script>
+</body>
+</html>
