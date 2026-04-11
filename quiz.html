@@ -204,6 +204,23 @@
       cursor: pointer; font-weight: 600;
     }
 
+    .mission-card {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid #fbbf24; border-radius: 16px;
+      padding: 20px; margin-bottom: 16px; text-align: center;
+    }
+    .mission-icon { font-size: 36px; margin-bottom: 8px; }
+    .mission-title { font-size: 16px; font-weight: 900; color: #92400e; margin-bottom: 8px; }
+    .mission-desc { font-size: 14px; color: #78350f; line-height: 1.7; margin-bottom: 14px; word-break: keep-all; }
+    .mission-desc strong { color: #dc2626; }
+    .mission-share-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 12px 24px; background: #fee500; color: #3a1d1d;
+      font-size: 14px; font-weight: 800; border: none; border-radius: 12px;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(254,229,0,0.4);
+    }
+    .mission-share-btn:active { opacity: 0.85; }
+
     .btn-restart {
       width: 100%; padding: 18px; border: none; border-radius: 14px;
       background: linear-gradient(135deg, #11998e, #38ef7d);
@@ -379,6 +396,17 @@
     <div class="reminder-wrap" id="reminderWrap">
       <div class="reminder-text">📅 30일 후 재도전을 권장합니다:<br><strong id="reminderDate"></strong></div>
       <button class="btn-copy-reminder" onclick="copyReminder()">📋 날짜 복사</button>
+    </div>
+
+    <!-- 실천 과제 -->
+    <div class="mission-card" id="missionCard">
+      <div class="mission-icon">🎯</div>
+      <div class="mission-title">오늘의 실천 과제</div>
+      <div class="mission-desc">배운 내용을 주변에 해당되는 분<br><strong>1명에게 알려주세요</strong></div>
+      <button class="mission-share-btn" onclick="shareMission()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
+        카카오톡으로 알려주기
+      </button>
     </div>
 
     <button class="btn-restart" onclick="restart()">🔄 다시 풀기</button>
@@ -909,6 +937,24 @@ function restart() {
   document.getElementById('deptInput').value = '';
   setHospital('복주회복병원');
   document.getElementById('deptInput').style.display = '';
+}
+</script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+<script>
+Kakao.init('d24677d166ecd885a80091fbc35e9266');
+function shareMission() {
+  var url = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '수술 후에도 걷지 못하는 데는 이유가 있습니다',
+      description: '퇴원 후 기력 저하·재활·비용까지 한 번에 확인하세요. 수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다. 📞 054-851-5070',
+      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
+      link: { mobileWebUrl: url, webUrl: url }
+    },
+    buttons: [{ title: '지금 바로 확인하기', link: { mobileWebUrl: url, webUrl: url } }]
+  });
+  gtag('event', 'share', { method: 'kakao_mission', page: 'quiz' });
 }
 </script>
 </body>
