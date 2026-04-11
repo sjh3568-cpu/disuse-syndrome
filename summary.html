@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>비사용증후군 핵심 요약 | 인덕의료재단</title>
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="비사용증후군 핵심 요약 | 인덕의료재단" />
-  <meta name="description" content="안동병원·성소병원·안동의료원 수술 후 재활이 필요한 분께 꼭 알려주세요. 비사용증후군 핵심 요약. 복주회복병원 054-851-5070" />
-  <meta property="og:description" content="안동병원·성소병원·안동의료원 수술 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070" />
+  <meta property="og:title" content="퇴원했는데 못 걸어요? 쉬면 낫는 게 아닙니다" />
+  <meta name="description" content="퇴원했는데 못 걸어요? 쉬면 나아진다고요? 2주면 근육의 40%가 빠집니다. 확인해 보세요. 복주회복병원 054-851-5070" />
+  <meta property="og:description" content="쉬면 나아진다고요? 2주면 근육의 40%가 빠집니다. 확인해 보세요." />
   <meta property="og:image" content="https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg" />
   <meta property="og:image:width" content="800" />
   <meta property="og:image:height" content="400" />
@@ -521,8 +521,18 @@ const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 const CHECKLIST_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html';
 function shareKakao() {
   if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) return;
-  Kakao.Share.sendScrap({
-    requestUrl: SHARE_URL
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '퇴원했는데 못 걸어요? 쉬면 낫는 게 아닙니다',
+      description: '쉬면 나아진다고요? 2주면 근육의 40%가 빠집니다. 확인해 보세요.',
+      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
+      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+    },
+    buttons: [{
+      title: '지금 확인하기',
+      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+    }]
   });
 }
 

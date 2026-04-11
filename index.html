@@ -636,8 +636,18 @@ function printWithHospital(name) {
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 function shareKakao() {
   if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) return;
-  Kakao.Share.sendScrap({
-    requestUrl: SHARE_URL
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '퇴원했는데 못 걸어요? 쉬면 낫는 게 아닙니다',
+      description: '쉬면 나아진다고요? 2주면 근육의 40%가 빠집니다. 확인해 보세요.',
+      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
+      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+    },
+    buttons: [{
+      title: '지금 확인하기',
+      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+    }]
   });
 }
 </script>
