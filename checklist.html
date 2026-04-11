@@ -41,6 +41,19 @@
       padding: 18px 20px; border-left: 4px solid #a855f7;
       font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.7;
     }
+    .hospital-banner {
+      max-width: 500px; margin: 0 auto 20px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(99,102,241,0.2));
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 16px; padding: 18px 20px;
+      text-align: center; font-size: 16px; font-weight: 800;
+      color: #fff; line-height: 1.7; word-break: keep-all;
+    }
+    .hospital-banner span {
+      display: inline-block; margin-top: 6px;
+      font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,0.7);
+    }
 
     .section-label {
       max-width: 500px; margin: 0 auto 12px;
@@ -237,6 +250,11 @@
 
   <div class="intro-card">
     ℹ️ 본인 또는 가족을 떠올리며 해당되는 항목을 모두 체크하세요. 의학적 진단을 대체하지 않으며, 결과에 따라 전문 상담을 권장합니다.
+  </div>
+
+  <div class="hospital-banner">
+    🏥 안동병원·성소병원·안동의료원에서<br>수술·치료 받으셨나요?<br>
+    <span>퇴원 전에 꼭 확인하세요</span>
   </div>
 
   <!-- 골든타임 계산기 -->
@@ -506,7 +524,7 @@ function showResult() {
   }
 
   // 체크리스트 숨기고 결과 표시
-  document.querySelectorAll('.check-card, .section-label, .intro-card, .counter, .btn-diagnose, .golden-calc').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.check-card, .section-label, .intro-card, .hospital-banner, .counter, .btn-diagnose, .golden-calc').forEach(el => el.style.display = 'none');
   document.getElementById('resultScreen').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -517,7 +535,7 @@ function retry() {
     c.querySelector('.check-box').innerText = '';
     c.style.display = '';
   });
-  document.querySelectorAll('.section-label, .intro-card, .counter, .btn-diagnose, .golden-calc').forEach(el => el.style.display = '');
+  document.querySelectorAll('.section-label, .intro-card, .hospital-banner, .counter, .btn-diagnose, .golden-calc').forEach(el => el.style.display = '');
   document.getElementById('resultScreen').style.display = 'none';
   document.getElementById('countNum').innerText = '0';
   window.scrollTo({ top: 0, behavior: 'smooth' });

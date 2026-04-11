@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>수술 후에도 걷지 못하는 데는 이유가 있습니다 | 복주회복병원</title>
-  <meta name="description" content="퇴원 후 기력 저하·재활·비용까지 한 번에 확인하세요. 수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다." />
+  <meta name="description" content="안동병원·성소병원·안동의료원 수술 후 기력 저하·재활·비용까지 한 번에 확인하세요. 수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다." />
   <!-- Open Graph (카카오톡·SNS 링크 미리보기) -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sjh3568-cpu.github.io/disuse-syndrome/" />
   <meta property="og:title" content="수술 후에도 걷지 못하는 데는 이유가 있습니다" />
-  <meta property="og:description" content="퇴원 후 기력 저하·재활·비용까지 한 번에 확인하세요. 수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다. 📞 복주회복병원 054-851-5070" />
+  <meta property="og:description" content="안동병원·성소병원·안동의료원 수술 후 기력 저하·재활·비용까지 한 번에 확인하세요. 수술·발병 후 60일 이내라면 지금이 가장 좋은 타이밍입니다. 📞 복주회복병원 054-851-5070" />
   <meta property="og:image" content="https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg" />
   <meta property="og:image:width" content="1280" />
   <meta property="og:image:height" content="720" />
@@ -259,6 +259,40 @@
     /* QR 인쇄 전용 섹션 (화면에서는 숨김) */
     #qrSection { display: none; }
 
+    /* 병원 선택 모달 */
+    .hospital-modal {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); z-index: 1000;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .hospital-modal.show { display: flex; }
+    .hospital-modal-box {
+      background: #fff; border-radius: 20px; padding: 28px 24px;
+      max-width: 360px; width: 100%; text-align: center;
+    }
+    .hospital-modal-title {
+      font-size: 18px; font-weight: 900; color: #1a1a2e; margin-bottom: 6px;
+    }
+    .hospital-modal-sub {
+      font-size: 13px; color: #888; margin-bottom: 18px; line-height: 1.5;
+    }
+    .hospital-modal-btn {
+      display: block; width: 100%; padding: 14px;
+      margin-bottom: 10px; border: 2px solid #e5e7eb;
+      border-radius: 14px; background: #fff;
+      font-size: 15px; font-weight: 700; color: #1a1a2e;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .hospital-modal-btn:active { background: #f3f4f6; }
+    .hospital-modal-btn.general {
+      border-color: #d1d5db; color: #666; font-size: 14px;
+    }
+    .hospital-modal-close {
+      margin-top: 6px; padding: 10px;
+      border: none; background: none;
+      font-size: 14px; color: #aaa; cursor: pointer;
+    }
+
     /* 관리자 링크 */
     .admin-link {
       font-size: 12px; color: rgba(255,255,255,0.25);
@@ -473,7 +507,20 @@
     <div class="qr-hint">📷 <strong>카메라 앱</strong>으로 위 QR 코드를 비추면<br>정보 페이지로 바로 연결됩니다</div>
   </div>
 
-  <button class="btn-print-qr-small" onclick="window.print()">🖨️ 배포용 QR 인쇄하기</button>
+  <!-- 병원 선택 모달 -->
+  <div class="hospital-modal" id="hospitalModal">
+    <div class="hospital-modal-box">
+      <div class="hospital-modal-title">🏥 어느 병원에 배포할까요?</div>
+      <div class="hospital-modal-sub">선택한 병원명이 QR 포스터에 표시됩니다</div>
+      <button class="hospital-modal-btn" onclick="printWithHospital('안동병원')">안동병원</button>
+      <button class="hospital-modal-btn" onclick="printWithHospital('성소병원')">성소병원</button>
+      <button class="hospital-modal-btn" onclick="printWithHospital('안동의료원')">안동의료원</button>
+      <button class="hospital-modal-btn general" onclick="printWithHospital('')">일반용 (병원명 없이)</button>
+      <button class="hospital-modal-close" onclick="closeHospitalModal()">닫기</button>
+    </div>
+  </div>
+
+  <button class="btn-print-qr-small" onclick="showHospitalSelect()">🖨️ 배포용 QR 인쇄하기</button>
 
   <button class="btn-kakao-share" onclick="shareKakao()">
     <div class="kakao-row1">
@@ -504,6 +551,27 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
     document.getElementById('qrSection').style.display = 'none';
   }
 })();
+
+// 병원 선택 QR 인쇄
+function showHospitalSelect() {
+  document.getElementById('hospitalModal').classList.add('show');
+}
+function closeHospitalModal() {
+  document.getElementById('hospitalModal').classList.remove('show');
+}
+function printWithHospital(name) {
+  closeHospitalModal();
+  var eyebrow = document.querySelector('#qrSection .qr-eyebrow');
+  var subtitle = document.querySelector('#qrSection .qr-subtitle');
+  if (name) {
+    eyebrow.innerHTML = '📱 ' + name + ' 환자·보호자분께';
+    subtitle.innerHTML = '<strong>' + name + '</strong>에서 수술 받으셨나요?<br>퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong><br>QR 스캔 한 번으로 확인하세요';
+  } else {
+    eyebrow.innerHTML = '📱 스마트폰 카메라로 찍어보세요';
+    subtitle.innerHTML = '퇴원했는데 기력이 없다면<br><strong>이유가 따로 있습니다</strong><br>QR 스캔 한 번으로 원인·치료·비용을 바로 확인하세요';
+  }
+  window.print();
+}
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 function shareKakao() {
