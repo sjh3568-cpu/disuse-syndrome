@@ -465,10 +465,10 @@
   <!-- 카카오톡 공유 -->
   <div class="share-card">
     <p>📣 주변에 회복이 필요한 분이 있다면<br>카카오톡으로 공유해 보세요!</p>
-    <a id="kakaoShareBtn" class="btn-share" href="javascript:;" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;">
+    <button id="kakaoShareBtn" class="btn-share" onclick="shareKakao()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a1d1d"><path d="M12 2C6.477 2 2 5.813 2 10.5c0 2.943 1.696 5.54 4.28 7.147L5.25 21.5l4.563-2.26C10.54 19.41 11.26 19.5 12 19.5c5.523 0 10-3.813 10-8.5S17.523 2 12 2z"/></svg>
       카카오톡으로 공유하기
-    </a>
+    </button>
     <button class="btn-copy" onclick="copyLink()">🔗 링크 복사</button>
     <div class="share-counter" id="shareCounter">
       <span class="share-counter-icon">📊</span>
@@ -526,28 +526,34 @@ Kakao.init('d24677d166ecd885a80091fbc35e9266');
 
 const SHARE_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/summary.html';
 const CHECKLIST_URL = 'https://sjh3568-cpu.github.io/disuse-syndrome/checklist.html';
+var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
-  Kakao.Share.createDefaultButton({
-    container: '#kakaoShareBtn',
-    objectType: 'feed',
-    content: {
-      title: '비사용증후군 핵심 요약 | 인덕의료재단',
-      description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
-      imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
-      imageWidth: 800,
-      imageHeight: 400,
-      link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
-    },
-    buttons: [
-      { title: '핵심 요약 보기', link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL } },
-      { title: '자가진단 해보기', link: { mobileWebUrl: CHECKLIST_URL, webUrl: CHECKLIST_URL } }
-    ]
-  });
-} else {
-  document.getElementById('kakaoShareBtn').addEventListener('click', function() {
-    copyLink();
-  });
+function shareKakao() {
+  if (isMobile && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '비사용증후군 핵심 요약 | 인덕의료재단',
+        description: '수술·입원 후 재활이 필요한 분께 꼭 알려주세요. 복주회복병원 054-851-5070',
+        imageUrl: 'https://sjh3568-cpu.github.io/disuse-syndrome/images/og-image.jpg',
+        imageWidth: 800,
+        imageHeight: 400,
+        link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL }
+      },
+      buttons: [
+        { title: '핵심 요약 보기', link: { mobileWebUrl: SHARE_URL, webUrl: SHARE_URL } },
+        { title: '자가진단 해보기', link: { mobileWebUrl: CHECKLIST_URL, webUrl: CHECKLIST_URL } }
+      ]
+    });
+  } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(SHARE_URL).then(function() {
+        alert('링크가 복사되었습니다!\n카카오톡을 열어서 붙여넣기 해주세요.');
+      });
+    } else {
+      prompt('아래 링크를 복사해서 카카오톡에 붙여넣기 해주세요:', SHARE_URL);
+    }
+  }
 }
 
 // TTS 기능
@@ -692,13 +698,15 @@ function trackContact(method, page) {
   }
   updateDisplay();
 
-  // 카카오 공유 버튼 클릭 시 카운터 연결
-  document.getElementById('kakaoShareBtn').addEventListener('click', function() {
+  // shareKakao에 카운터 연결
+  var origShare = window.shareKakao;
+  window.shareKakao = function() {
+    origShare();
     count++;
     localStorage.setItem(KEY, count);
     updateDisplay();
-    gtag('event', 'share', { method: 'kakao', page: 'summary', count: count });
-  });
+    gtag('event', 'share', { method: isMobile ? 'kakao' : 'link_copy_kakao', page: 'summary', count: count });
+  };
 
   var origCopy = window.copyLink;
   window.copyLink = function() {
