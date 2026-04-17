@@ -121,6 +121,32 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
 
+    /* 문항별 상세 답안 */
+    .detail-row td { padding: 0 !important; border-bottom: 1px solid #f0f0f0; }
+    .detail-wrap {
+      background: #f8f9ff; padding: 16px 20px;
+      border-left: 4px solid #667eea;
+    }
+    .detail-title { font-size: 13px; font-weight: 700; color: #667eea; margin-bottom: 10px; }
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+    .detail-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; padding: 6px 10px; border-radius: 8px;
+      background: #fff;
+    }
+    .detail-item.correct { border-left: 3px solid #4caf50; }
+    .detail-item.wrong   { border-left: 3px solid #f44336; }
+    .detail-item .q-label { color: #555; flex: 1; word-break: keep-all; }
+    .detail-item .q-mark  { font-size: 15px; }
+    .btn-detail {
+      padding: 4px 10px; border: 1px solid #667eea; border-radius: 8px;
+      background: #f0f0ff; color: #667eea; font-size: 12px;
+      font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .btn-detail:active { background: #667eea; color: #fff; }
+    tbody tr.clickable { cursor: pointer; }
+    tbody tr.clickable:hover { background: #f0f4ff; }
+
     .no-data { text-align: center; padding: 48px; color: #bbb; font-size: 15px; }
     .btn-del {
       padding: 5px 12px; border: none; border-radius: 8px;
@@ -316,6 +342,7 @@
             <th>응시일시</th>
             <th>점수</th>
             <th>정답률</th>
+            <th>상세</th>
             <th>삭제</th>
           </tr>
         </thead>
@@ -392,7 +419,7 @@ function loadData() {
   .catch(() => {
     document.getElementById('barChartBasic').innerHTML = '<div class="no-data">아직 응답 데이터가 없습니다.</div>';
     document.getElementById('barChartAdv').innerHTML   = '<div class="no-data">아직 응답 데이터가 없습니다.</div>';
-    document.getElementById('resultTable').innerHTML   = '<tr><td colspan="9" class="no-data">응답 데이터 없음</td></tr>';
+    document.getElementById('resultTable').innerHTML   = '<tr><td colspan="10" class="no-data">응답 데이터 없음</td></tr>';
     ['totalCount','maxScore','avgPct','basicCount','basicAvg','advCount','advAvg'].forEach(id => {
       document.getElementById(id).innerText = '-';
     });
@@ -514,6 +541,11 @@ function renderDashboard(data) {
     const lvBadge    = d.level === 'advanced'
       ? '<span class="lv-badge adv">심화</span>'
       : '<span class="lv-badge basic">기초</span>';
+    const hasItems = d.items && d.items.length > 0;
+    const detailBtn = hasItems
+      ? `<button class="btn-detail" onclick="toggleDetail('detail-${realIdx}', event)">📋 보기</button>`
+      : '<span style="color:#ccc;font-size:12px;">-</span>';
+    const detailRow = hasItems ? buildDetailRow(d, realIdx) : '';
     return `<tr id="row-${realIdx}"${rowStyle}>
       <td>${filteredRaw.length - i}</td>
       <td><strong>${d.name}</strong>${retryBadge}</td>
@@ -523,10 +555,38 @@ function renderDashboard(data) {
       <td>${d.date}</td>
       <td><span class="score-pill ${pillCls}">${d.score} / ${d.total}</span></td>
       <td>${pct}%</td>
+      <td>${detailBtn}</td>
       <td><button class="btn-del" onclick="deleteEntry(${realIdx})">🗑 삭제</button></td>
-    </tr>`;
+    </tr>${detailRow}`;
   }).join('');
-  document.getElementById('resultTable').innerHTML = rows || `<tr><td colspan="9" class="no-data">해당 레벨 응시 데이터 없음</td></tr>`;
+  document.getElementById('resultTable').innerHTML = rows || `<tr><td colspan="10" class="no-data">해당 레벨 응시 데이터 없음</td></tr>`;
+}
+
+function buildDetailRow(d, realIdx) {
+  const titles = d.level === 'advanced' ? advQTitles : basicQTitles;
+  const items = d.items || [];
+  const cells = items.map(item => {
+    const qIdx = item.q - 1;
+    const title = (qIdx >= 0 && qIdx < titles.length) ? titles[qIdx] : `Q${item.q}`;
+    const cls = item.correct ? 'correct' : 'wrong';
+    const mark = item.correct ? '✅' : '❌';
+    return `<div class="detail-item ${cls}"><span class="q-label">${title}</span><span class="q-mark">${mark}</span></div>`;
+  }).join('');
+  return `<tr class="detail-row" id="detail-${realIdx}" style="display:none;">
+    <td colspan="10">
+      <div class="detail-wrap">
+        <div class="detail-title">📋 ${d.name} 님의 문항별 결과 (${d.score}/${d.total}점, ${Math.round((d.score/d.total)*100)}%)</div>
+        <div class="detail-grid">${cells}</div>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function toggleDetail(id, e) {
+  e.stopPropagation();
+  const row = document.getElementById(id);
+  if (!row) return;
+  row.style.display = row.style.display === 'none' ? '' : 'none';
 }
 
 function deleteEntry(idx) {
